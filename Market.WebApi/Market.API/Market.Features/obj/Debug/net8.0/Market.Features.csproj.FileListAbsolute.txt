@@ -1,0 +1,17 @@
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Features\bin\Debug\net8.0\Market.Features.deps.json
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Features\bin\Debug\net8.0\Market.Features.dll
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Features\bin\Debug\net8.0\Market.Features.pdb
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Features\bin\Debug\net8.0\Market.Core.dll
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Features\bin\Debug\net8.0\Market.Infrastructure.dll
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Features\bin\Debug\net8.0\Market.Infrastructure.pdb
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Features\bin\Debug\net8.0\Market.Core.pdb
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Features\obj\Debug\net8.0\Market.Features.csproj.AssemblyReference.cache
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Features\obj\Debug\net8.0\Market.Features.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Features\obj\Debug\net8.0\Market.Features.AssemblyInfoInputs.cache
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Features\obj\Debug\net8.0\Market.Features.AssemblyInfo.cs
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Features\obj\Debug\net8.0\Market.Features.csproj.CoreCompileInputs.cache
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Features\obj\Debug\net8.0\Market.F.774DA135.Up2Date
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Features\obj\Debug\net8.0\Market.Features.dll
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Features\obj\Debug\net8.0\refint\Market.Features.dll
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Features\obj\Debug\net8.0\Market.Features.pdb
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Features\obj\Debug\net8.0\ref\Market.Features.dll

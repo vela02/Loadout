@@ -1,0 +1,11 @@
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Core\bin\Debug\net8.0\Market.Core.deps.json
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Core\bin\Debug\net8.0\Market.Core.dll
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Core\bin\Debug\net8.0\Market.Core.pdb
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Core\obj\Debug\net8.0\Market.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Core\obj\Debug\net8.0\Market.Core.AssemblyInfoInputs.cache
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Core\obj\Debug\net8.0\Market.Core.AssemblyInfo.cs
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Core\obj\Debug\net8.0\Market.Core.csproj.CoreCompileInputs.cache
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Core\obj\Debug\net8.0\Market.Core.dll
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Core\obj\Debug\net8.0\refint\Market.Core.dll
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Core\obj\Debug\net8.0\Market.Core.pdb
+C:\Users\Admin\Desktop\RS1 - 2025 - Templejt\Market.WebApi\Market.API\Market.Core\obj\Debug\net8.0\ref\Market.Core.dll
