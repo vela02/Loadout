@@ -5,7 +5,7 @@ namespace Market.Features.ProductCategories.CreateProductCategory
     /// <summary>
     /// Command for creating new product category.
     /// </summary>
-    /// <seealso cref="MediatR.IRequest&lt;System.Int32&gt;" />
+    /// <seealso cref="MediatR.IRequest<int>" />
     public class CreateProductCategoryCommand : IRequest<int>
     {
         /// <summary>
@@ -14,6 +14,6 @@ namespace Market.Features.ProductCategories.CreateProductCategory
         /// <value>
         /// The name.
         /// </value>
-        public string Name { get; set; }
+        public required string Name { get; set; }
     }
 }

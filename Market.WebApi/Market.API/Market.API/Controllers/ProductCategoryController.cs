@@ -1,9 +1,11 @@
+using Market.Features.Common;
 using Market.Features.ProductCategories.CreateProductCategory;
 using Market.Features.ProductCategories.GetProductCategoryById;
+using Market.Features.ProductCategories.ListProductCategories;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApplication1.Controllers
+namespace Market.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -33,5 +35,22 @@ namespace WebApplication1.Controllers
 
             return Ok(category);
         }
+
+        [HttpGet]
+        public async Task<ActionResult<PageResult<ListProductCategoriesItem>>> List(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string? search = null,
+            [FromQuery] bool? onlyEnabled = null)
+        {
+            var result = await sender.Send(new ListProductCategoriesQuery
+            {
+                Paging = new Shared.Dtos.PageRequest { Page = page, PageSize = pageSize },
+                Search = search,
+                OnlyEnabled = onlyEnabled
+            });
+            return Ok(result);
+        }
+
     }
 }
