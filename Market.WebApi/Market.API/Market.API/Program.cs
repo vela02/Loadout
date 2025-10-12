@@ -8,7 +8,6 @@ using Market.Shared.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
-using Microsoft.Extensions.Options;          // IOptions<JwtOptions>
 using Microsoft.IdentityModel.Tokens;        // TokenValidationParameters, SymmetricSecurityKey
 using System.Text;                            // Encoding.UTF8.GetBytes(...)
 

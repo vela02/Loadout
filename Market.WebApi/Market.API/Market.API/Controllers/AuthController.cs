@@ -14,7 +14,7 @@ public sealed class AuthController(
     [AllowAnonymous]
     public async Task<ActionResult<TokenPairDto>> Login([FromBody] LoginRequestDto req, CancellationToken ct)
     {
-        var user = await ctx.Set<UserEntity>()
+        var user = await ctx.Users
             .FirstOrDefaultAsync(x => x.Email == req.Email && x.IsEnabled && !x.IsDeleted, ct);
 
         if (user is null)
@@ -48,7 +48,7 @@ public sealed class AuthController(
     public async Task<ActionResult<TokenPairDto>> Refresh([FromBody] RefreshRequestDto req, CancellationToken ct)
     {
         var hash = tokens.HashRefreshToken(req.RefreshToken);
-        var rt = await ctx.Set<RefreshTokenEntity>()
+        var rt = await ctx.RefreshTokens
             .Include(x => x.User)
             .FirstOrDefaultAsync(x => x.TokenHash == hash && !x.IsRevoked && !x.IsDeleted, ct);
 
@@ -84,7 +84,7 @@ public sealed class AuthController(
     public async Task<IActionResult> Logout([FromBody] RefreshRequestDto req, CancellationToken ct)
     {
         var hash = tokens.HashRefreshToken(req.RefreshToken);
-        var rt = await ctx.Set<RefreshTokenEntity>()
+        var rt = await ctx.RefreshTokens
             .FirstOrDefaultAsync(x => x.TokenHash == hash && !x.IsRevoked && !x.IsDeleted, ct);
 
         if (rt != null)
