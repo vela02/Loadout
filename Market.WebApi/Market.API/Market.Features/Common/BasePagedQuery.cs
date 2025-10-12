@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-namespace Market.Features.Common;
+﻿namespace Market.Features.Common;
 
 /// <summary>
 /// Bazna klasa za list upite sa paginacijom, pretragom i sortiranjem.

@@ -1,14 +1,9 @@
-﻿using Market.Features.Common;
-using Market.Infrastructure.Database;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-
-namespace Market.Features.ProductCategories.ListProductCategories;
+﻿namespace Market.Features.ProductCategories.Queries.List;
 
 public sealed class ListProductCategoriesQueryHandler(DatabaseContext ctx)
-        : IRequestHandler<ListProductCategoriesQuery, PageResult<ListProductCategoriesItem>>
+        : IRequestHandler<ListProductCategoriesQuery, PageResult<ListProductCategoriesQueryDto>>
 {
-    public async Task<PageResult<ListProductCategoriesItem>> Handle(
+    public async Task<PageResult<ListProductCategoriesQueryDto>> Handle(
         ListProductCategoriesQuery request, CancellationToken ct)
     {
         var q = ctx.ProductCategories.AsNoTracking();
@@ -31,13 +26,13 @@ public sealed class ListProductCategoriesQueryHandler(DatabaseContext ctx)
             q = q.Where(x => x.IsEnabled == request.OnlyEnabled);
 
         var projectedQuery = q.OrderBy(x => x.Name)
-            .Select(x => new ListProductCategoriesItem
+            .Select(x => new ListProductCategoriesQueryDto
             {
                 Id = x.Id,
                 Name = x.Name,
                 IsEnabled = x.IsEnabled
             });
 
-        return await PageResult<ListProductCategoriesItem>.FromQueryableAsync(projectedQuery, request.Paging, ct);
+        return await PageResult<ListProductCategoriesQueryDto>.FromQueryableAsync(projectedQuery, request.Paging, ct);
     }
 }

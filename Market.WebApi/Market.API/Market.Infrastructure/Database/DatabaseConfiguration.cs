@@ -1,47 +1,40 @@
 ﻿using Market.Core.Entities.Base;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Buffers.Text;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Market.Infrastructure.Database
+namespace Market.Infrastructure.Database;
+
+public partial class DatabaseContext
 {
-    public partial class DatabaseContext
+    private void ModifyTimestamps()
     {
-        private void ModifyTimestamps()
+        var entries = ChangeTracker.Entries();
+
+        foreach (var entry in entries)
         {
-            var entries = ChangeTracker.Entries();
+            var entity = ((BaseEntity)entry.Entity);
 
-            foreach (var entry in entries)
+            if (entry.State == EntityState.Added)
             {
-                var entity = ((BaseEntity)entry.Entity);
-
-                if (entry.State == EntityState.Added)
-                {
-                    entity.CreatedAt = DateTime.Now;
-                }
-                else if (entry.State == EntityState.Modified)
-                {
-                    entity.ModifiedAt = DateTime.Now;
-                }
+                entity.CreatedAt = DateTime.Now;
+            }
+            else if (entry.State == EntityState.Modified)
+            {
+                entity.ModifiedAt = DateTime.Now;
             }
         }
+    }
 
-        public override int SaveChanges()
-        {
-            ModifyTimestamps();
+    public override int SaveChanges()
+    {
+        ModifyTimestamps();
 
-            return base.SaveChanges();
-        }
+        return base.SaveChanges();
+    }
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
-        {
-            ModifyTimestamps();
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    {
+        ModifyTimestamps();
 
-            return base.SaveChangesAsync(cancellationToken);
-        }
+        return base.SaveChangesAsync(cancellationToken);
     }
 }

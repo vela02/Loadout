@@ -1,17 +1,12 @@
-﻿using Market.Core.Entities;
-using Market.Infrastructure.Database;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace Market.Tests
+namespace Market.Tests;
+
+public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<Program>
 {
-    public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<Program>
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
-        {
-            builder.UseEnvironment("IntegrationTests");
-        }
+        builder.UseEnvironment("IntegrationTests");
     }
 }

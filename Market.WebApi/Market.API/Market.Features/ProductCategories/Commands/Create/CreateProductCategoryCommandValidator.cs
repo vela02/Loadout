@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace Market.Features.ProductCategories.CreateProductCategory;
+﻿namespace Market.Features.ProductCategories.Commands.Create;
 
 public sealed class CreateProductCategoryCommandValidator
     : AbstractValidator<CreateProductCategoryCommand>

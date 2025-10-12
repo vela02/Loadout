@@ -1,25 +1,47 @@
-﻿using Market.Shared.Dtos;
+﻿namespace Market.API.Middleware;
 
-namespace Market.API.Middleware
+public sealed class ExceptionMiddleware(ILogger<ExceptionMiddleware> logger) : IMiddleware
 {
-    public sealed class ExceptionMiddleware : IMiddleware
+    public async Task InvokeAsync(HttpContext ctx, RequestDelegate next)
     {
-        private readonly ILogger<ExceptionMiddleware> _logger;
-        public ExceptionMiddleware(ILogger<ExceptionMiddleware> logger) => _logger = logger;
-
-        public async Task InvokeAsync(HttpContext ctx, RequestDelegate next)
+        try
         {
-            try { await next(ctx); }
-            catch (Exception ex)
+            await next(ctx);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Unhandled exception");
+
+            ctx.Response.ContentType = "application/json";
+            ctx.Response.StatusCode = ex switch
             {
-                _logger.LogError(ex, "Unhandled");
-                ctx.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                await ctx.Response.WriteAsJsonAsync(new ErrorDto
-                {
-                    Code = "internal.error",
-                    Message = "Došlo je do greške. Pokušajte ponovo."
-                });
+                NotFoundException => StatusCodes.Status404NotFound,
+                ConflictException => StatusCodes.Status409Conflict,
+                ValidationException => StatusCodes.Status400BadRequest,
+                _ => StatusCodes.Status500InternalServerError
+            };
+
+            string code = "internal.error";
+            string message = "Došlo je do greške. Pokušajte ponovo.";
+
+            if (ex is NotFoundException or ConflictException)
+            {
+                code = "entity.error";
+                message = ex.Message;
             }
+            else if (ex is ValidationException vex)
+            {
+                code = "validation.error";
+                message = string.Join(" ", vex.Errors.Select(e => e.ErrorMessage));
+            }
+
+            var error = new ErrorDto
+            {
+                Code = code,
+                Message = message
+            };
+
+            await ctx.Response.WriteAsJsonAsync(error);
         }
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace Market.Shared.Constants
+﻿namespace Market.Shared.Constants;
+
+public class ConfigurationValues
 {
-    public class ConfigurationValues
-    {
-        public const string ConnectionString = "Main";
-    }
+    public const string ConnectionString = "Main";
 }

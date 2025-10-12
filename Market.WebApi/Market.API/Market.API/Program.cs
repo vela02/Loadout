@@ -1,11 +1,7 @@
-﻿using FluentValidation;
-using FluentValidation.AspNetCore;
+﻿using FluentValidation.AspNetCore;
 using Market.API.Middleware;
-using Market.Infrastructure.Database;
+using Market.Features.ProductCategories.Commands.Create;
 using Market.Shared.Constants;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,11 +10,30 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(opts =>
     {
+        // Ova opcija definiše šta se dešava kada ASP.NET Core ne uspije validirati model
+        // još prije nego što dođe do FluentValidation validacije ili handlera.
+        //
+        // To se dešava, naprimjer, ako:
+        //  - JSON koji je poslao klijent nije ispravan (npr. očekuje se int, a pošalje string)
+        //  - obavezno polje (required) uopšte nije poslano
+        //  - model binding ne može popuniti objekt iz requesta
+        //
+        // U tim slučajevima FluentValidation se uopšte ne pokreće,
+        // pa ovdje vraćamo standardizovan JSON odgovor (ErrorDto)
+        // umjesto defaultnog ASP.NET odgovora.
+        //
+        // Na ovaj način, sve greške validacije u aplikaciji — bilo da dolaze iz model bindera
+        // ili iz FluentValidation-a — imaju isti format i isti ErrorDto izgled.
         opts.InvalidModelStateResponseFactory = ctx =>
         {
+            // Izvlačimo sve poruke o greškama iz ModelState-a
             var msg = string.Join("; ",
                 ctx.ModelState.Values.SelectMany(v => v.Errors)
-                                     .Select(e => string.IsNullOrWhiteSpace(e.ErrorMessage) ? "Validation error" : e.ErrorMessage));
+                                     .Select(e => string.IsNullOrWhiteSpace(e.ErrorMessage)
+                                         ? "Validation error"
+                                         : e.ErrorMessage));
+
+            // Vraćamo HTTP 400 (Bad Request) sa našim standardnim ErrorDto formatom
             return new BadRequestObjectResult(new Market.Shared.Dtos.ErrorDto
             {
                 Code = "validation.failed",
@@ -26,6 +41,7 @@ builder.Services.AddControllers()
             });
         };
     });
+
 
 builder.Services.AddFluentValidationAutoValidation(o =>
 {
@@ -37,7 +53,7 @@ builder.Services.AddFluentValidationAutoValidation(o =>
 
 // svi validatori iz Features sklopa
 builder.Services.AddValidatorsFromAssembly(
-    typeof(Market.Features.ProductCategories.CreateProductCategory.CreateProductCategoryCommand).Assembly
+    typeof(CreateProductCategoryCommand).Assembly
 );
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -59,7 +75,7 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg =>
 {
-    cfg.RegisterServicesFromAssembly(typeof(Market.Features.ProductCategories.CreateProductCategory.CreateProductCategoryCommandHandler).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(CreateProductCategoryCommandHandler).Assembly);
 });
 
 builder.Services.AddTransient<ExceptionMiddleware>();

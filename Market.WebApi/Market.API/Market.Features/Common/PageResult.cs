@@ -1,36 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿namespace Market.Features.Common;
 
-namespace Market.Features.Common
+public sealed class PageResult<T>
 {
-    public sealed class PageResult<T>
+    public required int Total { get; init; }
+    public required IReadOnlyList<T> Items { get; init; }
+
+    /// <summary>
+    /// Kreira PageResult iz IQueryable-a pomoću EF Core asinkronih metoda.
+    /// </summary>
+    public static async Task<PageResult<T>> FromQueryableAsync(
+        IQueryable<T> query,
+        PageRequest paging,
+        CancellationToken ct = default,
+        bool includeTotal = true)
     {
-        public required int Total { get; init; }
-        public required IReadOnlyList<T> Items { get; init; }
+        int total = 0;
+        if (includeTotal)
+            total = await query.CountAsync(ct);
 
-        /// <summary>
-        /// Kreira PageResult iz IQueryable-a pomoću EF Core asinkronih metoda.
-        /// </summary>
-        public static async Task<PageResult<T>> FromQueryableAsync(
-            IQueryable<T> query,
-            PageRequest paging,
-            CancellationToken ct = default,
-            bool includeTotal = true)
-        {
-            int total = 0;
-            if (includeTotal)
-                total = await query.CountAsync(ct);
+        var items = await query
+            .Skip(paging.SkipCount)
+            .Take(paging.PageSize)
+            .ToListAsync(ct);
 
-            var items = await query
-                .Skip(paging.SkipCount)
-                .Take(paging.PageSize)
-                .ToListAsync(ct);
-
-            return new PageResult<T> { Total = total, Items = items };
-        }
+        return new PageResult<T> { Total = total, Items = items };
     }
 }
