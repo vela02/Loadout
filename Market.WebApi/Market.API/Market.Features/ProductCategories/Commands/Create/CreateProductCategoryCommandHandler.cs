@@ -21,7 +21,8 @@ public class CreateProductCategoryCommandHandler(DatabaseContext context)
 
         var category = new ProductCategoryEntity
         {
-            Name = request.Name.Trim()
+            Name = request.Name!.Trim(),
+            IsEnabled = true // defaultno IsEnabled
         };
 
         context.ProductCategories.Add(category);

@@ -1,6 +1,8 @@
 using Market.Features.Common;
 using Market.Features.ProductCategories.Commands.Create;
 using Market.Features.ProductCategories.Commands.Delete;
+using Market.Features.ProductCategories.Commands.Status.Disable;
+using Market.Features.ProductCategories.Commands.Status.Enable;
 using Market.Features.ProductCategories.Commands.Update;
 using Market.Features.ProductCategories.Queries.GetById;
 using Market.Features.ProductCategories.Queries.List;
@@ -19,7 +21,7 @@ public class ProductCategoryController(ISender sender) : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id }, new { id });
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:int}")]
     public async Task Update(int id, UpdateProductCategoryCommand command, CancellationToken ct)
     {
         // ID iz rute ima prioritet
@@ -28,18 +30,18 @@ public class ProductCategoryController(ISender sender) : ControllerBase
         // bez return -> 204 No Content
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:int}")]
     public async Task Delete(int id, CancellationToken ct)
     {
         await sender.Send(new DeleteProductCategoryCommand { Id = id }, ct);
         // bez return -> 204 No Content
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<GetProductCategoryByIdQueryDto> GetById(int id, CancellationToken ct)
     {
         var category = await sender.Send(new GetProductCategoryByIdQuery { Id = id }, ct);
-        return category; // NotFoundException -> 404 preko middleware-a
+        return category; // ako je NotFoundException -> 404 preko middleware-a
     }
 
     [HttpGet]
@@ -48,4 +50,19 @@ public class ProductCategoryController(ISender sender) : ControllerBase
         var result = await sender.Send(query, ct);
         return result;
     }
+
+    [HttpPut("{id:int}/disable")]
+    public async Task Disable(int id, CancellationToken ct)
+    {
+        await sender.Send(new DisableProductCategoryCommand { Id = id }, ct);
+        // bez return -> 204 No Content
+    }
+
+    [HttpPut("{id:int}/enable")]
+    public async Task Enable(int id, CancellationToken ct)
+    {
+        await sender.Send(new EnableProductCategoryCommand { Id = id }, ct);
+        // bez return -> 204 No Content
+    }
+
 }

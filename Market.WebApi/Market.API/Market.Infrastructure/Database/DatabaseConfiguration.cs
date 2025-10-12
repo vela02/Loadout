@@ -1,5 +1,6 @@
 ﻿using Market.Core.Entities.Base;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Market.Infrastructure.Database;
 
@@ -20,6 +21,25 @@ public partial class DatabaseContext
             else if (entry.State == EntityState.Modified)
             {
                 entity.ModifiedAt = DateTime.Now;
+            }
+        }
+    }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        // Primijeni globalni filter na sve entitete koji nasljeđuju BaseEntity
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType))
+            {
+                var parameter = Expression.Parameter(entityType.ClrType, "e");
+                var prop = Expression.Property(parameter, nameof(BaseEntity.IsDeleted));
+                var compare = Expression.Equal(prop, Expression.Constant(false));
+                var lambda = Expression.Lambda(compare, parameter);
+
+                modelBuilder.Entity(entityType.ClrType)
+                            .HasQueryFilter(lambda);
             }
         }
     }

@@ -11,7 +11,7 @@ public class DeleteProductCategoryCommandHandler(DatabaseContext context)
         if (category is null)
             throw new MarketNotFoundException("Kategorija nije pronađena.");
 
-        context.ProductCategories.Remove(category);
+        category.IsDeleted = true; // Soft delete
         await context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
