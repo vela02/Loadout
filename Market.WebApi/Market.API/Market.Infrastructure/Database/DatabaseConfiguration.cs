@@ -1,4 +1,5 @@
 ﻿using Market.Core.Entities.Base;
+using Market.Infrastructure.Database.Seeders;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -28,6 +29,13 @@ public partial class DatabaseContext
     {
         base.OnModelCreating(modelBuilder);
 
+        ApplyGlobalFielters(modelBuilder);
+
+        StaticDataSeeder.Seed(modelBuilder); // statički podaci
+    }
+
+    private void ApplyGlobalFielters(ModelBuilder modelBuilder)
+    {
         // Primijeni globalni filter na sve entitete koji nasljeđuju BaseEntity
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
