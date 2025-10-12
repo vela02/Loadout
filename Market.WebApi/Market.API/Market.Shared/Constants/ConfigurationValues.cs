@@ -2,5 +2,8 @@
 
 public class ConfigurationValues
 {
-    public const string ConnectionString = "Main";
+    public class ConnectionString
+    {
+        public const string Main = "Main";
+    }
 }

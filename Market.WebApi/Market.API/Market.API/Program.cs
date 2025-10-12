@@ -1,5 +1,7 @@
 ﻿using FluentValidation.AspNetCore;
+using Market.API.Controllers;
 using Market.API.Middleware;
+using Market.Features.Common.Behaviors;
 using Market.Features.ProductCategories.Commands.Create;
 using Market.Shared.Constants;
 
@@ -34,22 +36,13 @@ builder.Services.AddControllers()
                                          : e.ErrorMessage));
 
             // Vraćamo HTTP 400 (Bad Request) sa našim standardnim ErrorDto formatom
-            return new BadRequestObjectResult(new Market.Shared.Dtos.ErrorDto
+            return new BadRequestObjectResult(new ErrorDto
             {
                 Code = "validation.failed",
                 Message = msg
             });
         };
     });
-
-
-builder.Services.AddFluentValidationAutoValidation(o =>
-{
-    // o.DisableDataAnnotationsValidation = true
-    // Isključuje staru .NET validaciju putem[Required], [MaxLength], [Range], itd.
-    // Da se ne miješaju dvije validacije (DataAnnotations + FluentValidation).
-    o.DisableDataAnnotationsValidation = true;
-});
 
 // svi validatori iz Features sklopa
 builder.Services.AddValidatorsFromAssembly(
@@ -58,7 +51,7 @@ builder.Services.AddValidatorsFromAssembly(
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-var connectionString = builder.Configuration.GetConnectionString(ConfigurationValues.ConnectionString);
+
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
     if (builder.Environment.IsEnvironment("IntegrationTests"))
@@ -69,15 +62,19 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
     else
     {
         // za normalni runtime, koristi SQL Server
-        options.UseSqlServer(builder.Configuration.GetConnectionString("Main"));
+        options.UseSqlServer(builder.Configuration.GetConnectionString(ConfigurationValues.ConnectionString.Main));
     }
 });
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg =>
 {
-    cfg.RegisterServicesFromAssembly(typeof(CreateProductCategoryCommandHandler).Assembly);
+    cfg.RegisterServicesFromAssemblies(
+        typeof(ProductCategoryController).Assembly, //ukljucuje sve servise iz projekta gdje se nalazi ProductCategoryController, tj. Market.API
+        typeof(CreateProductCategoryCommand).Assembly  //ukljucuje sve servise iz projekta gdje se nalazi CreateProductCategoryCommand, tj. Market.Features
+    );
 });
 
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 builder.Services.AddTransient<ExceptionMiddleware>();
 
 var app = builder.Build();
@@ -89,11 +86,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
-app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();
 

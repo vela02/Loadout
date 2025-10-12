@@ -12,10 +12,11 @@ namespace Market.API.Controllers;
 public class ProductCategoryController(ISender sender) : ControllerBase
 {
     [HttpPost]
-    public async Task<int> CreateProductCategory(CreateProductCategoryCommand command, CancellationToken ct)
+    public async Task<ActionResult<int>> CreateProductCategory(CreateProductCategoryCommand command, CancellationToken ct)
     {
-        int productCategoryId = await sender.Send(command, ct);
-        return productCategoryId;
+        int id = await sender.Send(command, ct);
+
+        return CreatedAtAction(nameof(GetById), new { id }, new { id });
     }
 
     [HttpPut("{id}")]

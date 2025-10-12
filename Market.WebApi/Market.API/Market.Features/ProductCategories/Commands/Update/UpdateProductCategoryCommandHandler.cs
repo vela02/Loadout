@@ -6,10 +6,11 @@ public sealed class UpdateProductCategoryCommandHandler(DatabaseContext ctx)
     public async Task<Unit> Handle(UpdateProductCategoryCommand request, CancellationToken ct)
     {
         var entity = await ctx.ProductCategories
-            .FirstOrDefaultAsync(x => x.Id == request.Id, ct);
+            .Where(x => x.Id == request.Id)
+            .FirstOrDefaultAsync(ct);
 
         if (entity is null)
-            throw new NotFoundException($"Kategorija (ID={request.Id}) nije pronađena.");
+            throw new MarketNotFoundException($"Kategorija (ID={request.Id}) nije pronađena.");
 
         // Provjera duplikata naziva (case-insensitive, osim na isti ID)
         var exists = await ctx.ProductCategories
@@ -17,7 +18,7 @@ public sealed class UpdateProductCategoryCommandHandler(DatabaseContext ctx)
 
         if (exists)
         {
-            throw new ConflictException("Naziv već postoji.");
+            throw new MarketConflictException("Naziv već postoji.");
         }
 
 

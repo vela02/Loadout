@@ -5,13 +5,18 @@ public class CreateProductCategoryCommandHandler(DatabaseContext context)
 {
     public async Task<int> Handle(CreateProductCategoryCommand request, CancellationToken cancellationToken)
     {
+        var normalized = request.Name?.Trim();
+
+        if (string.IsNullOrWhiteSpace(normalized))
+            throw new ValidationException("Naziv je obavezan.");
+
         // Provjera da li već postoji kategorija sa istim nazivom
         bool exists = await context.ProductCategories
-            .AnyAsync(x => x.Name == request.Name, cancellationToken);
+            .AnyAsync(x => x.Name == normalized, cancellationToken);
 
         if (exists)
         {
-            throw new ConflictException("Naziv već postoji.");
+            throw new MarketConflictException("Naziv već postoji.");
         }
 
         var category = new ProductCategoryEntity

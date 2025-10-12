@@ -2,6 +2,7 @@
 
 public sealed class UpdateProductCategoryCommand : IRequest<Unit>
 {
-    public required int Id { get; set; }
+    [JsonIgnore]
+    public int Id { get; set; }
     public required string Name { get; set; }
 }

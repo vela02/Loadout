@@ -9,7 +9,7 @@ public class DeleteProductCategoryCommandHandler(DatabaseContext context)
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
         if (category is null)
-            throw new NotFoundException("Kategorija nije pronađena.");
+            throw new MarketNotFoundException("Kategorija nije pronađena.");
 
         context.ProductCategories.Remove(category);
         await context.SaveChangesAsync(cancellationToken);

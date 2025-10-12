@@ -17,3 +17,5 @@ global using Market.Infrastructure.Database;
 
 // Features.Common sloj
 global using Market.Features.Common;
+
+global using System.Text.Json.Serialization;

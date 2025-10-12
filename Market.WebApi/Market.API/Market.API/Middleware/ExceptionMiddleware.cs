@@ -15,8 +15,8 @@ public sealed class ExceptionMiddleware(ILogger<ExceptionMiddleware> logger) : I
             ctx.Response.ContentType = "application/json";
             ctx.Response.StatusCode = ex switch
             {
-                NotFoundException => StatusCodes.Status404NotFound,
-                ConflictException => StatusCodes.Status409Conflict,
+                MarketNotFoundException => StatusCodes.Status404NotFound,
+                MarketConflictException => StatusCodes.Status409Conflict,
                 ValidationException => StatusCodes.Status400BadRequest,
                 _ => StatusCodes.Status500InternalServerError
             };
@@ -24,7 +24,7 @@ public sealed class ExceptionMiddleware(ILogger<ExceptionMiddleware> logger) : I
             string code = "internal.error";
             string message = "Došlo je do greške. Pokušajte ponovo.";
 
-            if (ex is NotFoundException or ConflictException)
+            if (ex is MarketNotFoundException or MarketConflictException)
             {
                 code = "entity.error";
                 message = ex.Message;
