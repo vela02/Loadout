@@ -1,9 +1,17 @@
 ﻿using Market.API.Controllers;
+using Market.Core.Security;
 using Market.Features.Common.Behaviors;
 using Market.Features.ProductCategories.Commands.Create;
 using Market.Infrastructure.Database.Seeders;
 using Market.Shared.Constants;
 using Market.Shared.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Options;          // IOptions<JwtOptions>
+using Microsoft.IdentityModel.Tokens;        // TokenValidationParameters, SymmetricSecurityKey
+using System.Text;                            // Encoding.UTF8.GetBytes(...)
+
 // Potrebno za WebApplicationFactory u integracijskim testovima
 
 public partial class Program {
@@ -35,12 +43,83 @@ public partial class Program {
                 };
             });
 
+        builder.Services.AddOptions<JwtOptions>()
+            .Bind(builder.Configuration.GetSection("Jwt"))
+            .Validate(o => !string.IsNullOrWhiteSpace(o.Key), "Jwt:Key is missing.")
+            .Validate(o => !string.IsNullOrWhiteSpace(o.Issuer), "Jwt:Issuer is missing.")
+            .Validate(o => !string.IsNullOrWhiteSpace(o.Audience), "Jwt:Audience is missing.")
+            .ValidateOnStart();
+
+        // nakon .AddOptions<JwtOptions>()...
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            var jwtSection = builder.Configuration.GetSection("Jwt");
+            var key = jwtSection["Key"];
+            var issuer = jwtSection["Issuer"];
+            var audience = jwtSection["Audience"];
+
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = issuer,
+                ValidateAudience = true,
+                ValidAudience = audience,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
+            };
+        });
+
+        builder.Services.AddAuthorization(o =>
+        {
+            o.FallbackPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
+        });
+
         // FluentValidation — automatsko registrovanje svih validatora iz Features sklopa
         builder.Services.AddValidatorsFromAssembly(typeof(CreateProductCategoryCommand).Assembly);
 
         // Swagger/OpenAPI
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Market API", Version = "v1" });
+
+            // XML komentari (ako koristiš)
+            var xml = Path.Combine(AppContext.BaseDirectory, "Market.API.xml");
+            if (File.Exists(xml)) c.IncludeXmlComments(xml, includeControllerXmlComments: true);
+
+            // JWT Bearer security definicija
+            var securityScheme = new OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Description = "Unesi JWT token. Format: **Bearer {token}**",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            };
+            c.AddSecurityDefinition("Bearer", securityScheme);
+
+            // Globalni zahtjev: svi endpointi očekuju Bearer, osim onih s [AllowAnonymous]
+            var securityRequirement = new OpenApiSecurityRequirement
+            {
+                { securityScheme, Array.Empty<string>() }
+            };
+            c.AddSecurityRequirement(securityRequirement);
+        });
 
         // DbContext (InMemory za IntegrationTests; SQL Server inače)
         builder.Services.AddDbContext<DatabaseContext>(options =>
@@ -66,6 +145,7 @@ public partial class Program {
 
         // Pipeline behavior: FluentValidation pre MediatR handlera
         builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        builder.Services.AddTransient(typeof(IJwtTokenService), typeof(JwtTokenService));
 
         // Custom global exception middleware
         builder.Services.AddTransient<ExceptionMiddleware>();
@@ -84,6 +164,7 @@ public partial class Program {
         app.UseMiddleware<ExceptionMiddleware>();
 
         app.UseHttpsRedirection();
+        app.UseAuthentication();   // VAŽNO: prije Authorization
         app.UseAuthorization();
 
         app.MapControllers();

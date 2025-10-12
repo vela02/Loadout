@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace Market.Infrastructure.Database.Seeders;
+﻿namespace Market.Infrastructure.Database.Seeders;
 
 public partial class StaticDataSeeder
 {

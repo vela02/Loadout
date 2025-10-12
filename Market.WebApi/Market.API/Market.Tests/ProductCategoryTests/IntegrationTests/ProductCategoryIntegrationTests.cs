@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestPlatform.TestHost;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 
 namespace Market.Tests.ProductCategoryTests.IntegrationTests;
 
