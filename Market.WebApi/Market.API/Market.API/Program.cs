@@ -1,5 +1,4 @@
 ﻿using Market.API.Controllers;
-using Market.API.Middleware;
 using Market.Features.Common.Behaviors;
 using Market.Features.ProductCategories.Commands.Create;
 using Market.Infrastructure.Database.Seeders;
