@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
 [ApiController]
-[Route("api/v1/auth")]
+[Route("[controller]")]
 public sealed class AuthController(
     DatabaseContext ctx,
     IJwtTokenService tokens,
