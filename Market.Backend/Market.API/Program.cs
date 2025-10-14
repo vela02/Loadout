@@ -1,5 +1,4 @@
-﻿using Market.API.Controllers;
-using Market.Infrastructure.Database.Seeders;
+﻿using Market.Infrastructure.Database.Seeders;
 using Market.Shared.Constants;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -7,9 +6,9 @@ using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;        // TokenValidationParameters, SymmetricSecurityKey
 using System.Text;
 using Market.Application.Abstractions;
-using Market.Domain.Security;
-using Market.Application.ProductCategories.Commands.Create;
-using Market.Application.Common.Behaviors;                            // Encoding.UTF8.GetBytes(...)
+using Market.Application.Common.Behaviors;
+using Market.Shared;
+using Market.Application.Features.ProductCategories.Commands.Create;                            // Encoding.UTF8.GetBytes(...)
 
 // Potrebno za WebApplicationFactory u integracijskim testovima
 

@@ -1,7 +1,4 @@
-﻿using Market.Domain.Entities;
-using Market.Domain.Entities.Identity;
-
-namespace Market.Application.Abstractions
+﻿namespace Market.Application.Abstractions
 {
     // Application sloj
     public interface IAppDbContext

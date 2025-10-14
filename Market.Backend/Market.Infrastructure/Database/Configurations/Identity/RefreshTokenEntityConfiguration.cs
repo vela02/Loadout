@@ -1,6 +1,4 @@
-﻿using Market.Domain.Entities.Identity;
-
-namespace Market.Infrastructure.Database.Configurations.Identity;
+﻿namespace Market.Infrastructure.Database.Configurations.Identity;
 
 public sealed class RefreshTokenEntityConfiguration : IEntityTypeConfiguration<RefreshTokenEntity>
 {

@@ -1,4 +1,4 @@
-﻿using Market.Domain.Exceptions;
+﻿using Market.Application.Common.Exceptions;
 
 public sealed class ExceptionMiddleware(
     ILogger<ExceptionMiddleware> logger,
