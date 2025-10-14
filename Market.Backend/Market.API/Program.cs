@@ -1,14 +1,16 @@
-﻿using Market.Infrastructure.Database.Seeders;
+﻿using Market.Application.Abstractions;
+using Market.Application.Common.Behaviors;
+using Market.Application.Modules.Catalog.ProductCategories.Commands.Create;                            // Encoding.UTF8.GetBytes(...)
+using Market.Domain.Entities.Identity;
+using Market.Infrastructure.Database.Seeders;
+using Market.Infrastructure.Identity;
+using Market.Shared;
 using Market.Shared.Constants;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;        // TokenValidationParameters, SymmetricSecurityKey
+using Microsoft.OpenApi.Models;
 using System.Text;
-using Market.Application.Abstractions;
-using Market.Application.Common.Behaviors;
-using Market.Shared;
-using Market.Application.Features.ProductCategories.Commands.Create;                            // Encoding.UTF8.GetBytes(...)
 
 // Potrebno za WebApplicationFactory u integracijskim testovima
 
@@ -141,6 +143,11 @@ public partial class Program {
                 typeof(CreateProductCategoryCommand).Assembly         // Market.Features
             );
         });
+        // Identity hasher za lozinke
+        builder.Services.AddScoped<IPasswordHasher<MarketUserEntity>, PasswordHasher<MarketUserEntity>>();
+
+        // TimeProvider (da ne puca konstruktor handlera)
+        builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
 
         // Pipeline behavior: FluentValidation pre MediatR handlera
         builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
@@ -148,6 +155,9 @@ public partial class Program {
 
         // Custom global exception middleware
         builder.Services.AddTransient<ExceptionMiddleware>();
+
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<IAppCurrentUser, AppCurrentUser>();
 
         var app = builder.Build();
 

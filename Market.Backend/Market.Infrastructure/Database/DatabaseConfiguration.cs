@@ -1,4 +1,4 @@
-﻿using Market.Domain.Entities.Base;
+﻿using Market.Domain.Common;
 using Market.Infrastructure.Database.Seeders;
 using System.Linq.Expressions;
 
@@ -24,6 +24,13 @@ public partial class DatabaseContext
             }
         }
     }
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder.Properties<decimal>().HavePrecision(18, 2);
+        configurationBuilder.Properties<decimal?>().HavePrecision(18, 2);
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

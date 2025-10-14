@@ -1,8 +1,8 @@
 ﻿namespace Market.Infrastructure.Database.Configurations.Identity;
 
-public sealed class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
+public sealed class UserEntityConfiguration : IEntityTypeConfiguration<MarketUserEntity>
 {
-    public void Configure(EntityTypeBuilder<UserEntity> b)
+    public void Configure(EntityTypeBuilder<MarketUserEntity> b)
     {
         b.ToTable("Users");
 
@@ -18,9 +18,15 @@ public sealed class UserEntityConfiguration : IEntityTypeConfiguration<UserEntit
         b.Property(x => x.PasswordHash)
             .IsRequired();
 
-        b.Property(x => x.Role)
-            .HasMaxLength(50)
-            .HasDefaultValue("User");
+        // Uloge
+        b.Property(x => x.IsAdmin)
+            .HasDefaultValue(false);
+
+        b.Property(x => x.IsManager)
+            .HasDefaultValue(false);
+
+        b.Property(x => x.IsEmployee)
+            .HasDefaultValue(true); // default: običan korisnik
 
         b.Property(x => x.TokenVersion)
             .HasDefaultValue(0);

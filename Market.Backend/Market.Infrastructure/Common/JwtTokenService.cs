@@ -1,64 +1,68 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Market.Application.Abstractions;
+using Market.Shared;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.IdentityModel.Tokens.Jwt;
-using Market.Shared;
-using Market.Application.Abstractions;
-using Market.Application.Features.Auth.Commands.Login;
+
+namespace Market.Infrastructure.Identity;
 
 public sealed class JwtTokenService(IOptions<JwtOptions> options) : IJwtTokenService
 {
     private readonly JwtOptions _o = options.Value;
 
-    public LoginCommandDto Issue(UserEntity user)
+    public JwtTokenPair IssueTokens(MarketUserEntity user)
     {
-        var now = DateTime.UtcNow;
+        var now = DateTimeOffset.UtcNow;
+        var accessExpires = now.AddMinutes(_o.AccessTokenMinutes);
+        var refreshExpires = now.AddDays(_o.RefreshTokenDays);
+
+        // --- claimovi ---
         var claims = new List<Claim>
         {
-            new(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Email, user.Email),
-            new(ClaimTypes.Name, user.Email),
-            new(ClaimTypes.Role, user.Role),
-            new("ver", user.TokenVersion.ToString()) // za global revoke
+            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Email, user.Email),
+            new("is_admin", user.IsAdmin.ToString().ToLowerInvariant()),
+            new("is_manager", user.IsManager.ToString().ToLowerInvariant()),
+            new("is_employee", user.IsEmployee.ToString().ToLowerInvariant()),
+            new("ver", user.TokenVersion.ToString()),
+            new(JwtRegisteredClaimNames.Iat, now.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
         };
 
-        var creds = new SigningCredentials(
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_o.Key)),
-            SecurityAlgorithms.HmacSha256);
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_o.Key));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var jwt = new JwtSecurityToken(
             issuer: _o.Issuer,
             audience: _o.Audience,
             claims: claims,
-            notBefore: now,
-            expires: now.AddMinutes(_o.AccessTokenMinutes),
+            notBefore: now.UtcDateTime,
+            expires: accessExpires.UtcDateTime,
             signingCredentials: creds);
 
-        var access = new JwtSecurityTokenHandler().WriteToken(jwt);
-        var (raw, hash, exp) = IssueRefreshToken();
+        var accessToken = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-        return new LoginCommandDto
+        // --- refresh token ---
+        var refreshRaw = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+        var refreshHash = HashRefreshToken(refreshRaw);
+
+        return new JwtTokenPair
         {
-            AccessToken = access,
-            RefreshToken = raw,
-            ExpiresAtUtc = jwt.ValidTo
+            AccessToken = accessToken,
+            AccessTokenExpiresAtUtc = accessExpires.UtcDateTime,
+            RefreshTokenRaw = refreshRaw,
+            RefreshTokenHash = refreshHash,
+            RefreshTokenExpiresAtUtc = refreshExpires.UtcDateTime 
         };
-    }
-
-    public (string Raw, string Hash, DateTime ExpiresUtc) IssueRefreshToken()
-    {
-        var raw = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
-        var expires = DateTime.UtcNow.AddDays(_o.RefreshTokenDays);
-        return (raw, HashRefreshToken(raw), expires);
     }
 
     public string HashRefreshToken(string rawToken)
     {
-        // stabilan hash (npr. SHA256) — za demo ok; u produkciji razmotri HMAC s server-secretom
         using var sha = SHA256.Create();
         var bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(rawToken));
-        return Convert.ToHexString(bytes);
+        return Convert.ToBase64String(bytes);
     }
 }

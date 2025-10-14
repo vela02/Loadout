@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Features\Auth\Commands\using MediatR%3b\**" />
-    <EmbeddedResource Remove="Features\Auth\Commands\using MediatR%3b\**" />
-    <None Remove="Features\Auth\Commands\using MediatR%3b\**" />
+    <Compile Remove="Modules\Auth\Commands\using MediatR%3b\**" />
+    <EmbeddedResource Remove="Modules\Auth\Commands\using MediatR%3b\**" />
+    <None Remove="Modules\Auth\Commands\using MediatR%3b\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Market.Domain\Market.Domain.csproj" />
+    <ProjectReference Include="..\Market.Shared\Market.Shared.csproj" />
   </ItemGroup>
 
 </Project>

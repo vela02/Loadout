@@ -1,5 +1,4 @@
-using Market.Application.Features.ProductCategories.Commands.Create;
-
+using Market.Application.Modules.Catalog.ProductCategories.Commands.Create;
 
 namespace Market.Tests.ProductCategoryTests.UnitTests;
 
