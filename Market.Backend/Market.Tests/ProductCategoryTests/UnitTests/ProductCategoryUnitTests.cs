@@ -1,6 +1,5 @@
-using Market.Features.ProductCategories.Commands.Create;
-using Market.Infrastructure.Database;
-using Microsoft.EntityFrameworkCore;
+using Market.Application.ProductCategories.Commands.Create;
+
 
 namespace Market.Tests.ProductCategoryTests.UnitTests;
 

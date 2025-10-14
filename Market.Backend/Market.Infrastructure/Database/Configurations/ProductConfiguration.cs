@@ -1,4 +1,6 @@
-﻿namespace Market.Infrastructure.Database.Configurations;
+﻿using Market.Domain.Entities;
+
+namespace Market.Infrastructure.Database.Configurations;
 
 public class ProductConfiguration : IEntityTypeConfiguration<ProductEntity>
 {

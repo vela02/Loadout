@@ -1,5 +1,5 @@
-﻿using Market.Core.Entities.Identity;
-using Market.Core.Security;
+﻿using Market.Domain.Entities.Identity;
+using Market.Domain.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 

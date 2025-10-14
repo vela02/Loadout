@@ -1,4 +1,6 @@
-﻿public sealed class ExceptionMiddleware(
+﻿using Market.Domain.Exceptions;
+
+public sealed class ExceptionMiddleware(
     ILogger<ExceptionMiddleware> logger,
     IHostEnvironment env) : IMiddleware
 {

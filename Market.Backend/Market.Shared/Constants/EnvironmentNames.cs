@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Hosting;
 
-namespace Market.Shared.Extensions;
+namespace Market.Shared.Constants;
 
 public static class EnvironmentExtensions
 {

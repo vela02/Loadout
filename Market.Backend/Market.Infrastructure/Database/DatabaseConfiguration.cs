@@ -1,4 +1,4 @@
-﻿using Market.Core.Entities.Base;
+﻿using Market.Domain.Entities.Base;
 using Market.Infrastructure.Database.Seeders;
 using System.Linq.Expressions;
 

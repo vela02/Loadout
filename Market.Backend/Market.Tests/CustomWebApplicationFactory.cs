@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
-
-namespace Market.Tests;
+﻿namespace Market.Tests;
 
 public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<Program>
 {

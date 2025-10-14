@@ -1,15 +1,15 @@
 ﻿using Market.API.Controllers;
-using Market.Core.Security;
-using Market.Features.Common.Behaviors;
-using Market.Features.ProductCategories.Commands.Create;
 using Market.Infrastructure.Database.Seeders;
 using Market.Shared.Constants;
-using Market.Shared.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;        // TokenValidationParameters, SymmetricSecurityKey
-using System.Text;                            // Encoding.UTF8.GetBytes(...)
+using System.Text;
+using Market.Application.Abstractions;
+using Market.Domain.Security;
+using Market.Application.ProductCategories.Commands.Create;
+using Market.Application.Common.Behaviors;                            // Encoding.UTF8.GetBytes(...)
 
 // Potrebno za WebApplicationFactory u integracijskim testovima
 
@@ -133,11 +133,12 @@ public partial class Program {
             }
         });
 
+        builder.Services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<DatabaseContext>());
+
         // MediatR — registruj servise iz API i Features projekata
         builder.Services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssemblies(
-                typeof(ProductCategoryController).Assembly,           // Market.API
                 typeof(CreateProductCategoryCommand).Assembly         // Market.Features
             );
         });

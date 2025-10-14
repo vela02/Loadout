@@ -1,4 +1,5 @@
-﻿global using Market.Core.Entities;
-global using Microsoft.EntityFrameworkCore;
+﻿global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
-global using Market.Core.Entities.Identity;
+global using Market.Domain.Entities;
+global using Market.Domain.Entities.Identity;
+global using Microsoft.AspNetCore.Identity;

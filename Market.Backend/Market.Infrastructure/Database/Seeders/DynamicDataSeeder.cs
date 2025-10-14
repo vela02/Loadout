@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace Market.Infrastructure.Database.Seeders;
+﻿namespace Market.Infrastructure.Database.Seeders;
 
 /// <summary>
 /// Dynamic seeder koji se pokreće u runtime-u,
@@ -68,7 +66,15 @@ public static class DynamicDataSeeder
             IsEnabled = true,
         };
 
-        context.Users.AddRange(admin, user);
+        var dummyForSwagger = new UserEntity
+        {
+            Email = "string",
+            PasswordHash = hasher.HashPassword(null!, "string"),
+            Role = "User",
+            IsEnabled = true,
+        };
+
+        context.Users.AddRange(admin, user, dummyForSwagger);
         await context.SaveChangesAsync();
 
         Console.WriteLine("✅ Dynamic seed: demo users added.");

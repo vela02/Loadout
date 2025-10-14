@@ -1,11 +1,10 @@
-using Market.Features.Common;
-using Market.Features.ProductCategories.Commands.Create;
-using Market.Features.ProductCategories.Commands.Delete;
-using Market.Features.ProductCategories.Commands.Status.Disable;
-using Market.Features.ProductCategories.Commands.Status.Enable;
-using Market.Features.ProductCategories.Commands.Update;
-using Market.Features.ProductCategories.Queries.GetById;
-using Market.Features.ProductCategories.Queries.List;
+using Market.Application.ProductCategories.Commands.Create;
+using Market.Application.ProductCategories.Commands.Update;
+using Market.Application.ProductCategories.Commands.Delete;
+using Market.Application.ProductCategories.Commands.Status.Disable;
+using Market.Application.ProductCategories.Commands.Status.Enable;
+using Market.Application.ProductCategories.Queries.GetById;
+using Market.Application.ProductCategories.Queries.List;
 
 namespace Market.API.Controllers;
 
