@@ -1,4 +1,4 @@
-﻿namespace Market.Shared.Constants;
+﻿namespace Market.Shared.Options;
 
 public class ConfigurationValues
 {

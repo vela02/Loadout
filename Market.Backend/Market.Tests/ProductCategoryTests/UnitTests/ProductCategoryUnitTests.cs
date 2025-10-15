@@ -17,7 +17,7 @@ public class ProductCategoryUnitTests
     public async Task Handle_ShouldAddNewCategory()
     {
         // Arrange
-        var context = GetInMemoryDbContext();
+        using var context = GetInMemoryDbContext(); // dispose
         var handler = new CreateProductCategoryCommandHandler(context);
         var command = new CreateProductCategoryCommand { Name = "Test Category" };
 
@@ -27,6 +27,9 @@ public class ProductCategoryUnitTests
         // Assert
         var category = await context.ProductCategories.FindAsync(resultId);
         Assert.NotNull(category);
-        Assert.Equal("Test Category", category.Name);
+        Assert.Equal("Test Category", category!.Name);
+        // (opcionalno) ako koristiš UTC:
+        // Assert.True(category.CreatedAt > DateTime.MinValue);
     }
+
 }

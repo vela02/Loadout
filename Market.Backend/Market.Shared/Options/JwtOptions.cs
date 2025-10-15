@@ -1,4 +1,4 @@
-﻿namespace Market.Shared;
+﻿namespace Market.Shared.Options;
 
 public sealed class JwtOptions
 {

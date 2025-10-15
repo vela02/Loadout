@@ -14,6 +14,8 @@ public class ProductCategoryIntegrationTests : IClassFixture<CustomWebApplicatio
     [Fact]
     public async Task Post_CreateProductCategory_ShouldReturnCreated()
     {
+
+        // TODO :: Autorizacija
         // Arrange
         var request = new
         {

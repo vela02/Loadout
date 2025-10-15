@@ -1,5 +1,5 @@
 ﻿using Market.Application.Abstractions;
-using Market.Shared;
+using Market.Shared.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

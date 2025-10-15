@@ -1,6 +1,7 @@
 ﻿using Market.Application.Abstractions;
 using Market.Infrastructure.Common;
 using Market.Infrastructure.Database;
+using Market.Shared.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,7 +24,7 @@ public static class DependencyInjection
             }
             else
             {
-                options.UseSqlServer(configuration.GetConnectionString(Shared.Constants.ConfigurationValues.ConnectionString.Main));
+                options.UseSqlServer(configuration.GetConnectionString(ConfigurationValues.ConnectionString.Main));
             }
         });
 
