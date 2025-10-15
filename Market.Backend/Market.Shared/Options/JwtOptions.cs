@@ -1,10 +1,16 @@
-﻿namespace Market.Shared.Options;
+﻿using System.ComponentModel.DataAnnotations;
 
+namespace Market.Shared.Options;
+
+/// <summary>Tipizirana JWT podešavanja iz sekcije "Jwt".</summary>
 public sealed class JwtOptions
 {
-    public required string Issuer { get; init; }
-    public required string Audience { get; init; }
-    public required string Key { get; init; }
-    public int AccessTokenMinutes { get; init; } = 20;
-    public int RefreshTokenDays { get; init; } = 14;
+    public const string SectionName = "Jwt";
+
+    [Required] public string Issuer { get; init; } = default!;
+    [Required] public string Audience { get; init; } = default!;
+    [Required, MinLength(32)] public string Key { get; init; } = default!;
+
+    [Range(1, 1440)] public int AccessTokenMinutes { get; init; } = 20;
+    [Range(1, 90)] public int RefreshTokenDays { get; init; } = 14;
 }

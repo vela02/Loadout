@@ -1,5 +1,6 @@
 ﻿using Market.Shared.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -13,9 +14,8 @@ public static class DependencyInjection
         IConfiguration configuration,
         IHostEnvironment env)
     {
-        // Controllers + uniforman BadRequest za model-binding/JSON greške
-        services
-            .AddControllers()
+        // Controllers + uniforman BadRequest
+        services.AddControllers()
             .ConfigureApiBehaviorOptions(opts =>
             {
                 opts.InvalidModelStateResponseFactory = ctx =>
@@ -25,7 +25,6 @@ public static class DependencyInjection
                                              .Select(e => string.IsNullOrWhiteSpace(e.ErrorMessage)
                                                  ? "Validation error"
                                                  : e.ErrorMessage));
-
                     return new Microsoft.AspNetCore.Mvc.BadRequestObjectResult(new ErrorDto
                     {
                         Code = "validation.failed",
@@ -34,38 +33,34 @@ public static class DependencyInjection
                 };
             });
 
-        // JWT options + auth
+        // Tipizirani options + validacija na startu
         services.AddOptions<JwtOptions>()
-            .Bind(configuration.GetSection("Jwt"))
-            .Validate(o => !string.IsNullOrWhiteSpace(o.Key), "Jwt:Key is missing.")
-            .Validate(o => !string.IsNullOrWhiteSpace(o.Issuer), "Jwt:Issuer is missing.")
-            .Validate(o => !string.IsNullOrWhiteSpace(o.Audience), "Jwt:Audience is missing.")
+            .Bind(configuration.GetSection(JwtOptions.SectionName))
+            .ValidateDataAnnotations()
             .ValidateOnStart();
 
-        services.AddAuthentication(options =>
+        // JWT auth (čita iz IOptions<JwtOptions>)
+        services.AddAuthentication(o =>
         {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         })
-            .AddJwtBearer(options =>
-            {
-                var jwtSection = configuration.GetSection("Jwt");
-                var key = jwtSection["Key"]!;
-                var issuer = jwtSection["Issuer"]!;
-                var audience = jwtSection["Audience"]!;
+        .AddJwtBearer((o) =>
+        {
+            var jwt = configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>()!;
 
-                options.TokenValidationParameters = new()
-                {
-                    ValidateIssuer = true,
-                    ValidIssuer = issuer,
-                    ValidateAudience = true,
-                    ValidAudience = audience,
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
+            o.TokenValidationParameters = new()
+            {
+                ValidateIssuer = true,
+                ValidIssuer = jwt.Issuer,
+                ValidateAudience = true,
+                ValidAudience = jwt.Audience,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key)),
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
+            };
+        });
 
         services.AddAuthorization(o =>
         {
@@ -74,16 +69,16 @@ public static class DependencyInjection
                 .Build();
         });
 
-        // Swagger (+ Bearer)
+        // Swagger s Bearer auth
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Market API", Version = "v1" });
-
             var xml = Path.Combine(AppContext.BaseDirectory, "Market.API.xml");
-            if (File.Exists(xml)) c.IncludeXmlComments(xml, includeControllerXmlComments: true);
+            if (File.Exists(xml))
+                c.IncludeXmlComments(xml, includeControllerXmlComments: true);
 
-            var securityScheme = new OpenApiSecurityScheme
+            var bearer = new OpenApiSecurityScheme
             {
                 Name = "Authorization",
                 Description = "Unesi JWT token. Format: **Bearer {token}**",
@@ -91,21 +86,13 @@ public static class DependencyInjection
                 Type = SecuritySchemeType.Http,
                 Scheme = "bearer",
                 BearerFormat = "JWT",
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
             };
-
-            c.AddSecurityDefinition("Bearer", securityScheme);
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                { securityScheme, Array.Empty<string>() }
-            });
+            c.AddSecurityDefinition("Bearer", bearer);
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement { { bearer, Array.Empty<string>() } });
         });
 
-        // Globalni exception middleware (tip definisan u API sloju)
+        // Globalni exception middleware (tvoj tip)
         services.AddTransient<ExceptionMiddleware>();
 
         return services;

@@ -11,8 +11,8 @@ public partial class Program
         // Registracije po slojevima
         builder.Services
             .AddAPI(builder.Configuration, builder.Environment)
-            .AddApplication()
-            .AddInfrastructure(builder.Configuration, builder.Environment);
+            .AddInfrastructure(builder.Configuration, builder.Environment)
+            .AddApplication();
 
         var app = builder.Build();
 
