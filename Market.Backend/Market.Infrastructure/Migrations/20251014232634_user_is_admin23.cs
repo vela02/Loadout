@@ -2,21 +2,20 @@
 
 #nullable disable
 
-namespace Market.Infrastructure.Migrations
+namespace Market.Infrastructure.Migrations;
+
+/// <inheritdoc />
+public partial class user_is_admin23 : Migration
 {
     /// <inheritdoc />
-    public partial class user_is_admin23 : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
 
-        }
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
 
-        }
     }
 }
