@@ -1,4 +1,4 @@
-﻿namespace Market.Application.Features.Auth.Commands.Login;
+﻿namespace Market.Application.Modules.Auth.Commands.Login;
 
 /// <summary>
 /// Predstavlja par tokena (access + refresh) koji klijent dobija prilikom prijave ili osvježavanja.

@@ -1,4 +1,4 @@
-﻿namespace Market.Application.Features.Auth.Commands.Login;
+﻿namespace Market.Application.Modules.Auth.Commands.Login;
 
 /// <summary>
 /// FluentValidation validator za <see cref="LoginCommand"/>.

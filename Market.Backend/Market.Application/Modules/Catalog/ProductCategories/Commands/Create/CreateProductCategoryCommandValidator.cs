@@ -1,6 +1,4 @@
-﻿using Market.Domain.Entities.Catalog;
-
-namespace Market.Application.Modules.Catalog.ProductCategories.Commands.Create;
+﻿namespace Market.Application.Modules.Catalog.ProductCategories.Commands.Create;
 
 public sealed class CreateProductCategoryCommandValidator
     : AbstractValidator<CreateProductCategoryCommand>

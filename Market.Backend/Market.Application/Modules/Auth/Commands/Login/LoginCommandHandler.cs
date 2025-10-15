@@ -1,4 +1,4 @@
-﻿using Market.Application.Features.Auth.Commands.Login;
+﻿using Market.Application.Modules.Auth.Commands.Login;
 
 public sealed class LoginCommandHandler(
     IAppDbContext ctx,

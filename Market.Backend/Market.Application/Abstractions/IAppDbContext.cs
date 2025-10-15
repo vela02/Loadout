@@ -1,6 +1,4 @@
-﻿using Market.Domain.Entities.Catalog;
-
-namespace Market.Application.Abstractions;
+﻿namespace Market.Application.Abstractions;
 
 // Application sloj
 public interface IAppDbContext

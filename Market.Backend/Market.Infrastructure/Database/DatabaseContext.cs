@@ -1,5 +1,4 @@
 ﻿using Market.Application.Abstractions;
-using Market.Domain.Entities.Catalog;
 
 namespace Market.Infrastructure.Database;
 

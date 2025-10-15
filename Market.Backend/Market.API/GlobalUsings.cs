@@ -5,8 +5,6 @@
 global using MediatR;
 global using FluentValidation;
 global using Microsoft.AspNetCore.Mvc;
-global using Microsoft.EntityFrameworkCore;
-global using Market.Infrastructure.Database;
 global using Market.Application.Common;
 
 global using Microsoft.AspNetCore.Authorization;

@@ -1,6 +1,4 @@
-﻿using Market.Domain.Entities.Catalog;
-
-namespace Market.Application.Modules.Catalog.ProductCategories.Commands.Update;
+﻿namespace Market.Application.Modules.Catalog.ProductCategories.Commands.Update;
 
 public sealed class UpdateProductCategoryCommandValidator
     : AbstractValidator<UpdateProductCategoryCommand>

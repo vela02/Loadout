@@ -1,4 +1,4 @@
-﻿namespace Market.Application.Features.Auth.Commands.Refresh;
+﻿namespace Market.Application.Modules.Auth.Commands.Refresh;
 
 /// <summary>
 /// Zahtjev za rotaciju refresh tokena i izdavanje novog para tokena.

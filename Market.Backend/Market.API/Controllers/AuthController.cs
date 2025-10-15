@@ -1,6 +1,6 @@
-﻿using Market.Application.Features.Auth.Commands.Login;
-using Market.Application.Features.Auth.Commands.Logout;
-using Market.Application.Features.Auth.Commands.Refresh;
+﻿using Market.Application.Modules.Auth.Commands.Login;
+using Market.Application.Modules.Auth.Commands.Logout;
+using Market.Application.Modules.Auth.Commands.Refresh;
 
 [ApiController]
 [Route("api/auth")]

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Market.Application.Abstractions;
 
-namespace Market.Infrastructure.Identity;
+namespace Market.Infrastructure.Common;
 
 /// <summary>
 /// Implementacija IAppCurrentUser koja čita podatke iz JWT tokena.

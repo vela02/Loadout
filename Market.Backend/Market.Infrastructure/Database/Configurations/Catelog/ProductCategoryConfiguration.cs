@@ -1,6 +1,4 @@
-﻿using Market.Domain.Entities.Catalog;
-
-namespace Market.Infrastructure.Database.Configurations.Catelog;
+﻿namespace Market.Infrastructure.Database.Configurations.Catelog;
 
 public class ProductCategoryConfiguration : IEntityTypeConfiguration<ProductCategoryEntity>
 {

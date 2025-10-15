@@ -1,4 +1,4 @@
-﻿namespace Market.Application.Features.Auth.Commands.Logout;
+﻿namespace Market.Application.Modules.Auth.Commands.Logout;
 
 /// <summary>
 /// Handler koji poništava refresh token korisnika (idempotentno).

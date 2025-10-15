@@ -1,6 +1,4 @@
-﻿using Market.Application.Features.Auth.Commands.Login;
-
-namespace Market.Application.Abstractions;
+﻿namespace Market.Application.Abstractions;
 
 public sealed class JwtTokenPair
 {

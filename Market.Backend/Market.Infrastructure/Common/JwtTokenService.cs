@@ -7,7 +7,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Market.Infrastructure.Identity;
+namespace Market.Infrastructure.Common;
 
 public sealed class JwtTokenService(IOptions<JwtOptions> options) : IJwtTokenService
 {

@@ -1,4 +1,4 @@
-﻿namespace Market.Application.Features.Auth.Commands.Refresh;
+﻿namespace Market.Application.Modules.Auth.Commands.Refresh;
 
 /// <summary>
 /// DTO koji se vraća nakon uspješnog osvježavanja (rotacije) tokena.

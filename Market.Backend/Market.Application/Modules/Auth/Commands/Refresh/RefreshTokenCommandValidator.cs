@@ -1,4 +1,4 @@
-﻿namespace Market.Application.Features.Auth.Commands.Refresh;
+﻿namespace Market.Application.Modules.Auth.Commands.Refresh;
 
 public sealed class RefreshTokenCommandValidator : AbstractValidator<RefreshTokenCommand>
 {
