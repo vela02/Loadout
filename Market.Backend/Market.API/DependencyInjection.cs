@@ -14,7 +14,7 @@ public static class DependencyInjection
         IConfiguration configuration,
         IHostEnvironment env)
     {
-        // Controllers + uniforman BadRequest
+        // Controllers + uniform BadRequest
         services.AddControllers()
             .ConfigureApiBehaviorOptions(opts =>
             {
@@ -33,13 +33,13 @@ public static class DependencyInjection
                 };
             });
 
-        // Tipizirani options + validacija na startu
+        // Typed options + validation on startup
         services.AddOptions<JwtOptions>()
             .Bind(configuration.GetSection(JwtOptions.SectionName))
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
-        // JWT auth (čita iz IOptions<JwtOptions>)
+        // JWT auth (reads from IOptions<JwtOptions>)
         services.AddAuthentication(o =>
         {
             o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -69,7 +69,7 @@ public static class DependencyInjection
                 .Build();
         });
 
-        // Swagger s Bearer auth
+        // Swagger with Bearer auth
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(c =>
         {
@@ -92,7 +92,7 @@ public static class DependencyInjection
             c.AddSecurityRequirement(new OpenApiSecurityRequirement { { bearer, Array.Empty<string>() } });
         });
 
-        // Globalni exception middleware (tvoj tip)
+        // Global exception middleware
         services.AddTransient<ExceptionMiddleware>();
 
         return services;

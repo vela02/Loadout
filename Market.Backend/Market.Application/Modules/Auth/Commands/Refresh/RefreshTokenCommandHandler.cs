@@ -8,10 +8,10 @@ public sealed class RefreshTokenCommandHandler(
 {
     public async Task<RefreshTokenCommandDto> Handle(RefreshTokenCommand request, CancellationToken ct)
     {
-        // 1) Hash primljenog refresh tokena
+        // 1) Hash the received refresh token
         var incomingHash = jwt.HashRefreshToken(request.RefreshToken);
 
-        // 2) Pronađi važeći refresh token u bazi (TRACKING jer ga mijenjamo)
+        // 2) Find the valid refresh token in the database (TRACKING because we will modify it)
         var rt = await ctx.RefreshTokens
             .Include(x => x.User)
             .FirstOrDefaultAsync(x =>
@@ -24,7 +24,7 @@ public sealed class RefreshTokenCommandHandler(
         if (rt is null || rt.ExpiresAtUtc <= nowUtc)
             throw new MarketConflictException("Refresh token je nevažeći ili je istekao.");
 
-        // (optional) Fingerprint provjera
+        // (optional) Fingerprint check
         if (rt.Fingerprint is not null &&
             request.Fingerprint is not null &&
             rt.Fingerprint != request.Fingerprint)
@@ -36,18 +36,18 @@ public sealed class RefreshTokenCommandHandler(
         if (user is null || !user.IsEnabled || user.IsDeleted)
             throw new MarketConflictException("Korisnički nalog je nevažeći.");
 
-        // 3) Rotacija: revoke stari
+        // 3) Rotation: revoke the old one
         rt.IsRevoked = true;
         rt.RevokedAtUtc = nowUtc;
 
-        // 4) Izdaj NOVI par (access + refresh) – servis vraća i RAW i HASH i isteke
+        // 4) Issue a NEW pair (access + refresh) – the service returns both RAW and HASH along with expirations.
         var pair = jwt.IssueTokens(user);
 
-        // 5) Upis NOVOG refresh tokena (samo HASH u bazu)
+        // 5) Save the NEW refresh token (HASH only) in the database
         var newRt = new RefreshTokenEntity
         {
-            TokenHash = pair.RefreshTokenHash,               // ✅ koristimo hash iz servisa
-            ExpiresAtUtc = pair.RefreshTokenExpiresAtUtc,    // ✅ bez hard-codiranja
+            TokenHash = pair.RefreshTokenHash,
+            ExpiresAtUtc = pair.RefreshTokenExpiresAtUtc,
             UserId = user.Id,
             Fingerprint = request.Fingerprint,
         };
@@ -55,7 +55,7 @@ public sealed class RefreshTokenCommandHandler(
         ctx.RefreshTokens.Add(newRt);
         await ctx.SaveChangesAsync(ct);
 
-        // 6) Vraćamo klijentu RAW refresh token i access token
+        // 6) Return the RAW refresh token and access token to the client
         return new RefreshTokenCommandDto
         {
             AccessToken = pair.AccessToken,
@@ -63,6 +63,5 @@ public sealed class RefreshTokenCommandHandler(
             AccessTokenExpiresAtUtc = pair.AccessTokenExpiresAtUtc,
             RefreshTokenExpiresAtUtc = pair.RefreshTokenExpiresAtUtc
         };
-
     }
 }

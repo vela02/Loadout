@@ -8,7 +8,7 @@ namespace Market.Infrastructure;
 public static class DatabaseInitializer
 {
     /// <summary>
-    /// Centralizovana migracija i seeding.
+    /// Centralized migration and seeding.
     /// </summary>
     public static async Task InitializeDatabaseAsync(this IServiceProvider services, IHostEnvironment env)
     {
@@ -22,7 +22,7 @@ public static class DatabaseInitializer
             return;
         }
 
-        // SQL Server ili sl.
+        // SQL Server or similar
         await ctx.Database.MigrateAsync();
 
         if (env.IsDevelopment())

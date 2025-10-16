@@ -25,6 +25,5 @@ public sealed class AuthController(IMediator mediator) : ControllerBase
     public async Task Logout([FromBody] LogoutCommand command, CancellationToken ct)
     {
         await mediator.Send(command, ct);
-        // bez return -> 204 No Content
     }
 }

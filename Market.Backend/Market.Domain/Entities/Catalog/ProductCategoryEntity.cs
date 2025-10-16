@@ -3,24 +3,24 @@
 namespace Market.Domain.Entities.Catalog;
 
 /// <summary>
-/// Predstavlja kategoriju proizvoda.
+/// Represents a product category.
 /// </summary>
 public class ProductCategoryEntity : BaseEntity
 {
     /// <summary>
-    /// Naziv kategorije.
+    /// Name of the category.
     /// </summary>
-    public required string Name { get; set; }
+    public string Name { get; set; }
 
     /// <summary>
-    /// Označava da li je kategorija aktivna (enabled).
+    /// Indicates whether the category is active (enabled).
     /// </summary>
     public bool IsEnabled { get; set; }
 
     /// <summary>
     /// Lista proizvoda koji pripadaju ovoj kategoriji.
     ///
-    /// 👉 **Napomena za studente:**
+    /// **Napomena za studente:**
     /// Ova kolekcija se koristi prvenstveno za čitanje (query),
     /// a ne za izmjene. Koristimo <see cref="IReadOnlyCollection{T}"/>
     /// sa <c>private set</c> da onemogućimo direktno manipulisanje
@@ -44,10 +44,9 @@ public class ProductCategoryEntity : BaseEntity
     /// </summary>
     public IReadOnlyCollection<ProductEntity> Products { get; private set; } = new List<ProductEntity>();
 
-
     /// <summary>
-    /// Jedan izvor istine za tehnička/poslovna ograničenja.
-    /// Koristi se u validatorima i EF konfiguraciji.
+    /// Single source of truth for technical/business constraints.
+    /// Used in validators and EF configuration.
     /// </summary>
     public static class Constraints
     {

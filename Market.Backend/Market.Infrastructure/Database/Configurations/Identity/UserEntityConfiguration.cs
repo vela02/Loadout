@@ -18,7 +18,7 @@ public sealed class UserEntityConfiguration : IEntityTypeConfiguration<MarketUse
         b.Property(x => x.PasswordHash)
             .IsRequired();
 
-        // Uloge
+        // Roles
         b.Property(x => x.IsAdmin)
             .HasDefaultValue(false);
 
@@ -26,7 +26,7 @@ public sealed class UserEntityConfiguration : IEntityTypeConfiguration<MarketUse
             .HasDefaultValue(false);
 
         b.Property(x => x.IsEmployee)
-            .HasDefaultValue(true); // default: običan korisnik
+            .HasDefaultValue(true); // Default: regular user
 
         b.Property(x => x.TokenVersion)
             .HasDefaultValue(0);
@@ -34,7 +34,7 @@ public sealed class UserEntityConfiguration : IEntityTypeConfiguration<MarketUse
         b.Property(x => x.IsEnabled)
             .HasDefaultValue(true);
 
-        // Navigacija
+        // Navigation
         b.HasMany(x => x.RefreshTokens)
             .WithOne(x => x.User)
             .HasForeignKey(x => x.UserId);

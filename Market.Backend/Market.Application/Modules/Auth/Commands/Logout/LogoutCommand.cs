@@ -1,12 +1,12 @@
 namespace Market.Application.Modules.Auth.Commands.Logout;
 
 /// <summary>
-/// Command za odjavu korisnika i poništavanje (revokaciju) refresh tokena.
+/// Command for user logout and revocation of the refresh token.
 /// </summary>
 public sealed class LogoutCommand : IRequest
 {
     /// <summary>
-    /// Refresh token koji se poništava.
+    /// The refresh token to be revoked.
     /// </summary>
-    public required string RefreshToken { get; init; }
+    public string RefreshToken { get; init; }
 }

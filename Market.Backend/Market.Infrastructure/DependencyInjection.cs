@@ -16,18 +16,19 @@ public static class DependencyInjection
         IConfiguration configuration,
         IHostEnvironment env)
     {
-        // Tipizirane ConnectionStrings + validacija
+        // Typed ConnectionStrings + validation
         services.AddOptions<ConnectionStringsOptions>()
             .Bind(configuration.GetSection(ConnectionStringsOptions.SectionName))
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
-        // DbContext: InMemory za test okoline; SQL Server inače
+        // DbContext: InMemory for test environments; SQL Server otherwise
         services.AddDbContext<DatabaseContext>((sp, options) =>
         {
             if (env.IsEnvironment("IntegrationTests") || env.IsEnvironment("Testing"))
             {
                 options.UseInMemoryDatabase("IntegrationTestsDb");
+
                 return;
             }
 
@@ -35,20 +36,20 @@ public static class DependencyInjection
             options.UseSqlServer(cs);
         });
 
-        // IAppDbContext mapiranje
+        // IAppDbContext mapping
         services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<DatabaseContext>());
 
         // Identity hasher
         services.AddScoped<IPasswordHasher<MarketUserEntity>, PasswordHasher<MarketUserEntity>>();
 
-        // Token service (čita JwtOptions preko IOptions<JwtOptions>)
+        // Token service (reads JwtOptions via IOptions<JwtOptions>)
         services.AddTransient<IJwtTokenService, JwtTokenService>();
 
         // HttpContext accessor + current user
         services.AddHttpContextAccessor();
         services.AddScoped<IAppCurrentUser, AppCurrentUser>();
 
-        // TimeProvider (ako ga koristiš u handlerima/servisima)
+        // TimeProvider (if used in handlers/services)
         services.AddSingleton<TimeProvider>(TimeProvider.System);
 
         return services;

@@ -1,19 +1,17 @@
 ﻿namespace Market.Application.Modules.Auth.Commands.Refresh;
 
 /// <summary>
-/// Zahtjev za rotaciju refresh tokena i izdavanje novog para tokena.
+/// Request to rotate the refresh token and issue a new token pair.
 /// </summary>
 public sealed class RefreshTokenCommand : IRequest<RefreshTokenCommandDto>
 {
     /// <summary>
-    /// Refresh token koji klijent šalje za rotaciju.
+    /// Refresh token that the client sends for rotation.
     /// </summary>
-    public required string RefreshToken { get; init; }
+    public string RefreshToken { get; init; }
 
     /// <summary>
-    /// (optional) Klijentski “fingerprint”/otisak uređaja za device-bound tokene. (optional)
+    /// (Optional) Client "fingerprint" / device identifier for device-bound tokens.
     /// </summary>
     public string? Fingerprint { get; init; }
 }
-
-

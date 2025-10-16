@@ -1,7 +1,7 @@
 ﻿namespace Market.Application.Modules.Auth.Commands.Logout;
 
 /// <summary>
-/// Handler koji poništava refresh token korisnika (idempotentno).
+/// Handler that revokes the user's refresh token (idempotently).
 /// </summary>
 public sealed class LogoutCommandHandler(IAppDbContext ctx, IJwtTokenService tokens) : IRequestHandler<LogoutCommand>
 {
@@ -15,7 +15,7 @@ public sealed class LogoutCommandHandler(IAppDbContext ctx, IJwtTokenService tok
                 !x.IsRevoked &&
                 !x.IsDeleted, ct);
 
-        // Idempotentno — ako token ne postoji ili je već poništen, ništa se ne dešava.
+        // Idempotent — if the token does not exist or has already been revoked, nothing happens.
         if (rt is null)
             return;
 

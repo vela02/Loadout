@@ -1,27 +1,27 @@
 ﻿namespace Market.Application.Modules.Auth.Commands.Refresh;
 
 /// <summary>
-/// DTO koji se vraća nakon uspješnog osvježavanja (rotacije) tokena.
+/// DTO returned after a successful token refresh (rotation).
 /// </summary>
 public sealed class RefreshTokenCommandDto
 {
     /// <summary>
-    /// Novi access token koji klijent treba koristiti za autentifikaciju.
+    /// New access token that the client should use for authentication.
     /// </summary>
-    public required string AccessToken { get; init; }
+    public string AccessToken { get; init; }
 
     /// <summary>
-    /// Novi refresh token koji zamjenjuje prethodni.
+    /// New refresh token that replaces the previous one.
     /// </summary>
-    public required string RefreshToken { get; init; }
+    public string RefreshToken { get; init; }
 
     /// <summary>
-    /// Datum isteka access tokena u UTC formatu.
+    /// Expiration date of the access token in UTC format.
     /// </summary>
-    public required DateTime AccessTokenExpiresAtUtc { get; init; }
+    public DateTime AccessTokenExpiresAtUtc { get; init; }
 
     /// <summary>
-    /// Datum isteka refresh tokena u UTC formatu.
+    /// Expiration date of the refresh token in UTC format.
     /// </summary>
-    public required DateTime RefreshTokenExpiresAtUtc { get; init; }
+    public DateTime RefreshTokenExpiresAtUtc { get; init; }
 }

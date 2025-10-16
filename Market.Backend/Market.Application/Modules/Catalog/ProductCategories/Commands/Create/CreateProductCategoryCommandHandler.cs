@@ -8,21 +8,21 @@ public class CreateProductCategoryCommandHandler(IAppDbContext context)
         var normalized = request.Name?.Trim();
 
         if (string.IsNullOrWhiteSpace(normalized))
-            throw new ValidationException("Naziv je obavezan.");
+            throw new ValidationException("Name is required.");
 
-        // Provjera da li već postoji kategorija sa istim nazivom
+        // Check if a category with the same name already exists.
         bool exists = await context.ProductCategories
             .AnyAsync(x => x.Name == normalized, cancellationToken);
 
         if (exists)
         {
-            throw new MarketConflictException("Naziv već postoji.");
+            throw new MarketConflictException("Name already exists.");
         }
 
         var category = new ProductCategoryEntity
         {
             Name = request.Name!.Trim(),
-            IsEnabled = true // defaultno IsEnabled
+            IsEnabled = true // deault IsEnabled
         };
 
         context.ProductCategories.Add(category);

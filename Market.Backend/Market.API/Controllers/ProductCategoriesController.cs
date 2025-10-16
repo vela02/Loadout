@@ -23,24 +23,24 @@ public class ProductCategoriesController(ISender sender) : ControllerBase
     [HttpPut("{id:int}")]
     public async Task Update(int id, UpdateProductCategoryCommand command, CancellationToken ct)
     {
-        // ID iz rute ima prioritet
+        // ID from the route takes precedence
         command.Id = id;
         await sender.Send(command, ct);
-        // bez return -> 204 No Content
+        // no return -> 204 No Content
     }
 
     [HttpDelete("{id:int}")]
     public async Task Delete(int id, CancellationToken ct)
     {
         await sender.Send(new DeleteProductCategoryCommand { Id = id }, ct);
-        // bez return -> 204 No Content
+        // no return -> 204 No Content
     }
 
     [HttpGet("{id:int}")]
     public async Task<GetProductCategoryByIdQueryDto> GetById(int id, CancellationToken ct)
     {
         var category = await sender.Send(new GetProductCategoryByIdQuery { Id = id }, ct);
-        return category; // ako je NotFoundException -> 404 preko middleware-a
+        return category; // if NotFoundException -> 404 via middleware
     }
 
     [HttpGet]
@@ -54,14 +54,13 @@ public class ProductCategoriesController(ISender sender) : ControllerBase
     public async Task Disable(int id, CancellationToken ct)
     {
         await sender.Send(new DisableProductCategoryCommand { Id = id }, ct);
-        // bez return -> 204 No Content
+        // no return -> 204 No Content
     }
 
     [HttpPut("{id:int}/enable")]
     public async Task Enable(int id, CancellationToken ct)
     {
         await sender.Send(new EnableProductCategoryCommand { Id = id }, ct);
-        // bez return -> 204 No Content
+        // no return -> 204 No Content
     }
-
 }

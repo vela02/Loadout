@@ -73,8 +73,14 @@ public static class DynamicDataSeeder
             IsEmployee = true,
             IsEnabled = true,
         };
-
-        context.Users.AddRange(admin, user, dummyForSwagger);
+        var dummyForTests = new MarketUserEntity
+        {
+            Email = "test",
+            PasswordHash = hasher.HashPassword(null!, "test123"),
+            IsEmployee = true,
+            IsEnabled = true,
+        };
+        context.Users.AddRange(admin, user, dummyForSwagger, dummyForTests);
         await context.SaveChangesAsync();
 
         Console.WriteLine("✅ Dynamic seed: demo users added.");

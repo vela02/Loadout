@@ -10,16 +10,16 @@ public static class DependencyInjection
     {
         var assembly = Assembly.GetExecutingAssembly();
 
-        // MediatR samo iz Application sloja
+        // MediatR only from the Application layer
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
 
-        // FluentValidation iz Application sloja
+        // FluentValidation from the Application layer
         services.AddValidatorsFromAssembly(assembly);
 
         // Pipeline behaviors (npr. ValidationBehavior)
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
-        // TimeProvider — ako ga koriste handleri
+        // TimeProvider — if used by handlers
         services.AddSingleton(TimeProvider.System);
 
         return services;

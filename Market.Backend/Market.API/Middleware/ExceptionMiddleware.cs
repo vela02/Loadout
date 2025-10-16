@@ -41,7 +41,7 @@ public sealed class ExceptionMiddleware(
     private static ErrorDto BuildErrorDto(Exception ex, bool isDev, string traceId)
     {
         string code = "internal.error";
-        string message = "Došlo je do greške. Pokušajte ponovo.";
+        string message = "An error occurred. Please try again.";
 
         List<FieldErrorDto>? fieldErrors = null;
 
@@ -56,7 +56,7 @@ public sealed class ExceptionMiddleware(
 
             case ValidationException vex:
                 code = "validation.error";
-                message = "Validacija nije prošla.";
+                message = "Validation failed.";
                 fieldErrors = vex.Errors
                     .Select(e => new FieldErrorDto
                     {
@@ -74,7 +74,7 @@ public sealed class ExceptionMiddleware(
             Message = message,
             TraceId = traceId,
             Errors = fieldErrors,
-            // DEV okruženje može dobiti detalje:
+            // DEV environment can get details:
             Details = isDev ? ex.ToString() : null
         };
     }
@@ -85,8 +85,8 @@ public sealed class ErrorDto
     public string Code { get; set; } = default!;
     public string Message { get; set; } = default!;
     public string? TraceId { get; set; }
-    public string? Details { get; set; }           // samo u Dev
-    public List<FieldErrorDto>? Errors { get; set; } // per-field validacije
+    public string? Details { get; set; }           // only in Dev
+    public List<FieldErrorDto>? Errors { get; set; } // per-field validations
 }
 
 public sealed class FieldErrorDto

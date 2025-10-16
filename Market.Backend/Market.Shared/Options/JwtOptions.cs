@@ -2,7 +2,7 @@
 
 namespace Market.Shared.Options;
 
-/// <summary>Tipizirana JWT podešavanja iz sekcije "Jwt".</summary>
+/// <summary>Typed JWT settings from the "Jwt" section.</summary>
 public sealed class JwtOptions
 {
     public const string SectionName = "Jwt";

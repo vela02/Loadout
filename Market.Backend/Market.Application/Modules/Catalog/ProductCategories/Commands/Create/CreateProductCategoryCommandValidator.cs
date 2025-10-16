@@ -6,7 +6,7 @@ public sealed class CreateProductCategoryCommandValidator
     public CreateProductCategoryCommandValidator()
     {
         RuleFor(x => x.Name)
-            .NotEmpty().WithMessage("Naziv je obavezan.")
-            .MaximumLength(ProductCategoryEntity.Constraints.NameMaxLength).WithMessage($"Naziv može imati najviše {ProductCategoryEntity.Constraints.NameMaxLength} znakova.");
+            .NotEmpty().WithMessage("Name is required.")
+            .MaximumLength(ProductCategoryEntity.Constraints.NameMaxLength).WithMessage($"Name can be at most {ProductCategoryEntity.Constraints.NameMaxLength} characters long.");
     }
 }

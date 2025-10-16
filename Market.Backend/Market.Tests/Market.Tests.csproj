@@ -25,7 +25,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Market.API\Market.API.csproj" />
     <ProjectReference Include="..\Market.Application\Market.Application.csproj" />
-    <ProjectReference Include="..\Market.Features\Market.Features.csproj" />
     <ProjectReference Include="..\Market.Shared\Market.Shared.csproj" />
   </ItemGroup>
 

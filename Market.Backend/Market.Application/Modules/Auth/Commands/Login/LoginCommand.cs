@@ -1,22 +1,22 @@
 ﻿namespace Market.Application.Modules.Auth.Commands.Login;
 
 /// <summary>
-/// Command za prijavu korisnika i izdavanje access/refresh token para.
+/// Command for user login and issuing an access/refresh token pair.
 /// </summary>
 public sealed class LoginCommand : IRequest<LoginCommandDto>
 {
     /// <summary>
-    /// Email korisnika.
+    /// User's email.
     /// </summary>
-    public required string Email { get; init; }
+    public string Email { get; init; }
 
     /// <summary>
-    /// Lozinka korisnika.
+    /// User's password.
     /// </summary>
-    public required string Password { get; init; }
+    public string Password { get; init; }
 
     /// <summary>
-    /// (optional) Klijentski “fingerprint”/otisak uređaja za device-bound refresh tokene. (optional)
+    /// (Optional) Client "fingerprint" / device identifier for device-bound refresh tokens.
     /// </summary>
     public string? Fingerprint { get; init; }
 }

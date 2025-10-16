@@ -22,13 +22,13 @@ public sealed class JwtTokenService : IJwtTokenService
 
     public JwtTokenPair IssueTokens(MarketUserEntity user)
     {
-        // sada iz TimeProvider-a (konzistentno s ostatkom app-a)
+        // Now from TimeProvider (consistent with the rest of the app)
         var nowInstant = _time.GetUtcNow();
         var nowUtc = nowInstant.UtcDateTime;
         var accessExpires = nowInstant.AddMinutes(_jwt.AccessTokenMinutes).UtcDateTime;
         var refreshExpires = nowInstant.AddDays(_jwt.RefreshTokenDays).UtcDateTime;
 
-        // --- claimovi (dodani i jti/aud za standardnost) ---
+        // --- Claims (including jti/aud for standard compliance) ---
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
@@ -43,7 +43,7 @@ public sealed class JwtTokenService : IJwtTokenService
             new(JwtRegisteredClaimNames.Aud, _jwt.Audience)
         };
 
-        // --- potpis ---
+        // --- Signature ---
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
         var creds = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
 
@@ -77,13 +77,13 @@ public sealed class JwtTokenService : IJwtTokenService
     {
         using var sha = SHA256.Create();
         var bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(rawToken));
-        // koristimo Base64Url da izbjegnemo problematične znakove
+        // Use Base64Url to avoid problematic characters
         return Base64UrlEncoder.Encode(bytes);
     }
 
     private static string GenerateRefreshTokenRaw(int numBytes)
     {
-        // Base64UrlEncoder iz Microsoft.IdentityModel.Tokens (bez + / =)
+        // Base64UrlEncoder from Microsoft.IdentityModel.Tokens (without + / =)
         var bytes = RandomNumberGenerator.GetBytes(numBytes);
         return Base64UrlEncoder.Encode(bytes);
     }

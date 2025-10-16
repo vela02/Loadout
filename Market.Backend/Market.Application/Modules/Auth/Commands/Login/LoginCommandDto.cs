@@ -1,22 +1,22 @@
 ﻿namespace Market.Application.Modules.Auth.Commands.Login;
 
 /// <summary>
-/// Predstavlja par tokena (access + refresh) koji klijent dobija prilikom prijave ili osvježavanja.
+/// Represents a pair of tokens (access + refresh) that the client receives upon login or token refresh.
 /// </summary>
 public sealed class LoginCommandDto
 {
     /// <summary>
-    /// JWT access token – koristi se za autorizovane API pozive.
+    /// JWT access token – used for authorized API calls.
     /// </summary>
-    public required string AccessToken { get; set; }
+    public string AccessToken { get; set; }
 
     /// <summary>
-    /// Osvježavajući token (refresh token) koji klijent čuva lokalno i koristi za dobijanje novog access tokena.
+    /// Refresh token that the client stores locally and uses to obtain a new access token.
     /// </summary>
-    public required string RefreshToken { get; set; }
+    public string RefreshToken { get; set; }
 
     /// <summary>
-    /// Vrijeme isteka access tokena u UTC formatu.
+    /// Expiration time of the access token in UTC format.
     /// </summary>
-    public required DateTime ExpiresAtUtc { get; set; }
+    public DateTime ExpiresAtUtc { get; set; }
 }

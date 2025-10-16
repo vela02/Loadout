@@ -6,9 +6,9 @@ public partial class StaticDataSeeder
 
     public static void Seed(ModelBuilder modelBuilder)
     {
-        // statički podaci se dodaj u migraciju
-        // ako ne postoje u DB-u u trenutku kreiranja migracije
-        // primjer statičkih podataka su npr. uloge (roles)
+        // Static data is added in the migration
+        // if it does not exist in the DB at the time of creating the migration
+        // example of static data: roles
         SeedProductCategories(modelBuilder);
     }
 

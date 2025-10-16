@@ -2,7 +2,7 @@
 
 namespace Market.Shared.Options;
 
-/// <summary>Sekcija "ConnectionStrings".</summary>
+/// <summary>"ConnectionStrings" section.</summary>
 public sealed class ConnectionStringsOptions
 {
     public const string SectionName = "ConnectionStrings";

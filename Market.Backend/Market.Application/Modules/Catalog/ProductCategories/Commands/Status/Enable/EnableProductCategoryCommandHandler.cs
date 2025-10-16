@@ -17,7 +17,7 @@ public sealed class EnableProductCategoryCommandHandler(IAppDbContext ctx)
             await ctx.SaveChangesAsync(ct);
         }
 
-        // ako je već enabled — ništa se ne mijenja, idempotentno
+        // If already enabled — nothing changes, idempotent
         return Unit.Value;
     }
 }

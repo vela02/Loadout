@@ -1,5 +1,5 @@
 ﻿// ================================================
-// Global using directives — zajednički za sve feature module
+// Global using directives — shared across all feature modules
 // ================================================
 
 global using MediatR;

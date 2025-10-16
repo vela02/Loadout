@@ -1,5 +1,5 @@
 ﻿// ================================================
-// Global using directives — zajednički za cijeli API projekat
+// Global using directives — shared across the entire API project
 // ================================================
 
 global using MediatR;

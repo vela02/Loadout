@@ -13,16 +13,16 @@ public sealed class DisableProductCategoryCommandHandler(IAppDbContext ctx)
             throw new MarketNotFoundException($"Kategorija (ID={request.Id}) nije pronađena.");
         }
 
-        if (!cat.IsEnabled) return Unit.Value; // idempotentno
+        if (!cat.IsEnabled) return Unit.Value; // idempotent
 
-        // poslovno pravilo: ne smiješ disable ako postoje aktivni proizvodi
+        // Business rule: cannot disable if there are active products
         var hasActiveProducts = await ctx.Products
             .AnyAsync(p => p.CategoryId == cat.Id && p.IsEnabled, ct);
 
         if (hasActiveProducts)
         {
             throw new MarketBusinessRuleException("category.disable.blocked.activeProducts",
-                $"Kategorija {cat.Name} se ne može onemogućiti jer sadrži aktivne proizvode.");
+                $"Category {cat.Name} cannot be disabled because it contains active products.");
         }
 
         cat.IsEnabled = false;

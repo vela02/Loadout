@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Net.Http.Json;
 
 namespace Market.Tests.ProductCategoryTests.IntegrationTests;
 
@@ -8,14 +9,12 @@ public class ProductCategoryIntegrationTests : IClassFixture<CustomWebApplicatio
 
     public ProductCategoryIntegrationTests(CustomWebApplicationFactory<Program> factory)
     {
-        _client = factory.CreateClient();
+        _client = factory.GetAuthenticatedClientAsync().Result;
     }
 
     [Fact]
     public async Task Post_CreateProductCategory_ShouldReturnCreated()
     {
-
-        // TODO :: Autorizacija
         // Arrange
         var request = new
         {
@@ -23,13 +22,16 @@ public class ProductCategoryIntegrationTests : IClassFixture<CustomWebApplicatio
         };
 
         // Act
-        var response = await _client.PostAsJsonAsync("/ProductCategory", request);
+        var response = await _client.PostAsJsonAsync("/ProductCategories", request);
 
         // Assert
         response.EnsureSuccessStatusCode();
 
-        var categoryId = await response.Content.ReadFromJsonAsync<int?>();
-        Assert.NotNull(categoryId);
+        var result = await response.Content.ReadFromJsonAsync<Dictionary<string, int>>();
+        Assert.NotNull(result);
+        Assert.True(result.ContainsKey("id"));
+
+        var categoryId = result["id"];
         Assert.NotEqual(0, categoryId);
     }
 }

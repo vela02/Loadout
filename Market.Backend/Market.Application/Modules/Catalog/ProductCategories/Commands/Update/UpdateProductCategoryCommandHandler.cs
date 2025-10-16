@@ -12,15 +12,14 @@ public sealed class UpdateProductCategoryCommandHandler(IAppDbContext ctx)
         if (entity is null)
             throw new MarketNotFoundException($"Kategorija (ID={request.Id}) nije pronađena.");
 
-        // Provjera duplikata naziva (case-insensitive, osim na isti ID)
+        // Check for duplicate name (case-insensitive, except for the same ID)
         var exists = await ctx.ProductCategories
             .AnyAsync(x => x.Id != request.Id && x.Name.ToLower() == request.Name.ToLower(), ct);
 
         if (exists)
         {
-            throw new MarketConflictException("Naziv već postoji.");
+            throw new MarketConflictException("Name already exists.");
         }
-
 
         entity.Name = request.Name.Trim();
 

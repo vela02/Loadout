@@ -26,8 +26,8 @@ public class ProductConfiguration : IEntityTypeConfiguration<ProductEntity>
 
         builder
             .HasOne(x => x.Category)
-            .WithMany(x=>x.Products)
+            .WithMany(x => x.Products)
             .HasForeignKey(x => x.CategoryId)
-            .OnDelete(DeleteBehavior.Restrict);// Restrict <-- ne dozvoli brisanje kategorije ako postoje proizvodi
+            .OnDelete(DeleteBehavior.Restrict);// Restrict — do not allow deleting a category if it has products
     }
 }

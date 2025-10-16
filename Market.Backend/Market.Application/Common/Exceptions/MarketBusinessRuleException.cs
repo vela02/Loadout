@@ -1,13 +1,13 @@
 ﻿namespace Market.Application.Common.Exceptions;
 
 /// <summary>
-/// Predstavlja grešku koja nastaje kada se prekrši neko poslovno pravilo.
+/// Represents an error that occurs when a business rule is violated.
 ///
-/// Ovakve greške ne označavaju sistemske probleme (npr. null reference),
-/// nego situacije kada zahtjev ne može biti izvršen jer bi narušio
-/// logiku poslovanja.
+/// Such errors do not indicate system issues (e.g., null reference),
+/// but situations where a request cannot be executed because it would
+/// violate business logic.
 ///
-/// Primjer: pokušaj onemogućavanja kategorije koja još sadrži aktivne proizvode.
+/// Example: attempting to disable a category that still contains active products.
 /// </summary>
 public sealed class MarketBusinessRuleException : Exception
 {

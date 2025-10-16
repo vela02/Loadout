@@ -2,11 +2,11 @@
 
 public sealed class PageResult<T>
 {
-    public required int Total { get; init; }
-    public required IReadOnlyList<T> Items { get; init; }
+    public int Total { get; init; }
+    public IReadOnlyList<T> Items { get; init; }
 
     /// <summary>
-    /// Kreira PageResult iz IQueryable-a pomoću EF Core asinkronih metoda.
+    /// Creates a PageResult from an IQueryable using EF Core asynchronous methods.
     /// </summary>
     public static async Task<PageResult<T>> FromQueryableAsync(
         IQueryable<T> query,

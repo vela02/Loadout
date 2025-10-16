@@ -5,7 +5,7 @@ using Market.Application.Abstractions;
 namespace Market.Infrastructure.Common;
 
 /// <summary>
-/// Implementacija IAppCurrentUser koja čita podatke iz JWT tokena.
+/// Implementation of IAppCurrentUser that reads data from a JWT token.
 /// </summary>
 public sealed class AppCurrentUser(IHttpContextAccessor httpContextAccessor)
     : IAppCurrentUser

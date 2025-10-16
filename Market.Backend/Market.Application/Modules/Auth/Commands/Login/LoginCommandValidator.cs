@@ -1,22 +1,22 @@
 ﻿namespace Market.Application.Modules.Auth.Commands.Login;
 
 /// <summary>
-/// FluentValidation validator za <see cref="LoginCommand"/>.
+/// FluentValidation validator for <see cref="LoginCommand"/>.
 /// </summary>
 public sealed class LoginCommandValidator : AbstractValidator<LoginCommand>
 {
     public LoginCommandValidator()
     {
         RuleFor(x => x.Email)
-            .NotEmpty().WithMessage("Email je obavezan.");
+            .NotEmpty().WithMessage("Email is required.");
 
         RuleFor(x => x.Password)
-            .NotEmpty().WithMessage("Lozinka je obavezna.")
-            .MinimumLength(5).WithMessage("Lozinka mora imati najmanje 6 znakova.");
+            .NotEmpty().WithMessage("Password is required.")
+            .MinimumLength(5).WithMessage("Password must be at least 6 characters long.");
 
-        // Fingerprint je opcionalan, ali ako dođe, možeš ograničiti dužinu
+        // Fingerprint is optional, but if provided, you can limit its length
         RuleFor(x => x.Fingerprint)
-            .MaximumLength(256).WithMessage("Fingerprint može imati najviše 256 znakova.")
+            .MaximumLength(256).WithMessage("Fingerprint can be up to 256 characters long.")
             .When(x => x.Fingerprint is not null);
     }
 }

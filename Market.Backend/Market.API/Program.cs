@@ -8,7 +8,7 @@ public partial class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Registracije po slojevima
+        // Registrations by layers
         builder.Services
             .AddAPI(builder.Configuration, builder.Environment)
             .AddInfrastructure(builder.Configuration, builder.Environment)
@@ -31,7 +31,7 @@ public partial class Program
 
         app.MapControllers();
 
-        // Migracije + seeding (centralizovano u Infrastructure)
+        // Migracije + seeding (centralized in Infrastructure)
         await app.Services.InitializeDatabaseAsync(app.Environment);
 
         app.Run();

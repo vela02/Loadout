@@ -1,37 +1,37 @@
 ﻿namespace Market.Application.Abstractions;
 
 /// <summary>
-/// Predstavlja trenutno prijavljenog korisnika u sistemu.
+/// Represents the currently logged-in user in the system.
 /// </summary>
 public interface IAppCurrentUser
 {
     /// <summary>
-    /// Identifikator korisnika (UserId).
+    /// User identifier (UserId).
     /// </summary>
     int? UserId { get; }
 
     /// <summary>
-    /// Email korisnika. (optional)
+    /// User Email. (optional)
     /// </summary>
     string? Email { get; }
 
     /// <summary>
-    /// Označava da li je korisnik prijavljen.
+    /// Indicates whether the user is logged in.
     /// </summary>
     bool IsAuthenticated { get; }
 
     /// <summary>
-    /// Da li je korisnik administrator.
+    /// Indicates whether the user is an administrator.
     /// </summary>
     bool IsAdmin { get; }
 
     /// <summary>
-    /// Da li je korisnik menadžer.
+    /// Indicates whether the user is a manager.
     /// </summary>
     bool IsManager { get; }
 
     /// <summary>
-    /// Da li je korisnik obični zaposlenik.
+    /// Indicates whether the user is a regular employee.
     /// </summary>
     bool IsEmployee { get; }
 }

@@ -3,37 +3,37 @@
 namespace Market.Domain.Entities.Catalog;
 
 /// <summary>
-/// Predstavlja proizvod u sistemu.
+/// Represents a product in the system.
 /// </summary>
 public class ProductEntity : BaseEntity
 {
     /// <summary>
-    /// Naziv proizvoda.
+    /// Name of the product.
     /// </summary>
-    public required string Name { get; set; }
+    public string Name { get; set; }
 
     /// <summary>
-    /// Opis proizvoda. (optional)
+    /// Product description. (optional)
     /// </summary>
     public string? Description { get; set; }
 
     /// <summary>
-    /// Cijena proizvoda.
+    /// Price of the product.
     /// </summary>
     public decimal Price { get; set; }
 
     /// <summary>
-    /// Količina proizvoda dostupna na stanju.
+    /// Quantity of the product available in stock.
     /// </summary>
     public int StockQuantity { get; set; }
 
     /// <summary>
-    /// Identifikator kategorije kojoj proizvod pripada.
+    /// Identifier of the category to which the product belongs.
     /// </summary>
     public int CategoryId { get; set; }
 
     /// <summary>
-    /// Navigacijska referenca na kategoriju proizvoda.
+    /// Navigation reference to the product's category.
     /// </summary>
     public ProductCategoryEntity? Category { get; set; }
 
@@ -43,8 +43,8 @@ public class ProductEntity : BaseEntity
     public bool IsEnabled { get; set; }
 
     /// <summary>
-    /// Jedan izvor istine za tehnička/poslovna ograničenja.
-    /// Koristi se u validatorima i EF konfiguraciji.
+    /// Single source of truth for technical/business constraints.
+    /// Used in validators and EF configuration.
     /// </summary>
     public static class Constraints
     {
