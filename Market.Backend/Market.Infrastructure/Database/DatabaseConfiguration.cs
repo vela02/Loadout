@@ -1,6 +1,7 @@
 ﻿using Market.Domain.Common;
 using Market.Infrastructure.Database.Seeders;
 using System.Linq.Expressions;
+using System.Runtime.Intrinsics.X86;
 
 namespace Market.Infrastructure.Database;
 
@@ -43,6 +44,9 @@ public partial class DatabaseContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        //bugfix 27.10.2025.nakon nastave - učitaj sve konfiguracije iz Infrastructure.Database.Configurations
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(DatabaseContext).Assembly);
 
         ApplyGlobalFielters(modelBuilder);
 
