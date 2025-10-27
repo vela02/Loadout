@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text;
 
-namespace Market.API.Middlewares;
+namespace Market.API.Middleware;
 
 /// <summary>
 /// Middleware that logs incoming HTTP requests and outgoing responses,
@@ -11,7 +11,7 @@ public sealed class RequestResponseLoggingMiddleware(
     RequestDelegate next,
     ILogger<RequestResponseLoggingMiddleware> logger)
 {
-    private const int SlowRequestThresholdMs = 400; // 2 seconds
+    private const int SlowRequestThresholdMs = 400; // 400 ms
 
     public async Task InvokeAsync(HttpContext context)
     {
@@ -35,17 +35,16 @@ public sealed class RequestResponseLoggingMiddleware(
 
         try
         {
-            // Continue pipeline
             await next(context);
         }
         finally
         {
             stopwatch.Stop();
 
-            // Read response body
-            context.Response.Body.Seek(0, SeekOrigin.Begin);
-            var responseText = await new StreamReader(context.Response.Body).ReadToEndAsync();
-            context.Response.Body.Seek(0, SeekOrigin.Begin);
+            // read response text for logging
+            responseBody.Seek(0, SeekOrigin.Begin);
+            var responseText = await new StreamReader(responseBody).ReadToEndAsync();
+            responseBody.Seek(0, SeekOrigin.Begin);
 
             var logMessage = new StringBuilder()
                 .AppendLine("HTTP Request/Response Log:")
@@ -64,13 +63,25 @@ public sealed class RequestResponseLoggingMiddleware(
             if (elapsed > SlowRequestThresholdMs)
             {
                 logger.LogWarning("[SLOW REQUEST] {Path} took {Elapsed} ms", request.Path, elapsed);
-                await File.AppendAllTextAsync("Logs/slow-requests.log",
-                    $"{DateTime.UtcNow:u} | {request.Path} | {elapsed} ms{Environment.NewLine}");
+
+                // >>> Bugfix 27.10.2025: sigurno pisanje na disk (ne ruši response ako folder ne postoji)
+                try
+                {
+                    var logDir = Path.Combine(AppContext.BaseDirectory, "Logs");
+                    Directory.CreateDirectory(logDir);
+                    var logPath = Path.Combine(logDir, "slow-requests.log");
+                    await File.AppendAllTextAsync(logPath, $"{DateTime.UtcNow:u} | {request.Path} | {elapsed} ms{Environment.NewLine}");
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Failed writing slow-request log.");
+                }
             }
 
             logger.LogInformation("{Log}", logMessage.ToString());
 
-            // Copy the response back to the original stream
+            // >>> Bugfix 27.10.2025: KLJUČNO: vrati originalni stream i kopiraj tijelo nazad da se vidi json error poruka
+            context.Response.Body = originalBodyStream;
             await responseBody.CopyToAsync(originalBodyStream);
         }
     }

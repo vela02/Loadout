@@ -1,5 +1,5 @@
 ﻿using Market.API;
-using Market.API.Middlewares;
+using Market.API.Middleware;
 using Market.Application;
 using Market.Infrastructure;
 using Serilog;
