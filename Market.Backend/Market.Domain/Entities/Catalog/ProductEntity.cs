@@ -42,6 +42,10 @@ public class ProductEntity : BaseEntity
     /// </summary>
     public bool IsEnabled { get; set; }
 
+    // Many-to-many: Users who favorited this product
+    public ICollection<UserProductFavoriteEntity> FavoritedByUsers { get; private set; } = new List<UserProductFavoriteEntity>();
+
+
     /// <summary>
     /// Single source of truth for technical/business constraints.
     /// Used in validators and EF configuration.
