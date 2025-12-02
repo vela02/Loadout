@@ -1,0 +1,56 @@
+<div class="auth-container">
+  <mat-card class="auth-card">
+    <mat-card-header>
+      <mat-card-title>Prijava</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Error message -->
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <!-- Email -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" />
+          <mat-icon matSuffix>person</mat-icon>
+        </mat-form-field>
+
+        <!-- Password -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Lozinka</mat-label>
+          <input matInput formControlName="password" type="password" />
+          <mat-icon matSuffix>lock</mat-icon>
+        </mat-form-field>
+
+        <div class="form-row">
+          <mat-checkbox formControlName="rememberMe">
+            Zapamti me
+          </mat-checkbox>
+        </div>
+
+        <div class="actions">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="form.invalid || isLoading"
+          >
+            <ng-container *ngIf="!isLoading; else loadingTpl">
+              Prijavi se
+            </ng-container>
+            <ng-template #loadingTpl>
+              <mat-progress-spinner
+                mode="indeterminate"
+                diameter="20"
+                strokeWidth="3"
+              ></mat-progress-spinner>
+            </ng-template>
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
