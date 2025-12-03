@@ -1,0 +1,25 @@
+<!-- PUBLIC LAYOUT -->
+<header class="public-header mat-elevation-z2">
+  <div class="header-left">
+    <span class="app-title">FIT Market</span>
+  </div>
+
+  <div class="header-right">
+    <button
+      mat-stroked-button
+      color="primary"
+      routerLink="/auth/login"
+    >
+      <mat-icon>login</mat-icon>
+      Prijava
+    </button>
+  </div>
+</header>
+
+<main class="public-content">
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="public-footer">
+  © {{ currentYear }} FIT Market – All rights reserved.
+</footer>

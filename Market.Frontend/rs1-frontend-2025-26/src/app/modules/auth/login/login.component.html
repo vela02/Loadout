@@ -1,0 +1,56 @@
+<div class="auth-container">
+  <mat-card class="auth-card">
+    <mat-card-header>
+      <mat-card-title>{{ 'AUTH.LOGIN.TITLE' | translate }}</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Error message -->
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <!-- Email -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'AUTH.LOGIN.EMAIL_LABEL' | translate }}</mat-label>
+          <input matInput formControlName="email" type="email" />
+          <mat-icon matSuffix>person</mat-icon>
+        </mat-form-field>
+
+        <!-- Password -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'AUTH.LOGIN.PASSWORD_LABEL' | translate }}</mat-label>
+          <input matInput formControlName="password" type="password" />
+          <mat-icon matSuffix>lock</mat-icon>
+        </mat-form-field>
+
+        <div class="form-row">
+          <mat-checkbox formControlName="rememberMe">
+            {{ 'AUTH.LOGIN.REMEMBER_ME' | translate }}
+          </mat-checkbox>
+        </div>
+
+        <div class="actions">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="form.invalid || isLoading"
+          >
+            <ng-container *ngIf="!isLoading; else loadingTpl">
+              {{ 'AUTH.LOGIN.BUTTON' | translate }}
+            </ng-container>
+            <ng-template #loadingTpl>
+              <mat-progress-spinner
+                mode="indeterminate"
+                diameter="20"
+                strokeWidth="3"
+              ></mat-progress-spinner>
+            </ng-template>
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
