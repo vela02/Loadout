@@ -1,4 +1,3 @@
-import { BasePagedRequest } from '../../models/basePagedRequest';
 
 export class ListProductCategoriesRequest{
   search?: string | null;

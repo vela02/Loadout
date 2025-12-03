@@ -11,7 +11,7 @@ import {LoginRequest, LoginResponse, LogoutRequest, RefreshTokenRequest, Refresh
 export class AuthService {
   private http = inject(HttpClient);
 
-  private readonly baseUrl = `${environment.apiUrl}/Auth`;
+  private readonly baseUrl = `${environment.apiUrl}/api/Auth`;
 
   /**
    * POST /Auth/login

@@ -1,6 +1,6 @@
 // src/app/modules/admin/catalogs/products/products.component.ts
 
-import { Component, inject, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 
 import {
@@ -22,6 +22,7 @@ export class ProductsComponent
 
   private productsService = inject(ProductsService);
   private router = inject(Router);
+  //private cdr = inject(ChangeDetectorRef); // <== dodaj
 
   displayedColumns: string[] = [
     'name',
@@ -48,8 +49,12 @@ export class ProductsComponent
       next: res => {
         this.handlePageResult(res);
         this.stopLoading();
+        //this.cdr.detectChanges();  // <== forsiraj render
       },
-      error: () => this.stopLoading('Greška pri učitavanju proizvoda'),
+      error: () => {
+        this.stopLoading('Greška pri učitavanju proizvoda');
+        //this.cdr.detectChanges();  // <== forsiraj render
+      },
     });
   }
 

@@ -1,11 +1,11 @@
-import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { NgModule, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { provideAnimations} from '@angular/platform-browser/animations';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
-import {AuthInterceptor} from './core/services/auth/auth-interceptor.service';
+import {authInterceptor} from './core/services/auth/auth-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -13,17 +13,15 @@ import {AuthInterceptor} from './core/services/auth/auth-interceptor.service';
   ],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule, // za Angular Material animacije
-    HttpClientModule,        // za HttpClient i sve servise
     AppRoutingModule
   ],
   providers: [
+    provideAnimations(),
     provideBrowserGlobalErrorListeners(),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true,
-    }
+    provideZoneChangeDetection(),
+    provideHttpClient(
+      withInterceptors([authInterceptor]) // ✅ Novi pristup
+    )
   ],
   bootstrap: [App]
 })

@@ -1,8 +1,8 @@
-import { BasePagedRequest } from '../models/basePagedRequest';
 import { PageResult } from '../models/pageResult';
 import {BaseListComponent} from './baseListComponent';
+import {BasePagedQuery} from '../models/basePagedQuery';
 
-export abstract class BasePagedComponent<TItem, TRequest extends BasePagedRequest>
+export abstract class BasePagedComponent<TItem, TRequest extends BasePagedQuery>
   extends BaseListComponent<TItem> {
 
   request!: TRequest;
@@ -23,16 +23,16 @@ export abstract class BasePagedComponent<TItem, TRequest extends BasePagedReques
 
   goToPage(page: number): void {
     if (page < 1 || (this.totalPages && page > this.totalPages)) return;
-    this.request.page = page;
+    this.request.paging.page = page;
     this.loadPagedData();
   }
 
-  nextPage() { this.goToPage(this.request.page + 1); }
-  prevPage() { this.goToPage(this.request.page - 1); }
+  nextPage() { this.goToPage(this.request.paging.page + 1); }
+  prevPage() { this.goToPage(this.request.paging.page - 1); }
 
   changePageSize(size: number) {
-    this.request.pageSize = size;
-    this.request.page = 1;
+    this.request.paging.pageSize = size;
+    this.request.paging.page = 1;
     this.loadPagedData();
   }
 }

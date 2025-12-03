@@ -12,7 +12,7 @@
           <input
             matInput
             placeholder="Unesite naziv proizvoda..."
-            (keyup.enter)="request.page = 1; loadPagedData()"
+            (keyup.enter)="request.paging.page = 1; loadPagedData()"
             [(ngModel)]="request.search"
           />
           <mat-icon matSuffix>search</mat-icon>
@@ -129,19 +129,19 @@
     <!-- Paginator (koristi BasePagedComponent polja i metode) -->
     <div class="paginator-bar" *ngIf="totalItems > 0">
       <div class="paginator-info">
-        Prikaz stranice {{ request.page }} od {{ totalPages || 1 }}
+        Prikaz stranice {{ request.paging.page }} od {{ totalPages || 1 }}
         (ukupno: {{ totalItems }} zapisa)
       </div>
 
       <div class="paginator-actions">
-        <button mat-stroked-button (click)="prevPage()" [disabled]="request.page <= 1 || isLoading">
+        <button mat-stroked-button (click)="prevPage()" [disabled]="request.paging.page <= 1 || isLoading">
           ‹ Prethodna
         </button>
 
         <button
           mat-stroked-button
           (click)="nextPage()"
-          [disabled]="(totalPages && request.page >= totalPages) || isLoading"
+          [disabled]="(totalPages && request.paging.page >= totalPages) || isLoading"
         >
           Sljedeća ›
         </button>
@@ -149,7 +149,7 @@
         <mat-form-field appearance="outline" class="page-size-field">
           <mat-label>Po stranici</mat-label>
           <mat-select
-            [value]="request.pageSize"
+            [value]="request.paging.pageSize"
             (selectionChange)="changePageSize($event.value)"
             [disabled]="isLoading"
           >

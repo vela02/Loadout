@@ -1,112 +1,109 @@
-import { Injectable, inject } from '@angular/core';
-import {
-  HttpInterceptor,
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpErrorResponse,
-} from '@angular/common/http';
+// src/app/core/services/auth/auth.interceptor.ts
+import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { inject } from '@angular/core';
 import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
 import { AuthStateService } from './auth-state.service';
 import { AuthService } from './auth.service';
 
-@Injectable()
-export class AuthInterceptor implements HttpInterceptor {
-  private authState = inject(AuthStateService);
-  private authService = inject(AuthService);
+// Globalni state za refresh (van funkcije da se dijeli između poziva)
+let refreshInProgress = false;
+const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
-  private refreshInProgress = false;
-  private refreshTokenSubject = new BehaviorSubject<string | null>(null);
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const authState = inject(AuthStateService);
+  const authService = inject(AuthService);
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // 1) ne diramo Auth endpoint-e (login/refresh/logout)
-    if (this.isAuthEndpoint(req.url)) {
-      return next.handle(req);
-    }
+  // 1) Ne diramo Auth endpoint-e (login/refresh/logout)
+  if (isAuthEndpoint(req.url)) {
+    return next(req);
+  }
 
-    // 2) dodaj Authorization header ako ima token
-    const accessToken = this.authState.accessToken;
-    let authReq = req;
+  // 2) Dodaj Authorization header ako ima token
+  const accessToken = authState.accessToken;
+  let authReq = req;
 
-    if (accessToken) {
-      authReq = req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-    }
+  if (accessToken) {
+    authReq = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
 
-    // 3) handle 401 → refresh → retry
-    return next.handle(authReq).pipe(
-      catchError((err) => {
-        if (err instanceof HttpErrorResponse && err.status === 401) {
-          return this.handle401Error(authReq, next);
-        }
-        return throwError(() => err);
+  // 3) Handle 401 → refresh → retry
+  return next(authReq).pipe(
+    catchError((err) => {
+      if (err instanceof HttpErrorResponse && err.status === 401) {
+        return handle401Error(authReq, next, authState, authService);
+      }
+      return throwError(() => err);
+    })
+  );
+};
+
+// Helper funkcije
+function isAuthEndpoint(url: string): boolean {
+  // Prilagodi po potrebi (npr. /api/Auth)
+  return url.includes('/Auth/');
+}
+
+function handle401Error(
+  req: any,
+  next: any,
+  authState: AuthStateService,
+  authService: AuthService
+): Observable<any> {
+  const refreshToken = authState.refreshToken;
+
+  if (!refreshToken) {
+    // Nema refresh tokena → logout scenarij
+    authState.clear();
+    return throwError(() => new Error('No refresh token'));
+  }
+
+  // Ako je refresh već u toku → sačekaj rezultat
+  if (refreshInProgress) {
+    return refreshTokenSubject.pipe(
+      filter((token) => token !== null),
+      take(1),
+      switchMap((token) => {
+        const cloned = token
+          ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+          : req;
+        return next(cloned);
       })
     );
   }
 
-  private isAuthEndpoint(url: string): boolean {
-    // prilagodi po potrebi (npr. /api/Auth)
-    return url.includes('/Auth/');
-  }
+  // Prvi koji je dobio 401 pokreće refresh
+  refreshInProgress = true;
+  refreshTokenSubject.next(null);
 
-  private handle401Error(
-    req: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    const refreshToken = this.authState.refreshToken;
-    if (!refreshToken) {
-      // nema refresh tokena → logout scenarij
-      this.authState.clear();
-      return throwError(() => new Error('No refresh token'));
-    }
+  return authService
+    .refresh({
+      refreshToken: refreshToken,
+      fingerprint: undefined,
+    })
+    .pipe(
+      switchMap((res) => {
+        refreshInProgress = false;
+        authState.setRefresh(res);
+        refreshTokenSubject.next(res.accessToken);
 
-    // ako je refresh već u toku → sačekaj rezultat
-    if (this.refreshInProgress) {
-      return this.refreshTokenSubject.pipe(
-        filter((token) => token !== null),
-        take(1),
-        switchMap((token) => {
-          const cloned = token
-            ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
-            : req;
-          return next.handle(cloned);
-        })
-      );
-    }
+        const clonedReq = req.clone({
+          setHeaders: {
+            Authorization: `Bearer ${res.accessToken}`,
+          },
+        });
 
-    // prvi koji je dobio 401 pokreće refresh
-    this.refreshInProgress = true;
-    this.refreshTokenSubject.next(null);
-
-    return this.authService
-      .refresh({
-        refreshToken: refreshToken,
-        fingerprint: undefined,
+        return next(clonedReq);
+      }),
+      catchError((error) => {
+        refreshInProgress = false;
+        authState.clear();
+        refreshTokenSubject.next(null);
+        return throwError(() => error);
       })
-      .pipe(
-        switchMap((res) => {
-          this.refreshInProgress = false;
-          this.authState.setRefresh(res);
-          this.refreshTokenSubject.next(res.accessToken);
-
-          const clonedReq = req.clone({
-            setHeaders: {
-              Authorization: `Bearer ${res.accessToken}`,
-            },
-          });
-
-          return next.handle(clonedReq);
-        }),
-        catchError((error) => {
-          this.refreshInProgress = false;
-          this.authState.clear();
-          this.refreshTokenSubject.next(null);
-          return throwError(() => error);
-        })
-      );
-  }
+    );
 }

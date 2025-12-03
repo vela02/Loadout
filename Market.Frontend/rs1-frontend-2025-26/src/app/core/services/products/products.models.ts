@@ -1,5 +1,5 @@
 import { PageResult } from '../../models/pageResult';
-import { BasePagedRequest } from '../../models/basePagedRequest';
+import {BasePagedQuery} from '../../models/basePagedQuery';
 
 // === DTO ===
 export interface ProductListItem {
@@ -13,9 +13,9 @@ export interface ProductListItem {
 }
 
 // === QUERY (READ) ===
-export class ListProductsRequest extends BasePagedRequest {
+export class ListProductsRequest extends BasePagedQuery {
   // future filters: categoryId?, isEnabled?, priceMin?, priceMax?
-  search ="";
+  search?: string | null;
 }
 
 // === RESPONSE ===
