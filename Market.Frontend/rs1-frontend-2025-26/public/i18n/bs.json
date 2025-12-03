@@ -3,14 +3,26 @@
     "TITLE": "Dobrodošli u našu aplikaciju",
     "DESCRIPTION": "Ovo je primjer lokalizacije."
   },
-  "LOGIN": {
-    "TITLE": "Prijava",
-    "USERNAME_LABEL": "Korisničko ime:",
-    "USERNAME_PLACEHOLDER": "Unesite korisničko ime",
-    "PASSWORD_LABEL": "Šifra:",
-    "PASSWORD_PLACEHOLDER": "Unesite šifru",
-    "SAVE_LOGIN": "Sačuvaj prijavu",
-    "BUTTON": "Prijavi se"
+  "AUTH": {
+    "LOGOUT": {
+      "TITLE": "Odjava",
+      "MESSAGE": "Odjavljujemo vas sa sistema...",
+      "REDIRECT_IN": "Preusmjeravanje za {{seconds}} s"
+    },
+    "LOGIN": {
+      "TITLE": "Prijava",
+      "USERNAME_LABEL": "Korisničko ime:",
+      "USERNAME_PLACEHOLDER": "Unesite korisničko ime",
+      "PASSWORD_LABEL": "Šifra:",
+      "PASSWORD_PLACEHOLDER": "Unesite šifru",
+      "SAVE_LOGIN": "Sačuvaj prijavu",
+      "BUTTON": "Prijavi se"
+    }
+  },
+  "ADMIN_PANEL": {
+    "MENU": {
+      "LOGOUT": "Odjava"
+    }
   }
 }
 

@@ -9,6 +9,12 @@ export abstract class BasePagedComponent<TItem, TRequest extends BasePagedQuery>
   totalItems = 0;
   totalPages = 0;
 
+  pageSizeOptions: number[] = [5, 10, 25, 50, 100];
+
+  get paging(){
+    return this.request.paging;
+  }
+
   protected abstract loadPagedData(): void;
 
   protected override loadData(): void {
@@ -23,16 +29,16 @@ export abstract class BasePagedComponent<TItem, TRequest extends BasePagedQuery>
 
   goToPage(page: number): void {
     if (page < 1 || (this.totalPages && page > this.totalPages)) return;
-    this.request.paging.page = page;
+    this.paging.page = page;
     this.loadPagedData();
   }
 
-  nextPage() { this.goToPage(this.request.paging.page + 1); }
-  prevPage() { this.goToPage(this.request.paging.page - 1); }
+  nextPage() { this.goToPage(this.paging.page + 1); }
+  prevPage() { this.goToPage(this.paging.page - 1); }
 
   changePageSize(size: number) {
-    this.request.paging.pageSize = size;
-    this.request.paging.page = 1;
+    this.paging.pageSize = size;
+    this.paging.page = 1;
     this.loadPagedData();
   }
 }

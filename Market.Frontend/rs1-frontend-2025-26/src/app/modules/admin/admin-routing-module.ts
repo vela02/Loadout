@@ -6,8 +6,8 @@ import { ProductsComponent } from './catalogs/products/products.component';
 import { ProductsAddComponent } from './catalogs/products/products-add/products-add.component';
 import { ProductsEditComponent } from './catalogs/products/products-edit/products-edit.component';
 import { ProductCategoriesComponent } from './catalogs/product-categories/product-categories.component';
-import { ProductCategoriesAddComponent } from './catalogs/product-categories/product-categories-add/product-categories-add.component';
-import { ProductCategoriesEditComponent } from './catalogs/product-categories/product-categories-edit/product-categories-edit.component';
+import {AdminOrdersComponent} from './orders/admin-orders.component';
+import {AdminSettingsComponent} from './admin-settings/admin-settings.component';
 
 const routes: Routes = [
   {
@@ -33,14 +33,17 @@ const routes: Routes = [
         path: 'product-categories',
         component: ProductCategoriesComponent,
       },
+
       {
-        path: 'product-categories/add',
-        component: ProductCategoriesAddComponent,
+        path: 'orders',
+        component: AdminOrdersComponent,
       },
+
       {
-        path: 'product-categories/:id/edit',
-        component: ProductCategoriesEditComponent,
+        path: 'settings',
+        component: AdminSettingsComponent,
       },
+
 
       // default admin route → /admin/products
       {

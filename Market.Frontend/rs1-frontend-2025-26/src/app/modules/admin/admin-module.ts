@@ -7,26 +7,13 @@ import { ProductsAddComponent } from './catalogs/products/products-add/products-
 import { ProductsEditComponent } from './catalogs/products/products-edit/products-edit.component';
 import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
 
-// Angular Material
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDialogContent } from '@angular/material/dialog';
-import { MatDialogActions } from '@angular/material/dialog';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { ProductCategoriesComponent } from './catalogs/product-categories/product-categories.component';
-import {MatSlideToggle} from '@angular/material/slide-toggle';
-import { ProductCategoriesEditComponent } from './catalogs/product-categories/product-categories-edit/product-categories-edit.component';
-import { ProductCategoriesAddComponent } from './catalogs/product-categories/product-categories-add/product-categories-add.component';
 import {materialModules} from '../shared/material-modules';
+import { ProductCategoryUpsertComponent } from './catalogs/product-categories/product-category-upsert/product-category-upsert.component';
+import { AdminOrdersComponent } from './orders/admin-orders.component';
+import {TranslatePipe} from '@ngx-translate/core';
+import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
 
 
 
@@ -37,16 +24,17 @@ import {materialModules} from '../shared/material-modules';
     ProductsEditComponent,
     AdminLayoutComponent,
     ProductCategoriesComponent,
-    ProductCategoriesEditComponent,
-    ProductCategoriesAddComponent
+    ProductCategoryUpsertComponent,
+    AdminOrdersComponent,
+    AdminSettingsComponent,
   ],
   imports: [
     CommonModule,
     AdminRoutingModule,
     ReactiveFormsModule,
     ...materialModules,
-    MatSlideToggle,
     FormsModule,
+    TranslatePipe,
   ]
 })
 export class AdminModule { }

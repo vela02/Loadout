@@ -1,0 +1,47 @@
+<!-- src/app/dialogs/product-category-dialog/product-category-dialog.component.html -->
+<h2 mat-dialog-title>{{ title }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="dialog-form">
+    <!-- Naziv -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Naziv</mat-label>
+      <input
+        matInput
+        formControlName="name"
+        placeholder="Unesite naziv kategorije"
+        maxlength="100"
+        autocomplete="off"
+      />
+      <mat-icon matSuffix>category</mat-icon>
+      <mat-error *ngIf="form.get('name')?.invalid">
+        {{ getErrorMessage("name") }}
+      </mat-error>
+      <mat-hint align="end">
+        {{ form.get("name")?.value?.length || 0 }}/100
+      </mat-hint>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button
+    mat-button
+    type="button"
+    (click)="onCancel()"
+    [disabled]="isSubmitting"
+  >
+    Otkaži
+  </button>
+
+  <button
+    mat-raised-button
+    color="primary"
+    type="button"
+    (click)="onSubmit()"
+    [disabled]="form.invalid || isSubmitting"
+  >
+    <mat-icon *ngIf="!isSubmitting">save</mat-icon>
+    {{ data.mode === "create" ? "Kreiraj" : "Sačuvaj" }}
+  </button>
+</mat-dialog-actions>

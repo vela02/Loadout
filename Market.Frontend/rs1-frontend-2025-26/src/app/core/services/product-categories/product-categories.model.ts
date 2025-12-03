@@ -1,5 +1,7 @@
+import {BasePagedQuery} from '../../models/basePagedQuery';
+import {PageResult} from '../../models/pageResult';
 
-export class ListProductCategoriesRequest{
+export class ListProductCategoriesRequest extends BasePagedQuery {
   search?: string | null;
   onlyEnabled?: boolean | null;
 }
@@ -11,17 +13,9 @@ export interface ProductCategoryListItem {
   isEnabled: boolean;
 }
 
-// Ako jednog dana dodaš paging, dovoljno je promijeniti ovaj alias:
-export type ListProductCategoriesResponse = ProductCategoryListItem[];
-// ili kasnije: PageResult<ProductCategoryListItem>
+export type ListProductCategoriesResponse = PageResult<ProductCategoryListItem>;
 
 // === COMMANDS (WRITE) ===
-export interface CreateProductCategoryCommand {
+export interface UpsertProductCategoryCommand {
   name?: string | null;
-  isEnabled: boolean;
-}
-
-export interface UpdateProductCategoryCommand {
-  name?: string | null;
-  isEnabled: boolean;
 }

@@ -3,10 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import {
-  CreateProductCategoryCommand,
   ListProductCategoriesRequest,
   ListProductCategoriesResponse,
-  ProductCategoryListItem, UpdateProductCategoryCommand
+  ProductCategoryListItem, UpsertProductCategoryCommand
 } from './product-categories.model';
 import { buildHttpParams } from '../../models/buildHttpParams';
 
@@ -33,11 +32,11 @@ export class ProductCategoriesService {
     return this.http.get<ProductCategoryListItem>(`${this.baseUrl}/${id}`);
   }
 
-  create(payload: CreateProductCategoryCommand): Observable<number> {
+  create(payload: UpsertProductCategoryCommand): Observable<number> {
     return this.http.post<number>(this.baseUrl, payload);
   }
 
-  update(id: number, payload: UpdateProductCategoryCommand): Observable<void> {
+  update(id: number, payload: UpsertProductCategoryCommand): Observable<void> {
     return this.http.put<void>(`${this.baseUrl}/${id}`, payload);
   }
 

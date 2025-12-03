@@ -11,7 +11,7 @@
           <mat-label>Pretraži</mat-label>
           <input
             matInput
-            [value]="search"
+            [value]="request.search"
             (keyup)="applyFilter($event)"
             placeholder="Unesite naziv..."
           />
@@ -19,7 +19,7 @@
         </mat-form-field>
 
         <mat-slide-toggle
-          [checked]="onlyEnabled"
+          [checked]="request.onlyEnabled"
           (change)="onOnlyEnabledChanged($event.checked)"
         >
           Samo aktivne
@@ -82,7 +82,7 @@
       <!-- No data -->
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" [attr.colspan]="displayedColumns.length">
-          <ng-container *ngIf="search || onlyEnabled; else noDataDefault">
+          <ng-container *ngIf="request.search || request.onlyEnabled; else noDataDefault">
             Nema podataka za zadane filtere.
           </ng-container>
           <ng-template #noDataDefault>

@@ -1,0 +1,18 @@
+<div class="logout-wrapper" @fadeInUp>
+  <mat-card class="logout-card">
+    <mat-card-header>
+      <mat-card-title>{{ 'AUTH.LOGOUT.TITLE' | translate }}</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <p>{{ 'AUTH.LOGOUT.MESSAGE' | translate }}</p>
+
+      <div class="logout-progress">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        <div class="logout-countdown">
+          {{ 'AUTH.LOGOUT.REDIRECT_IN' | translate:{seconds: countdownSeconds} }}
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

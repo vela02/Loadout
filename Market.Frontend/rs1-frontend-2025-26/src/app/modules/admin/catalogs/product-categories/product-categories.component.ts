@@ -1,11 +1,19 @@
-// src/app/modules/admin/catalogs/product-categories/product-categories.component.ts
 import { Component, OnInit, inject } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+
 import { BaseListComponent } from '../../../../core/components/baseListComponent';
-import { ProductCategoriesService } from '../../../../core/services/product-categories/product-categories.service';
 import {
   ListProductCategoriesRequest,
-  ProductCategoryListItem
+  ProductCategoryListItem,
+  UpsertProductCategoryCommand,
 } from '../../../../core/services/product-categories/product-categories.model';
+import { ProductCategoriesService } from '../../../../core/services/product-categories/product-categories.service';
+import { ProductCategoryUpsertComponent } from './product-category-upsert/product-category-upsert.component';
+
+interface ProductCategoryDialogResult {
+  id?: number;
+  data: UpsertProductCategoryCommand;
+}
 
 @Component({
   selector: 'app-product-categories',
@@ -18,57 +26,120 @@ export class ProductCategoriesComponent
   implements OnInit {
 
   private productCategoriesService = inject(ProductCategoriesService);
+  private dialog = inject(MatDialog);
 
   displayedColumns: string[] = ['name', 'actions'];
 
-  search: string = '';
-  onlyEnabled: boolean = false;
+  request : ListProductCategoriesRequest = {
+    search :"",
+    onlyEnabled : true,
+    paging: { page:1, pageSize: 100 }
+  }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.initList();
   }
 
-  protected loadData() {
+  // === Učitavanje liste ===
+  protected loadData(): void {
     this.startLoading();
-
-    const request: ListProductCategoriesRequest = {
-      search: this.search?.trim() || undefined,
-      // ako je checkbox/toggle uključen → šaljemo true, ako nije → undefined (da BE ne filtrira)
-      onlyEnabled: this.onlyEnabled ? true : undefined,
-    };
-
-    this.productCategoriesService.list(request).subscribe({
+    this.productCategoriesService.list(this.request).subscribe({
       next: res => {
-        this.items = res;
+        this.items = res.items;
         this.stopLoading();
       },
-      error: () => this.stopLoading('Greška pri učitavanju kategorija')
+      error: () => this.stopLoading('Greška pri učitavanju kategorija'),
     });
   }
 
-  applyFilter(event: Event) {
+  // === Filteri ===
+  applyFilter(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
-    this.search = value;
+    this.request.search = value;
     this.loadData();
   }
 
-  onOnlyEnabledChanged(checked: boolean) {
-    this.onlyEnabled = checked;
+  onOnlyEnabledChanged(checked: boolean): void {
+    this.request.onlyEnabled = checked;
     this.loadData();
   }
 
-  onCreate() {
-    // TODO: navigacija ili dijalog
-    console.log('create category');
+  // === Kreiranje ===
+  onCreate(): void {
+    const dialogRef = this.dialog.open<ProductCategoryUpsertComponent, any, ProductCategoryDialogResult>(
+      ProductCategoryUpsertComponent,
+      {
+        width: '500px',
+        disableClose: true,
+        data: {
+          mode: 'create',
+        },
+      }
+    );
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        return;
+      }
+
+      this.startLoading();
+
+      this.productCategoriesService.create(result.data).subscribe({
+        next: () => {
+          this.loadData();
+        },
+        error: () => this.stopLoading('Greška pri kreiranju kategorije'),
+      });
+    });
   }
 
-  onEdit(category: ProductCategoryListItem) {
-    // TODO: navigacija ili dijalog
-    console.log('edit category', category);
+  // === Uređivanje ===
+  onEdit(category: ProductCategoryListItem): void {
+    const dialogRef = this.dialog.open<ProductCategoryUpsertComponent, any, ProductCategoryDialogResult>(
+      ProductCategoryUpsertComponent,
+      {
+        width: '500px',
+        disableClose: true,
+        data: {
+          mode: 'edit',
+          category,
+        },
+      }
+    );
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        return;
+      }
+
+      this.startLoading();
+
+      this.productCategoriesService.update(category.id, result.data).subscribe({
+        next: () => {
+          this.loadData();
+        },
+        error: () => this.stopLoading('Greška pri izmjeni kategorije'),
+      });
+    });
   }
 
-  onDelete(category: ProductCategoryListItem) {
-    // TODO: confirm + service.delete
-    console.log('delete category', category);
+  // === Brisanje ===
+  onDelete(category: ProductCategoryListItem): void {
+    const confirmed = confirm(
+      `Da li ste sigurni da želite obrisati kategoriju "${category.name}"?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    this.startLoading();
+
+    this.productCategoriesService.delete(category.id).subscribe({
+      next: () => {
+        this.loadData();
+      },
+      error: () => this.stopLoading('Greška pri brisanju kategorije'),
+    });
   }
 }
