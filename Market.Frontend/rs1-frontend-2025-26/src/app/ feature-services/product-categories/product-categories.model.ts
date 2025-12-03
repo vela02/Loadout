@@ -1,5 +1,5 @@
-import {BasePagedQuery} from '../../models/basePagedQuery';
-import {PageResult} from '../../models/pageResult';
+import {BasePagedQuery} from '../../core/models/basePagedQuery';
+import {PageResult} from '../../core/models/pageResult';
 
 export class ListProductCategoriesRequest extends BasePagedQuery {
   search?: string | null;

@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BaseComponent } from '../../../core/components/baseComponent';
-import { AuthService } from '../../../core/services/auth/auth.service';
+import { AuthFacadeService } from '../../../core/services/auth/auth-facade.service';
 import { LoginRequest } from '../../../core/services/auth/auth.model';
 import { AuthStateService } from '../../../core/services/auth/auth-state.service';
 
@@ -15,8 +15,7 @@ import { AuthStateService } from '../../../core/services/auth/auth-state.service
 export class LoginComponent extends BaseComponent {
 
   private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
-  private authState = inject(AuthStateService);
+  private authFacade = inject(AuthFacadeService);
   private router = inject(Router);
 
   form = this.fb.group({
@@ -35,18 +34,13 @@ export class LoginComponent extends BaseComponent {
   }
 
   onSubmit(): void {
-    if (this.form.invalid || this.isLoading) {
-      return;
-    }
+    if (this.form.invalid || this.isLoading) return;
 
     this.startLoading();
     const payload = this.buildLoginPayload();
 
-    this.authService.login(payload).subscribe({
-      next: (res) => {
-        // ⬇ premješteno iz komponenti u AuthStateService
-        this.authState.setLogin(res);
-
+    this.authFacade.login(payload).subscribe({
+      next: () => {
         this.stopLoading();
         this.router.navigate(['/admin']);
       },
@@ -56,3 +50,4 @@ export class LoginComponent extends BaseComponent {
     });
   }
 }
+

@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {FitPaginatorBarComponent} from './fit-paginator-bar/fit-paginator-bar.component';
+import {FitPaginatorBarComponent} from './components/fit-paginator-bar/fit-paginator-bar.component';
 import {materialModules} from './material-modules';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {TranslatePipe} from '@ngx-translate/core';
 
 
 
@@ -11,10 +13,18 @@ import {materialModules} from './material-modules';
   ],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    TranslatePipe,
     ...materialModules
   ],
   exports:[
-    FitPaginatorBarComponent
+    FitPaginatorBarComponent,
+    CommonModule,
+    ReactiveFormsModule,
+    TranslatePipe,
+    FormsModule,
+    materialModules
   ]
 })
 export class SharedModule { }

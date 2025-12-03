@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {BasePagedComponent} from '../../../core/components/basePagedComponent';
+import {BasePagedComponent} from '../../../../core/components/basePagedComponent';
 
 @Component({
   selector: 'app-fit-paginator-bar',

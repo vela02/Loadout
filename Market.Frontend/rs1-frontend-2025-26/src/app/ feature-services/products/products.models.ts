@@ -1,5 +1,5 @@
-import { PageResult } from '../../models/pageResult';
-import {BasePagedQuery} from '../../models/basePagedQuery';
+import { PageResult } from '../../core/models/pageResult';
+import {BasePagedQuery} from '../../core/models/basePagedQuery';
 
 // === DTO ===
 export interface ProductListItem {

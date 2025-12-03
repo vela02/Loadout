@@ -4,7 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
   UpsertProductCategoryCommand,
   ProductCategoryListItem
-} from '../../../../../core/services/product-categories/product-categories.model';
+} from '../../../../../ feature-services/product-categories/product-categories.model';
 
 export type ProductCategoryDialogMode = 'create' | 'edit';
 

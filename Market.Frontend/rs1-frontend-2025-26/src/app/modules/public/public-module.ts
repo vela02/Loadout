@@ -1,10 +1,9 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
 
-import { PublicRoutingModule } from './public-routing-module';
-import { PublicLayoutComponent } from './public-layout/public-layout.component';
-import { SearchProductsComponent } from './search-products/search-products.component';
-import {materialModules} from '../shared/material-modules';
+import {PublicRoutingModule} from './public-routing-module';
+import {PublicLayoutComponent} from './public-layout/public-layout.component';
+import {SearchProductsComponent} from './search-products/search-products.component';
+import {SharedModule} from '../shared/shared-module';
 
 
 @NgModule({
@@ -13,9 +12,8 @@ import {materialModules} from '../shared/material-modules';
     SearchProductsComponent
   ],
   imports: [
-    CommonModule,
+    SharedModule,
     PublicRoutingModule,
-    ...materialModules,
   ]
 })
 export class PublicModule { }

@@ -1,15 +1,12 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
 
 import {AuthRoutingModule} from './auth-routing-module';
 import {AuthLayoutComponent} from './auth-layout/auth-layout.component';
 import {LoginComponent} from './login/login.component';
 import {RegisterComponent} from './register/register.component';
 import {ForgotPasswordComponent} from './forgot-password/forgot-password.component';
-import {ReactiveFormsModule} from '@angular/forms';
-import {materialModules} from '../shared/material-modules';
 import {LogoutComponent} from './logout/logout.component';
-import {TranslatePipe} from '@ngx-translate/core';
+import {SharedModule} from '../shared/shared-module';
 
 
 @NgModule({
@@ -21,11 +18,8 @@ import {TranslatePipe} from '@ngx-translate/core';
     LogoutComponent
   ],
   imports: [
-    CommonModule,
     AuthRoutingModule,
-    ...materialModules,
-    ReactiveFormsModule,
-    TranslatePipe,
+    SharedModule
   ]
 })
 export class AuthModule { }

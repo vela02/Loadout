@@ -7,7 +7,7 @@ import {
   style,
   animate,
 } from '@angular/animations';
-import { AuthService } from '../../../core/services/auth/auth.service';
+import { AuthFacadeService } from '../../../core/services/auth/auth-facade.service';
 import { AuthStateService } from '../../../core/services/auth/auth-state.service';
 import { LogoutRequest } from '../../../core/services/auth/auth.model';
 
@@ -31,7 +31,7 @@ import { LogoutRequest } from '../../../core/services/auth/auth.model';
 export class LogoutComponent implements OnInit {
 
   private router = inject(Router);
-  private authService = inject(AuthService);
+  private authService = inject(AuthFacadeService);
   private authState = inject(AuthStateService);
 
   countdownSeconds = 2;

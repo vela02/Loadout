@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import {authInterceptor} from './core/services/auth/auth-interceptor.service';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {CustomTranslateLoader} from './core/services/custom-translate-loader';
-import { FitPaginatorBarComponent } from './modules/shared/fit-paginator-bar/fit-paginator-bar.component';
+import { FitPaginatorBarComponent } from './modules/shared/components/fit-paginator-bar/fit-paginator-bar.component';
 import {materialModules} from './modules/shared/material-modules';
 import {SharedModule} from './modules/shared/shared-module';
 

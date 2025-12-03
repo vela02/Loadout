@@ -1,13 +1,13 @@
 import {inject, Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../environments/environment';
 import {
   ListProductCategoriesRequest,
   ListProductCategoriesResponse,
   ProductCategoryListItem, UpsertProductCategoryCommand
 } from './product-categories.model';
-import { buildHttpParams } from '../../models/buildHttpParams';
+import { buildHttpParams } from '../../core/models/buildHttpParams';
 
 @Injectable({
   providedIn: 'root',

@@ -6,8 +6,8 @@ import {
   ListProductCategoriesRequest,
   ProductCategoryListItem,
   UpsertProductCategoryCommand,
-} from '../../../../core/services/product-categories/product-categories.model';
-import { ProductCategoriesService } from '../../../../core/services/product-categories/product-categories.service';
+} from '../../../../ feature-services/product-categories/product-categories.model';
+import { ProductCategoriesService } from '../../../../ feature-services/product-categories/product-categories.service';
 import { ProductCategoryUpsertComponent } from './product-category-upsert/product-category-upsert.component';
 
 interface ProductCategoryDialogResult {

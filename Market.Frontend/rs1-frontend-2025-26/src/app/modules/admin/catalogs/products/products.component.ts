@@ -6,8 +6,8 @@ import { Router } from '@angular/router';
 import {
   ListProductsRequest,
   ProductListItem,
-} from '../../../../core/services/products/products.models';
-import { ProductsService } from '../../../../core/services/products/products.service';
+} from '../../../../ feature-services/products/products.models';
+import { ProductsService } from '../../../../ feature-services/products/products.service';
 import { BasePagedComponent } from '../../../../core/components/basePagedComponent';
 
 @Component({
