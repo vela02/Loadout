@@ -1,0 +1,22 @@
+.paginator-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.paginator-info {
+  opacity: 0.8;
+}
+
+.paginator-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.page-size-field {
+  width: 120px;
+}

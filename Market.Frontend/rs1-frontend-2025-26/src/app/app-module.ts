@@ -8,10 +8,13 @@ import { App } from './app';
 import {authInterceptor} from './core/services/auth/auth-interceptor.service';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {CustomTranslateLoader} from './core/services/custom-translate-loader';
+import { FitPaginatorBarComponent } from './core/components/fit-paginator-bar/fit-paginator-bar.component';
+import {materialModules} from './modules/shared/material-modules';
 
 @NgModule({
   declarations: [
-    App
+    App,
+    FitPaginatorBarComponent
   ],
   imports: [
     BrowserModule,
@@ -23,6 +26,7 @@ import {CustomTranslateLoader} from './core/services/custom-translate-loader';
         deps: [HttpClient]
       }
     }),
+    materialModules,
   ],
   providers: [
     provideAnimations(),
@@ -31,6 +35,9 @@ import {CustomTranslateLoader} from './core/services/custom-translate-loader';
     provideHttpClient(
       withInterceptors([authInterceptor])
     )
+  ],
+  exports: [
+    FitPaginatorBarComponent
   ],
   bootstrap: [App]
 })

@@ -1,0 +1,35 @@
+<div class="paginator-bar" *ngIf="vm.totalItems > 0">
+  <div class="paginator-info">
+    Prikaz stranice {{ vm.request.paging.page }} od {{ vm.totalPages || 1 }}
+    (ukupno: {{ vm.totalItems }} zapisa)
+  </div>
+
+  <div class="paginator-actions">
+    <button
+      mat-stroked-button
+      (click)="vm.prevPage()"
+      [disabled]="vm.request.paging.page <= 1 || vm.isLoading">
+      ‹ Prethodna
+    </button>
+
+    <button
+      mat-stroked-button
+      (click)="vm.nextPage()"
+      [disabled]="(vm.totalPages && vm.request.paging.page >= vm.totalPages) || vm.isLoading">
+      Sljedeća ›
+    </button>
+
+    <mat-form-field appearance="outline" class="page-size-field">
+      <mat-label>Po stranici</mat-label>
+      <mat-select
+        [value]="vm.request.paging.pageSize"
+        (selectionChange)="vm.changePageSize($event.value)"
+        [disabled]="vm.isLoading">
+        <mat-option [value]="5">5</mat-option>
+        <mat-option [value]="10">10</mat-option>
+        <mat-option [value]="20">20</mat-option>
+        <mat-option [value]="50">50</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>

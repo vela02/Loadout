@@ -126,40 +126,7 @@
       </tr>
     </table>
 
-    <!-- Paginator (koristi BasePagedComponent polja i metode) -->
-    <div class="paginator-bar" *ngIf="totalItems > 0">
-      <div class="paginator-info">
-        Prikaz stranice {{ request.paging.page }} od {{ totalPages || 1 }}
-        (ukupno: {{ totalItems }} zapisa)
-      </div>
+    <app-fit-paginator-bar [vm]="this"/>
 
-      <div class="paginator-actions">
-        <button mat-stroked-button (click)="prevPage()" [disabled]="request.paging.page <= 1 || isLoading">
-          ‹ Prethodna
-        </button>
-
-        <button
-          mat-stroked-button
-          (click)="nextPage()"
-          [disabled]="(totalPages && request.paging.page >= totalPages) || isLoading"
-        >
-          Sljedeća ›
-        </button>
-
-        <mat-form-field appearance="outline" class="page-size-field">
-          <mat-label>Po stranici</mat-label>
-          <mat-select
-            [value]="request.paging.pageSize"
-            (selectionChange)="changePageSize($event.value)"
-            [disabled]="isLoading"
-          >
-            <mat-option [value]="5">5</mat-option>
-            <mat-option [value]="10">10</mat-option>
-            <mat-option [value]="20">20</mat-option>
-            <mat-option [value]="50">50</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
   </div>
 </div>

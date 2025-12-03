@@ -14,6 +14,7 @@ import { ProductCategoryUpsertComponent } from './catalogs/product-categories/pr
 import { AdminOrdersComponent } from './orders/admin-orders.component';
 import {TranslatePipe} from '@ngx-translate/core';
 import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
+import {AppModule} from '../../app-module';
 
 
 
@@ -35,6 +36,7 @@ import { AdminSettingsComponent } from './admin-settings/admin-settings.componen
     ...materialModules,
     FormsModule,
     TranslatePipe,
+    AppModule,
   ]
 })
 export class AdminModule { }
