@@ -15,6 +15,7 @@ import { AdminOrdersComponent } from './orders/admin-orders.component';
 import {TranslatePipe} from '@ngx-translate/core';
 import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
 import {FitPaginatorBarComponent} from '../shared/fit-paginator-bar/fit-paginator-bar.component';
+import {SharedModule} from '../shared/shared-module';
 
 
 
@@ -36,6 +37,7 @@ import {FitPaginatorBarComponent} from '../shared/fit-paginator-bar/fit-paginato
     ...materialModules,
     FormsModule,
     TranslatePipe,
+    SharedModule,
   ]
 })
 export class AdminModule { }

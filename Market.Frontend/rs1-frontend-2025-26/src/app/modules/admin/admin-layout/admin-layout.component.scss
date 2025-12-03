@@ -16,8 +16,8 @@
   padding: 24px 20px;
   text-align: center;
   border-bottom: 1px solid #e0e0e0;
-  /*background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/
-  background: #4976b5 !important; /* Svjetlija nego prije (#424242) */
+  background: #4976b5 !important;
+  position: relative;
 }
 
 .sidebar-header h2 {
@@ -25,6 +25,51 @@
   font-size: 24px;
   font-weight: 600;
   color: white;
+}
+
+/* LANGUAGE SELECTOR */
+.language-selector {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.lang-button {
+  color: white !important;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.flag-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+::ng-deep .mat-mdc-menu-panel {
+  min-width: 180px !important;
+}
+
+::ng-deep .mat-mdc-menu-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+::ng-deep .mat-mdc-menu-item .flag-icon {
+  font-size: 20px;
+}
+
+::ng-deep .mat-mdc-menu-item.active-lang {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  font-weight: 500;
+}
+
+::ng-deep .mat-mdc-menu-item .check-icon {
+  margin-left: auto;
+  color: #1976d2;
+  font-size: 20px;
 }
 
 /* NAVIGATION LIST */

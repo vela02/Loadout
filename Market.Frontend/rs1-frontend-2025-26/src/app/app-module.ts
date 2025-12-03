@@ -4,7 +4,7 @@ import { provideAnimations} from '@angular/platform-browser/animations';
 import {HttpClient, provideHttpClient, withInterceptors} from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing-module';
-import { App } from './app';
+import { AppComponent } from './app.component';
 import {authInterceptor} from './core/services/auth/auth-interceptor.service';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {CustomTranslateLoader} from './core/services/custom-translate-loader';
@@ -14,7 +14,7 @@ import {SharedModule} from './modules/shared/shared-module';
 
 @NgModule({
   declarations: [
-    App
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -39,6 +39,6 @@ import {SharedModule} from './modules/shared/shared-module';
   ],
   exports: [
   ],
-  bootstrap: [App]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
