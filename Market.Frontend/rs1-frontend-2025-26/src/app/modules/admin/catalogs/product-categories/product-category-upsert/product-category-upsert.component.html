@@ -5,11 +5,11 @@
   <form [formGroup]="form" class="dialog-form">
     <!-- Naziv -->
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Naziv</mat-label>
+      <mat-label>{{ 'PRODUCT_CATEGORY_DIALOG.NAME_LABEL' | translate }}</mat-label>
       <input
         matInput
         formControlName="name"
-        placeholder="Unesite naziv kategorije"
+        [placeholder]="'PRODUCT_CATEGORY_DIALOG.NAME_PLACEHOLDER' | translate"
         maxlength="100"
         autocomplete="off"
       />
@@ -31,7 +31,7 @@
     (click)="onCancel()"
     [disabled]="isSubmitting"
   >
-    Otkaži
+    {{ 'PRODUCT_CATEGORY_DIALOG.BUTTON_CANCEL' | translate }}
   </button>
 
   <button
@@ -42,6 +42,6 @@
     [disabled]="form.invalid || isSubmitting"
   >
     <mat-icon *ngIf="!isSubmitting">save</mat-icon>
-    {{ data.mode === "create" ? "Kreiraj" : "Sačuvaj" }}
+    {{ data.mode === "create" ? ('PRODUCT_CATEGORY_DIALOG.BUTTON_CREATE' | translate) : ('PRODUCT_CATEGORY_DIALOG.BUTTON_SAVE' | translate) }}
   </button>
 </mat-dialog-actions>

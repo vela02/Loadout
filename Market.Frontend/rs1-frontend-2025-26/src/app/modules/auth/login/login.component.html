@@ -1,7 +1,7 @@
 <div class="auth-container">
   <mat-card class="auth-card">
     <mat-card-header>
-      <mat-card-title>Prijava</mat-card-title>
+      <mat-card-title>{{ 'AUTH.LOGIN.TITLE' | translate }}</mat-card-title>
     </mat-card-header>
 
     <mat-card-content>
@@ -13,21 +13,21 @@
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <!-- Email -->
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
+          <mat-label>{{ 'AUTH.LOGIN.EMAIL_LABEL' | translate }}</mat-label>
           <input matInput formControlName="email" type="email" />
           <mat-icon matSuffix>person</mat-icon>
         </mat-form-field>
 
         <!-- Password -->
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Lozinka</mat-label>
+          <mat-label>{{ 'AUTH.LOGIN.PASSWORD_LABEL' | translate }}</mat-label>
           <input matInput formControlName="password" type="password" />
           <mat-icon matSuffix>lock</mat-icon>
         </mat-form-field>
 
         <div class="form-row">
           <mat-checkbox formControlName="rememberMe">
-            Zapamti me
+            {{ 'AUTH.LOGIN.REMEMBER_ME' | translate }}
           </mat-checkbox>
         </div>
 
@@ -39,7 +39,7 @@
             [disabled]="form.invalid || isLoading"
           >
             <ng-container *ngIf="!isLoading; else loadingTpl">
-              Prijavi se
+              {{ 'AUTH.LOGIN.BUTTON' | translate }}
             </ng-container>
             <ng-template #loadingTpl>
               <mat-progress-spinner

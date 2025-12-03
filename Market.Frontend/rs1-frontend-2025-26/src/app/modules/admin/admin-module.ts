@@ -14,7 +14,7 @@ import { ProductCategoryUpsertComponent } from './catalogs/product-categories/pr
 import { AdminOrdersComponent } from './orders/admin-orders.component';
 import {TranslatePipe} from '@ngx-translate/core';
 import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
-import {AppModule} from '../../app-module';
+import {FitPaginatorBarComponent} from '../shared/fit-paginator-bar/fit-paginator-bar.component';
 
 
 
@@ -36,7 +36,6 @@ import {AppModule} from '../../app-module';
     ...materialModules,
     FormsModule,
     TranslatePipe,
-    AppModule,
   ]
 })
 export class AdminModule { }

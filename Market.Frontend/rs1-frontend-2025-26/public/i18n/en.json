@@ -3,13 +3,95 @@
     "TITLE": "Welcome to our app",
     "DESCRIPTION": "This is an example of localization."
   },
-  "LOGIN": {
-    "TITLE": "Login",
-    "USERNAME_LABEL": "Username:",
-    "USERNAME_PLACEHOLDER": "Enter username",
-    "PASSWORD_LABEL": "Password:",
-    "PASSWORD_PLACEHOLDER": "Enter password",
-    "SAVE_LOGIN": "Save login",
-    "BUTTON": "Login"
+  "AUTH": {
+    "LOGIN": {
+      "TITLE": "Login",
+      "EMAIL_LABEL": "Email",
+      "EMAIL_PLACEHOLDER": "Enter email",
+      "PASSWORD_LABEL": "Password",
+      "PASSWORD_PLACEHOLDER": "Enter password",
+      "REMEMBER_ME": "Remember me",
+      "BUTTON": "Login",
+      "LOADING": "Logging in..."
+    },
+    "LOGOUT": {
+      "TITLE": "Logout",
+      "MESSAGE": "Logging you out of the system...",
+      "REDIRECT_IN": "Redirecting in {{seconds}}s"
+    }
+  },
+  "ADMIN_PANEL": {
+    "TITLE": "Admin Panel",
+    "MENU": {
+      "CATEGORIES": "Product Categories",
+      "PRODUCTS": "Products",
+      "ORDERS": "Orders",
+      "SETTINGS": "Settings",
+      "LOGOUT": "Logout"
+    }
+  },
+  "PRODUCT_CATEGORIES": {
+    "TITLE": "Product Categories",
+    "SEARCH_PLACEHOLDER": "Search",
+    "SEARCH_INPUT_PLACEHOLDER": "Enter name...",
+    "ONLY_ACTIVE": "Only active",
+    "NEW_CATEGORY": "New Category",
+    "LOADING": "Loading...",
+    "TABLE": {
+      "NAME": "Category Name",
+      "ACTIONS": "Actions"
+    },
+    "ACTIONS": {
+      "EDIT_TOOLTIP": "Edit",
+      "DELETE_TOOLTIP": "Delete"
+    },
+    "NO_DATA": "No data.",
+    "NO_DATA_FILTER": "No data for the given filters."
+  },
+  "PRODUCT_CATEGORY_DIALOG": {
+    "TITLE_CREATE": "Create Category",
+    "TITLE_EDIT": "Edit Category",
+    "NAME_LABEL": "Name",
+    "NAME_PLACEHOLDER": "Enter category name",
+    "BUTTON_CANCEL": "Cancel",
+    "BUTTON_CREATE": "Create",
+    "BUTTON_SAVE": "Save",
+    "ERRORS": {
+      "NAME_REQUIRED": "Name is required",
+      "NAME_MAXLENGTH": "Name must not exceed 100 characters"
+    }
+  },
+  "PRODUCTS": {
+    "TITLE": "Products",
+    "SEARCH_PLACEHOLDER": "Search",
+    "SEARCH_INPUT_PLACEHOLDER": "Enter product name...",
+    "NEW_PRODUCT": "New Product",
+    "LOADING": "Loading...",
+    "TABLE": {
+      "NAME": "Name",
+      "CATEGORY": "Category",
+      "PRICE": "Price",
+      "STOCK": "In Stock",
+      "ACTIVE": "Active",
+      "ACTIONS": "Actions"
+    },
+    "ACTIONS": {
+      "EDIT_TOOLTIP": "Edit",
+      "DELETE_TOOLTIP": "Delete"
+    },
+    "NO_DATA": "No products.",
+    "NO_DATA_FILTER": "No products for the given filter."
+  },
+  "COMMON": {
+    "YES": "Yes",
+    "NO": "No",
+    "CANCEL": "Cancel",
+    "SAVE": "Save",
+    "DELETE": "Delete",
+    "EDIT": "Edit",
+    "CREATE": "Create",
+    "SEARCH": "Search",
+    "LOADING": "Loading...",
+    "ERROR": "An error occurred"
   }
 }
