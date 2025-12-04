@@ -12,13 +12,11 @@
         maxlength="100"
         autocomplete="off"
       />
-      <mat-icon matSuffix>category</mat-icon>
+      <mat-icon matSuffix>label</mat-icon>
       <mat-error *ngIf="form.get('name')?.invalid">
         {{ getErrorMessage('name') }}
       </mat-error>
-      <mat-hint align="end">
-        {{ form.get('name')?.value?.length || 0 }}/100
-      </mat-hint>
+      <mat-hint align="end">{{ form.get('name')?.value?.length || 0 }}/100</mat-hint>
     </mat-form-field>
   </form>
 
@@ -30,13 +28,8 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button
-    mat-button
-    type="button"
-    (click)="onCancel()"
-    [disabled]="isLoading"
-  >
-    <mat-icon>cancel</mat-icon>
+  <button mat-button type="button" (click)="onCancel()" [disabled]="isLoading">
+    <mat-icon>close</mat-icon>
     {{ 'PRODUCT_CATEGORIES.FORM.CANCEL' | translate }}
   </button>
 
@@ -47,8 +40,12 @@
     (click)="onSubmit()"
     [disabled]="!form || form.invalid || isLoading"
   >
-    <mat-icon *ngIf="!isLoading">save</mat-icon>
     <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
-    {{ isEditMode ? ('PRODUCT_CATEGORIES.FORM.UPDATE' | translate) : ('PRODUCT_CATEGORIES.FORM.SAVE' | translate) }}
+    <mat-icon *ngIf="!isLoading">{{ isEditMode ? 'edit' : 'save' }}</mat-icon>
+    {{
+      isEditMode
+        ? ('PRODUCT_CATEGORIES.FORM.UPDATE' | translate)
+        : ('PRODUCT_CATEGORIES.FORM.SAVE' | translate)
+    }}
   </button>
 </mat-dialog-actions>
