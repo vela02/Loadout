@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {myAuthData, authGuard} from './core/guards/auth.guard';
+import {myAuthData, myAuthGuard} from './core/guards/my-auth-guard';
 
 const routes: Routes = [
   {
     path: 'admin',
-    canActivate: [authGuard],
+    canActivate: [myAuthGuard],
     data: myAuthData({ requireAuth: true, requireAdmin: true }),
     loadChildren: () =>
       import('./modules/admin/admin-module').then(m => m.AdminModule)
@@ -17,7 +17,7 @@ const routes: Routes = [
   },
   {
     path: 'client',
-    canActivate: [authGuard],
+    canActivate: [myAuthGuard],
     data: myAuthData({ requireAuth: true }),// bilo ko logiran
     loadChildren: () =>
       import('./modules/client/client-module').then(m => m.ClientModule)
