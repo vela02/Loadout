@@ -1,38 +1,50 @@
-/* src/app/dialogs/product-category-dialog/product-category-dialog.component.css */
-.dialog-form {
+// Dialog Content
+mat-dialog-content {
+  min-height: 150px;
+  padding: 20px 24px;
+}
+
+// Form
+form {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  min-width: 400px;
-  padding: 20px 0;
 }
 
 .full-width {
   width: 100%;
 }
 
-mat-dialog-content {
-  max-height: 70vh;
-  overflow-y: auto;
+// Loading Container
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  gap: 16px;
+
+  p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+  }
 }
 
+// Dialog Actions
 mat-dialog-actions {
   padding: 16px 24px;
-  margin: 0;
-  gap: 8px;
-}
 
-mat-dialog-actions button {
-  min-width: 100px;
-}
+  button {
+    min-width: 100px;
 
-mat-dialog-actions button mat-spinner {
-  display: inline-block;
-  margin-right: 8px;
-}
+    mat-icon {
+      margin-right: 8px;
+    }
 
-h2 {
-  margin: 0;
-  padding: 16px 24px;
-  border-bottom: 1px solid #e0e0e0;
+    mat-spinner {
+      display: inline-block;
+      margin-right: 8px;
+    }
+  }
 }

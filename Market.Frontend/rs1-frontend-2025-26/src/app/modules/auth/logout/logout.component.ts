@@ -1,15 +1,7 @@
-// src/app/modules/auth/logout/logout.component.ts
 import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-  trigger,
-  transition,
-  style,
-  animate,
-} from '@angular/animations';
-import { AuthFacadeService } from '../../../core/services/auth/auth-facade.service';
-import { AuthStateService } from '../../../core/services/auth/auth-state.service';
-import { LogoutRequest } from '../../../core/services/auth/auth.model';
+import { trigger, transition, style, animate } from '@angular/animations';
+import { AuthService } from '../../../feature-services/auth/auth.service';
 
 @Component({
   selector: 'app-logout',
@@ -20,44 +12,26 @@ import { LogoutRequest } from '../../../core/services/auth/auth.model';
     trigger('fadeInUp', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(10px)' }),
-        animate(
-          '400ms ease-out',
-          style({ opacity: 1, transform: 'translateY(0)' })
-        ),
-      ]),
-    ]),
-  ],
+        animate('400ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ])
+  ]
 })
 export class LogoutComponent implements OnInit {
-
   private router = inject(Router);
-  private authService = inject(AuthFacadeService);
-  private authState = inject(AuthStateService);
+  private auth = inject(AuthService);
 
   countdownSeconds = 2;
 
   ngOnInit(): void {
-    const refreshToken = this.authState.refreshToken;
-
-    // Ako imamo refreshToken → pokušaj server-side logout
-    if (refreshToken) {
-      const payload: LogoutRequest = { refreshToken };
-
-      this.authService.logout(payload).subscribe({
-        next: () => this.finishLogout(),
-        error: () => this.finishLogout(), // čak i ako padne API, očistimo lokalno
-      });
-    } else {
-      // Nema tokena, samo lokalno očistimo i redirect
-      this.finishLogout();
-    }
+    // Call logout (handles API call + clears state)
+    this.auth.logout().subscribe({
+      next: () => this.startCountdown(),
+      error: () => this.startCountdown() // Even if API fails, clear local state
+    });
   }
 
-  private finishLogout(): void {
-    // 1) Očisti lokalno stanje (svi tokeni)
-    this.authState.clear();
-
-    // 2) Countdown + redirect na /login
+  private startCountdown(): void {
     const intervalId = setInterval(() => {
       this.countdownSeconds--;
 

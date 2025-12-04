@@ -22,65 +22,91 @@
   },
   "ADMIN_PANEL": {
     "TITLE": "Admin Panel",
+    "ROLES": {
+      "ADMIN": "Administrator",
+      "MANAGER": "Manager",
+      "EMPLOYEE": "Employee"
+    },
     "MENU": {
+      "CATALOG": "CATALOG",
       "CATEGORIES": "Product Categories",
       "PRODUCTS": "Products",
-      "ORDERS": "Orders",
+      "ORDERS_SECTION": "ORDERS",
+      "ORDERS": "Orders Overview",
+      "SYSTEM": "SYSTEM",
       "SETTINGS": "Settings",
       "LOGOUT": "Logout"
     }
   },
   "PRODUCT_CATEGORIES": {
     "TITLE": "Product Categories",
-    "SEARCH_PLACEHOLDER": "Search",
-    "SEARCH_INPUT_PLACEHOLDER": "Enter name...",
-    "ONLY_ACTIVE": "Only active",
+    "SEARCH_PLACEHOLDER": "Search categories",
+    "SEARCH_INPUT_PLACEHOLDER": "Enter category name...",
+    "ONLY_ENABLED": "Only Active",
     "NEW_CATEGORY": "New Category",
-    "LOADING": "Loading...",
+    "LOADING": "Loading categories...",
+    "NO_DATA": "No categories to display",
+    "NO_DATA_FILTER": "No results found for search",
     "TABLE": {
-      "NAME": "Category Name",
+      "NAME": "Name",
+      "STATUS": "Status",
+      "ENABLED": "Active",
+      "DISABLED": "Inactive",
       "ACTIONS": "Actions"
     },
     "ACTIONS": {
-      "EDIT_TOOLTIP": "Edit",
-      "DELETE_TOOLTIP": "Delete"
+      "EDIT_TOOLTIP": "Edit category",
+      "DELETE_TOOLTIP": "Delete category"
     },
-    "NO_DATA": "No data.",
-    "NO_DATA_FILTER": "No data for the given filters."
-  },
-  "PRODUCT_CATEGORY_DIALOG": {
-    "TITLE_CREATE": "Create Category",
-    "TITLE_EDIT": "Edit Category",
-    "NAME_LABEL": "Name",
-    "NAME_PLACEHOLDER": "Enter category name",
-    "BUTTON_CANCEL": "Cancel",
-    "BUTTON_CREATE": "Create",
-    "BUTTON_SAVE": "Save",
-    "ERRORS": {
-      "NAME_REQUIRED": "Name is required",
-      "NAME_MAXLENGTH": "Name must not exceed 100 characters"
+    "FORM": {
+      "NAME": "Category Name",
+      "NAME_PLACEHOLDER": "Enter category name",
+      "LOADING": "Loading...",
+      "CANCEL": "Cancel",
+      "SAVE": "Save",
+      "UPDATE": "Update"
     }
   },
   "PRODUCTS": {
     "TITLE": "Products",
-    "SEARCH_PLACEHOLDER": "Search",
+    "SEARCH_PLACEHOLDER": "Search products",
     "SEARCH_INPUT_PLACEHOLDER": "Enter product name...",
     "NEW_PRODUCT": "New Product",
-    "LOADING": "Loading...",
+    "LOADING": "Loading products...",
+    "NO_DATA": "No products to display",
+    "NO_DATA_FILTER": "No results found for search",
     "TABLE": {
       "NAME": "Name",
       "CATEGORY": "Category",
-      "PRICE": "Price",
-      "STOCK": "In Stock",
+      "PRICE": "Price (KM)",
+      "STOCK": "Stock",
       "ACTIVE": "Active",
       "ACTIONS": "Actions"
     },
     "ACTIONS": {
-      "EDIT_TOOLTIP": "Edit",
-      "DELETE_TOOLTIP": "Delete"
+      "EDIT_TOOLTIP": "Edit product",
+      "DELETE_TOOLTIP": "Delete product"
     },
-    "NO_DATA": "No products.",
-    "NO_DATA_FILTER": "No products for the given filter."
+    "ADD": {
+      "TITLE": "Add New Product",
+      "SAVING": "Saving product..."
+    },
+    "EDIT": {
+      "TITLE": "Edit Product",
+      "LOADING": "Loading product..."
+    },
+    "FORM": {
+      "NAME": "Product Name",
+      "NAME_PLACEHOLDER": "Enter product name",
+      "DESCRIPTION": "Description",
+      "DESCRIPTION_PLACEHOLDER": "Enter product description",
+      "PRICE": "Price",
+      "PRICE_PLACEHOLDER": "0.00",
+      "CATEGORY": "Category",
+      "CANCEL": "Cancel",
+      "SAVE": "Save",
+      "UPDATE": "Update"
+    }
   },
   "COMMON": {
     "YES": "Yes",

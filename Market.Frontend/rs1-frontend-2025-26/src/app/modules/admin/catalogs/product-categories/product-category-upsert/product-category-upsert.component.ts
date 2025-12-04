@@ -1,105 +1,120 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormGroup } from '@angular/forms';
+import { ProductCategoriesApiService } from '../../../../../api-services/product-categories/product-categories-api.service';
+import { ToasterService } from '../../../../../core/services/toaster.service';
 import {
-  UpsertProductCategoryCommand,
-  ProductCategoryListItem
-} from '../../../../../ feature-services/product-categories/product-categories.model';
-
-export type ProductCategoryDialogMode = 'create' | 'edit';
+  GetProductCategoryByIdQueryDto,
+  CreateProductCategoryCommand,
+  UpdateProductCategoryCommand
+} from '../../../../../api-services/product-categories/product-categories-api.model';
+import {ProductCategoryFormService} from "../product-category-form.service";
 
 export interface ProductCategoryDialogData {
-  mode: ProductCategoryDialogMode;
-  category?: ProductCategoryListItem;
+  mode: 'create' | 'edit';
+  categoryId?: number;
 }
 
-export interface ProductCategoryDialogResult {
-  mode: ProductCategoryDialogMode;
-  id?: number;
-  payload: UpsertProductCategoryCommand;
-}
 @Component({
   selector: 'app-product-category-upsert',
-  templateUrl: './product-category-upsert.component.html',
-  styleUrls: ['./product-category-upsert.component.scss'],
   standalone: false,
+  templateUrl: './product-category-upsert.component.html',
+  styleUrl: './product-category-upsert.component.scss',
+  providers: [ProductCategoryFormService]
 })
 export class ProductCategoryUpsertComponent implements OnInit {
-  form: FormGroup;
-  isSubmitting = false;
-  title: string;
+  private dialogRef = inject(MatDialogRef<ProductCategoryUpsertComponent>);
+  private data = inject<ProductCategoryDialogData>(MAT_DIALOG_DATA);
+  private api = inject(ProductCategoriesApiService);
+  private formService = inject(ProductCategoryFormService);
+  private toaster = inject(ToasterService);
 
-  constructor(
-    private fb: FormBuilder,
-    private dialogRef: MatDialogRef<ProductCategoryUpsertComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ProductCategoryDialogData
-  ) {
-    this.title =
-      data.mode === 'create' ? 'Nova kategorija' : 'Izmijeni kategoriju';
-
-    // Kreiraj formu
-    this.form = this.fb.group({
-      name: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(100),
-        ],
-      ],
-    });
-  }
+  form!: FormGroup;
+  isLoading = false;
+  isEditMode = false;
+  title = '';
 
   ngOnInit(): void {
-    // Ako je edit mode, popuni formu sa postojećim podacima
-    if (this.data.mode === 'edit' && this.data.category) {
-      this.form.patchValue({
-        name: this.data.category.name,
-      });
+    this.isEditMode = this.data.mode === 'edit';
+    this.title = this.isEditMode ? 'Edit Category' : 'New Category';
+
+    if (this.isEditMode && this.data.categoryId) {
+      this.loadCategory(this.data.categoryId);
+    } else {
+      this.form = this.formService.createCategoryForm();
     }
   }
 
+  private loadCategory(id: number): void {
+    this.isLoading = true;
+
+    this.api.getById(id).subscribe({
+      next: (category) => {
+        this.form = this.formService.createCategoryForm(category);
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.toaster.error('Failed to load category');
+        console.error('Load category error:', err);
+        this.dialogRef.close(false);
+      }
+    });
+  }
+
   onSubmit(): void {
-    if (this.form.invalid) {
+    if (this.form.invalid || this.isLoading) {
       this.form.markAllAsTouched();
       return;
     }
 
-    const formValue = this.form.value;
-    const upsertDto: UpsertProductCategoryCommand = {
-      name: formValue.name.trim(),
+    this.isLoading = true;
+
+    if (this.isEditMode && this.data.categoryId) {
+      this.updateCategory();
+    } else {
+      this.createCategory();
+    }
+  }
+
+  private createCategory(): void {
+    const command: CreateProductCategoryCommand = {
+      name: this.form.value.name.trim()
     };
 
-    // Vrati podatke roditeljskoj komponenti
-    this.dialogRef.close({
-      data: upsertDto,
-      mode: this.data.mode,
-      id: this.data.category?.id,
+    this.api.create(command).subscribe({
+      next: () => {
+        this.toaster.success('Category created successfully');
+        this.dialogRef.close(true); // Signal success
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Create category error:', err);
+      }
+    });
+  }
+
+  private updateCategory(): void {
+    const command: UpdateProductCategoryCommand = {
+      name: this.form.value.name.trim()
+    };
+
+    this.api.update(this.data.categoryId!, command).subscribe({
+      next: () => {
+        this.toaster.success('Category updated successfully');
+        this.dialogRef.close(true); // Signal success
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Update category error:', err);
+      }
     });
   }
 
   onCancel(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 
-  // Helper metode za validaciju
-  getErrorMessage(fieldName: string): string {
-    const control = this.form.get(fieldName);
-
-    if (control?.hasError('required')) {
-      return 'Ovo polje je obavezno';
-    }
-
-    if (control?.hasError('minlength')) {
-      const minLength = control.errors?.['minlength'].requiredLength;
-      return `Minimalno ${minLength} karaktera`;
-    }
-
-    if (control?.hasError('maxlength')) {
-      const maxLength = control.errors?.['maxlength'].requiredLength;
-      return `Maksimalno ${maxLength} karaktera`;
-    }
-
-    return '';
+  getErrorMessage(controlName: string): string {
+    return this.formService.getErrorMessage(this.form, controlName);
   }
 }

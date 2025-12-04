@@ -1,132 +1,109 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-
-import { BaseListComponent } from '../../../../core/components/baseListComponent';
+import { BasePagedComponent } from '../../../../core/components/basePagedComponent';
+import { ProductCategoriesApiService } from '../../../../api-services/product-categories/product-categories-api.service';
+import { ToasterService } from '../../../../core/services/toaster.service';
 import {
   ListProductCategoriesRequest,
-  ProductCategoryListItem,
-  UpsertProductCategoryCommand,
-} from '../../../../ feature-services/product-categories/product-categories.model';
-import { ProductCategoriesService } from '../../../../ feature-services/product-categories/product-categories.service';
+  ListProductCategoriesQueryDto
+} from '../../../../api-services/product-categories/product-categories-api.model';
 import { ProductCategoryUpsertComponent } from './product-category-upsert/product-category-upsert.component';
-
-interface ProductCategoryDialogResult {
-  id?: number;
-  data: UpsertProductCategoryCommand;
-}
 
 @Component({
   selector: 'app-product-categories',
   standalone: false,
   templateUrl: './product-categories.component.html',
-  styleUrl: './product-categories.component.scss',
+  styleUrl: './product-categories.component.scss'
 })
 export class ProductCategoriesComponent
-  extends BaseListComponent<ProductCategoryListItem>
+  extends BasePagedComponent<ListProductCategoriesQueryDto, ListProductCategoriesRequest>
   implements OnInit {
 
-  private productCategoriesService = inject(ProductCategoriesService);
+  private api = inject(ProductCategoriesApiService);
   private dialog = inject(MatDialog);
+  private toaster = inject(ToasterService);
 
-  displayedColumns: string[] = ['name', 'actions'];
+  displayedColumns: string[] = ['name', 'isEnabled', 'actions'];
+  showOnlyEnabled = true;
 
-  request : ListProductCategoriesRequest = {
-    search :"",
-    onlyEnabled : true,
-    paging: { page:1, pageSize: 100 }
+  constructor() {
+    super();
+    this.request = new ListProductCategoriesRequest();
+    this.request.onlyEnabled = true;
   }
 
   ngOnInit(): void {
     this.initList();
   }
 
-  // === Učitavanje liste ===
-  protected loadData(): void {
+  protected loadPagedData(): void {
     this.startLoading();
-    this.productCategoriesService.list(this.request).subscribe({
-      next: res => {
-        this.items = res.items;
+
+    this.api.list(this.request).subscribe({
+      next: (response) => {
+        this.handlePageResult(response);
         this.stopLoading();
       },
-      error: () => this.stopLoading('Greška pri učitavanju kategorija'),
+      error: (err) => {
+        this.stopLoading('Failed to load categories');
+        console.error('Load categories error:', err);
+      }
     });
   }
 
-  // === Filteri ===
-  applyFilter(event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
-    this.request.search = value;
-    this.loadData();
+  // === Filters ===
+
+  onSearchChange(searchTerm: string): void {
+    this.request.search = searchTerm;
+    this.request.paging.page = 1; // Reset to first page
+    this.loadPagedData();
   }
 
-  onOnlyEnabledChanged(checked: boolean): void {
+  onToggleEnabledFilter(checked: boolean): void {
+    this.showOnlyEnabled = checked;
     this.request.onlyEnabled = checked;
-    this.loadData();
+    this.request.paging.page = 1; // Reset to first page
+    this.loadPagedData();
   }
 
-  // === Kreiranje ===
+  // === CRUD Actions ===
+
   onCreate(): void {
-    const dialogRef = this.dialog.open<ProductCategoryUpsertComponent, any, ProductCategoryDialogResult>(
-      ProductCategoryUpsertComponent,
-      {
-        width: '500px',
-        disableClose: true,
-        data: {
-          mode: 'create',
-        },
+    const dialogRef = this.dialog.open(ProductCategoryUpsertComponent, {
+      width: '500px',
+      disableClose: true,
+      data: {
+        mode: 'create'
       }
-    );
+    });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (!result) {
-        return;
+    dialogRef.afterClosed().subscribe((success: boolean) => {
+      if (success) {
+        this.loadPagedData(); // Reload list
       }
-
-      this.startLoading();
-
-      this.productCategoriesService.create(result.data).subscribe({
-        next: () => {
-          this.loadData();
-        },
-        error: () => this.stopLoading('Greška pri kreiranju kategorije'),
-      });
     });
   }
 
-  // === Uređivanje ===
-  onEdit(category: ProductCategoryListItem): void {
-    const dialogRef = this.dialog.open<ProductCategoryUpsertComponent, any, ProductCategoryDialogResult>(
-      ProductCategoryUpsertComponent,
-      {
-        width: '500px',
-        disableClose: true,
-        data: {
-          mode: 'edit',
-          category,
-        },
+  onEdit(category: ListProductCategoriesQueryDto): void {
+    const dialogRef = this.dialog.open(ProductCategoryUpsertComponent, {
+      width: '500px',
+      disableClose: true,
+      data: {
+        mode: 'edit',
+        categoryId: category.id
       }
-    );
+    });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (!result) {
-        return;
+    dialogRef.afterClosed().subscribe((success: boolean) => {
+      if (success) {
+        this.loadPagedData(); // Reload list
       }
-
-      this.startLoading();
-
-      this.productCategoriesService.update(category.id, result.data).subscribe({
-        next: () => {
-          this.loadData();
-        },
-        error: () => this.stopLoading('Greška pri izmjeni kategorije'),
-      });
     });
   }
 
-  // === Brisanje ===
-  onDelete(category: ProductCategoryListItem): void {
+  onDelete(category: ListProductCategoriesQueryDto): void {
     const confirmed = confirm(
-      `Da li ste sigurni da želite obrisati kategoriju "${category.name}"?`
+      `Are you sure you want to delete category "${category.name}"?`
     );
 
     if (!confirmed) {
@@ -135,11 +112,35 @@ export class ProductCategoriesComponent
 
     this.startLoading();
 
-    this.productCategoriesService.delete(category.id).subscribe({
+    this.api.delete(category.id).subscribe({
       next: () => {
-        this.loadData();
+        this.toaster.success('Category deleted successfully');
+        this.loadPagedData(); // Reload current page
       },
-      error: () => this.stopLoading('Greška pri brisanju kategorije'),
+      error: (err) => {
+        this.stopLoading('Failed to delete category');
+        console.error('Delete category error:', err);
+      }
+    });
+  }
+
+  onToggleStatus(category: ListProductCategoriesQueryDto): void {
+    this.startLoading();
+
+    const action = category.isEnabled
+      ? this.api.disable(category.id)
+      : this.api.enable(category.id);
+
+    action.subscribe({
+      next: () => {
+        const status = category.isEnabled ? 'disabled' : 'enabled';
+        this.toaster.success(`Category ${status} successfully`);
+        this.loadPagedData(); // Reload to show updated status
+      },
+      error: (err) => {
+        this.stopLoading('Failed to update category status');
+        console.error('Toggle status error:', err);
+      }
     });
   }
 }

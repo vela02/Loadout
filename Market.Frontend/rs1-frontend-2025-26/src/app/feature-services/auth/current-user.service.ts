@@ -2,22 +2,22 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import {jwtDecode} from 'jwt-decode';
-import { AuthStateService } from './auth-state.service';
-import {CurrentUser} from '../../models/currentUser';
-import {MyJwtPayload} from '../../models/myJwtPayload';
+import { AuthStorageService } from './auth-storage.service';
+import {CurrentUser} from '../../core/models/currentUser';
+import {MyJwtPayload} from '../../core/models/myJwtPayload';
 
 @Injectable({ providedIn: 'root' })
 export class CurrentUserService {
   private readonly currentUserSubject = new BehaviorSubject<CurrentUser | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private authState: AuthStateService) {
+  constructor(private authState: AuthStorageService) {
     this.recalculateFromToken();
   }
 
   /** Ručno pozoveš nakon login/refresh-a */
   recalculateFromToken(): void {
-    const token = this.authState.accessToken;
+    const token = this.authState.getAccessToken();
     if (!token) {
       this.currentUserSubject.next(null);
       return;

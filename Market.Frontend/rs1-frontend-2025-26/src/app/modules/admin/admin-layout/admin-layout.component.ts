@@ -1,13 +1,17 @@
-import { Component } from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
+import { Component, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { AuthService } from '../../../feature-services/auth/auth.service';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: false,
   templateUrl: './admin-layout.component.html',
-  styleUrl: './admin-layout.component.scss',
+  styleUrl: './admin-layout.component.scss'
 })
 export class AdminLayoutComponent {
+  private translate = inject(TranslateService);
+  auth = inject(AuthService);
+
   currentLang: string;
 
   languages = [
@@ -15,7 +19,7 @@ export class AdminLayoutComponent {
     { code: 'en', name: 'English', flag: '🇬🇧' }
   ];
 
-  constructor(private translate: TranslateService) {
+  constructor() {
     this.currentLang = this.translate.currentLang || 'bs';
   }
 

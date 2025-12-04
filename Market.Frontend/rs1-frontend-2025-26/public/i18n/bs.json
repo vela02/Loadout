@@ -22,65 +22,91 @@
   },
   "ADMIN_PANEL": {
     "TITLE": "Admin Panel",
+    "ROLES": {
+      "ADMIN": "Administrator",
+      "MANAGER": "Menadžer",
+      "EMPLOYEE": "Zaposlenik"
+    },
     "MENU": {
+      "CATALOG": "KATALOG",
       "CATEGORIES": "Kategorije proizvoda",
       "PRODUCTS": "Proizvodi",
-      "ORDERS": "Narudžbe",
-      "SETTINGS": "Podešavanja",
+      "ORDERS_SECTION": "NARUDŽBE",
+      "ORDERS": "Pregled narudžbi",
+      "SYSTEM": "SISTEM",
+      "SETTINGS": "Postavke",
       "LOGOUT": "Odjava"
     }
   },
   "PRODUCT_CATEGORIES": {
-    "TITLE": "Produkt Kategorije",
-    "SEARCH_PLACEHOLDER": "Pretraži",
-    "SEARCH_INPUT_PLACEHOLDER": "Unesite naziv...",
-    "ONLY_ACTIVE": "Samo aktivne",
-    "NEW_CATEGORY": "Nova Kategorija",
-    "LOADING": "Učitavanje...",
+    "TITLE": "Kategorije proizvoda",
+    "SEARCH_PLACEHOLDER": "Pretraži kategorije",
+    "SEARCH_INPUT_PLACEHOLDER": "Unesite naziv kategorije...",
+    "ONLY_ENABLED": "Samo aktivne",
+    "NEW_CATEGORY": "Nova kategorija",
+    "LOADING": "Učitavanje kategorija...",
+    "NO_DATA": "Nema kategorija za prikaz",
+    "NO_DATA_FILTER": "Nema rezultata za pretragu",
     "TABLE": {
-      "NAME": "Naziv Kategorije",
+      "NAME": "Naziv",
+      "STATUS": "Status",
+      "ENABLED": "Aktivna",
+      "DISABLED": "Neaktivna",
       "ACTIONS": "Akcije"
     },
     "ACTIONS": {
-      "EDIT_TOOLTIP": "Izmijeni",
-      "DELETE_TOOLTIP": "Obriši"
+      "EDIT_TOOLTIP": "Uredi kategoriju",
+      "DELETE_TOOLTIP": "Obriši kategoriju"
     },
-    "NO_DATA": "Nema podataka.",
-    "NO_DATA_FILTER": "Nema podataka za zadane filtere."
-  },
-  "PRODUCT_CATEGORY_DIALOG": {
-    "TITLE_CREATE": "Kreiraj Kategoriju",
-    "TITLE_EDIT": "Izmijeni Kategoriju",
-    "NAME_LABEL": "Naziv",
-    "NAME_PLACEHOLDER": "Unesite naziv kategorije",
-    "BUTTON_CANCEL": "Otkaži",
-    "BUTTON_CREATE": "Kreiraj",
-    "BUTTON_SAVE": "Sačuvaj",
-    "ERRORS": {
-      "NAME_REQUIRED": "Naziv je obavezan",
-      "NAME_MAXLENGTH": "Naziv ne smije imati više od 100 karaktera"
+    "FORM": {
+      "NAME": "Naziv kategorije",
+      "NAME_PLACEHOLDER": "Unesite naziv kategorije",
+      "LOADING": "Učitavanje...",
+      "CANCEL": "Otkaži",
+      "SAVE": "Spremi",
+      "UPDATE": "Ažuriraj"
     }
   },
   "PRODUCTS": {
     "TITLE": "Proizvodi",
-    "SEARCH_PLACEHOLDER": "Pretraži",
+    "SEARCH_PLACEHOLDER": "Pretraži proizvode",
     "SEARCH_INPUT_PLACEHOLDER": "Unesite naziv proizvoda...",
     "NEW_PRODUCT": "Novi proizvod",
-    "LOADING": "Učitavanje...",
+    "LOADING": "Učitavanje proizvoda...",
+    "NO_DATA": "Nema proizvoda za prikaz",
+    "NO_DATA_FILTER": "Nema rezultata za pretragu",
     "TABLE": {
       "NAME": "Naziv",
       "CATEGORY": "Kategorija",
-      "PRICE": "Cijena",
-      "STOCK": "Na stanju",
+      "PRICE": "Cijena (KM)",
+      "STOCK": "Stanje",
       "ACTIVE": "Aktivan",
       "ACTIONS": "Akcije"
     },
     "ACTIONS": {
-      "EDIT_TOOLTIP": "Izmijeni",
-      "DELETE_TOOLTIP": "Obriši"
+      "EDIT_TOOLTIP": "Uredi proizvod",
+      "DELETE_TOOLTIP": "Obriši proizvod"
     },
-    "NO_DATA": "Nema proizvoda.",
-    "NO_DATA_FILTER": "Nema proizvoda za zadani filter."
+    "ADD": {
+      "TITLE": "Dodaj novi proizvod",
+      "SAVING": "Spremanje proizvoda..."
+    },
+    "EDIT": {
+      "TITLE": "Uredi proizvod",
+      "LOADING": "Učitavanje proizvoda..."
+    },
+    "FORM": {
+      "NAME": "Naziv proizvoda",
+      "NAME_PLACEHOLDER": "Unesite naziv proizvoda",
+      "DESCRIPTION": "Opis",
+      "DESCRIPTION_PLACEHOLDER": "Unesite opis proizvoda",
+      "PRICE": "Cijena",
+      "PRICE_PLACEHOLDER": "0.00",
+      "CATEGORY": "Kategorija",
+      "CANCEL": "Otkaži",
+      "SAVE": "Spremi",
+      "UPDATE": "Ažuriraj"
+    }
   },
   "COMMON": {
     "YES": "Da",

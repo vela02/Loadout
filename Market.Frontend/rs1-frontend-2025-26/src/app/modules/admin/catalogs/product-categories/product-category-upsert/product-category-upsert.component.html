@@ -1,27 +1,32 @@
-<!-- src/app/dialogs/product-category-dialog/product-category-dialog.component.html -->
 <h2 mat-dialog-title>{{ title }}</h2>
 
 <mat-dialog-content>
-  <form [formGroup]="form" class="dialog-form">
-    <!-- Naziv -->
+  <form [formGroup]="form" *ngIf="!isLoading && form">
+    <!-- Category Name -->
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>{{ 'PRODUCT_CATEGORY_DIALOG.NAME_LABEL' | translate }}</mat-label>
+      <mat-label>{{ 'PRODUCT_CATEGORIES.FORM.NAME' | translate }}</mat-label>
       <input
         matInput
         formControlName="name"
-        [placeholder]="'PRODUCT_CATEGORY_DIALOG.NAME_PLACEHOLDER' | translate"
+        [placeholder]="'PRODUCT_CATEGORIES.FORM.NAME_PLACEHOLDER' | translate"
         maxlength="100"
         autocomplete="off"
       />
       <mat-icon matSuffix>category</mat-icon>
       <mat-error *ngIf="form.get('name')?.invalid">
-        {{ getErrorMessage("name") }}
+        {{ getErrorMessage('name') }}
       </mat-error>
       <mat-hint align="end">
-        {{ form.get("name")?.value?.length || 0 }}/100
+        {{ form.get('name')?.value?.length || 0 }}/100
       </mat-hint>
     </mat-form-field>
   </form>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading && !form" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>{{ 'PRODUCT_CATEGORIES.FORM.LOADING' | translate }}</p>
+  </div>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
@@ -29,9 +34,10 @@
     mat-button
     type="button"
     (click)="onCancel()"
-    [disabled]="isSubmitting"
+    [disabled]="isLoading"
   >
-    {{ 'PRODUCT_CATEGORY_DIALOG.BUTTON_CANCEL' | translate }}
+    <mat-icon>cancel</mat-icon>
+    {{ 'PRODUCT_CATEGORIES.FORM.CANCEL' | translate }}
   </button>
 
   <button
@@ -39,9 +45,10 @@
     color="primary"
     type="button"
     (click)="onSubmit()"
-    [disabled]="form.invalid || isSubmitting"
+    [disabled]="!form || form.invalid || isLoading"
   >
-    <mat-icon *ngIf="!isSubmitting">save</mat-icon>
-    {{ data.mode === "create" ? ('PRODUCT_CATEGORY_DIALOG.BUTTON_CREATE' | translate) : ('PRODUCT_CATEGORY_DIALOG.BUTTON_SAVE' | translate) }}
+    <mat-icon *ngIf="!isLoading">save</mat-icon>
+    <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+    {{ isEditMode ? ('PRODUCT_CATEGORIES.FORM.UPDATE' | translate) : ('PRODUCT_CATEGORIES.FORM.SAVE' | translate) }}
   </button>
 </mat-dialog-actions>

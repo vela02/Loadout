@@ -5,7 +5,7 @@ import {HttpClient, provideHttpClient, withInterceptors} from '@angular/common/h
 
 import { AppRoutingModule } from './app-routing-module';
 import { AppComponent } from './app.component';
-import {authInterceptor} from './core/services/auth/auth-interceptor.service';
+import {authInterceptor} from './core/interceptors/auth-interceptor.service';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {CustomTranslateLoader} from './core/services/custom-translate-loader';
 import { FitPaginatorBarComponent } from './modules/shared/components/fit-paginator-bar/fit-paginator-bar.component';
