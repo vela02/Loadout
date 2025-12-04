@@ -8,7 +8,7 @@ import {
   CreateProductCategoryCommand,
   UpdateProductCategoryCommand
 } from '../../../../../api-services/product-categories/product-categories-api.model';
-import {ProductCategoryFormService} from "../product-category-form.service";
+import {ProductCategoryFormService} from "../services/product-category-form.service";
 
 export interface ProductCategoryDialogData {
   mode: 'create' | 'edit';

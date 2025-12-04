@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   LoginCommandDto,
   RefreshTokenCommandDto
-} from '../../api-services/auth/auth-api.model';
+} from '../../../api-services/auth/auth-api.model';
 
 /**
  * Low-level service for managing auth tokens in localStorage.

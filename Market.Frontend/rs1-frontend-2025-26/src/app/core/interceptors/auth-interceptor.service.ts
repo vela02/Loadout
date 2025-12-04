@@ -7,7 +7,7 @@ import {
 import { inject } from '@angular/core';
 import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
-import { AuthFacadeService } from '../../feature-services/auth/auth-facade.service';
+import { AuthFacadeService } from '../services/auth/auth-facade.service';
 
 // Global state for refresh (shared between requests)
 let refreshInProgress = false;

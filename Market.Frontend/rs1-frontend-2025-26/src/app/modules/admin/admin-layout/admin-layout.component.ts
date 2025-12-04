@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { AuthFacadeService } from '../../../feature-services/auth/auth-facade.service';
+import { AuthFacadeService } from '../../../core/services/auth/auth-facade.service';
 
 @Component({
   selector: 'app-admin-layout',

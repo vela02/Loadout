@@ -1,6 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {ProductFormService} from '../product-form.service';
+import {ProductFormService} from '../services/product-form.service';
 import {CreateProductCommand, GetProductByIdQueryDto} from '../../../../../api-services/products/products-api.models';
 import {BaseFormComponent} from '../../../../../core/components/base-classes/base-form-component';
 import {ProductsApiService} from '../../../../../api-services/products/products-api.service';

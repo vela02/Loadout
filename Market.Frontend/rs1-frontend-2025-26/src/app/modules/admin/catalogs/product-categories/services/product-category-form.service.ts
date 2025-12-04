@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {GetProductCategoryByIdQueryDto} from '../../../../api-services/product-categories/product-categories-api.model';
+import {GetProductCategoryByIdQueryDto} from '../../../../../api-services/product-categories/product-categories-api.model';
 
 /**
  * Service for creating and managing product category forms.

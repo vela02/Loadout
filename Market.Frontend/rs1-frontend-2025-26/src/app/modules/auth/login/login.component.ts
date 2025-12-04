@@ -2,8 +2,9 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BaseComponent } from '../../../core/components/base-classes/base-component';
-import { AuthFacadeService } from '../../../feature-services/auth/auth-facade.service';
+import { AuthFacadeService } from '../../../core/services/auth/auth-facade.service';
 import { LoginCommand } from '../../../api-services/auth/auth-api.model';
+import {CurrentUserService} from "../../../core/services/auth/current-user.service";
 
 @Component({
   selector: 'app-login',
@@ -15,6 +16,7 @@ export class LoginComponent extends BaseComponent {
   private fb = inject(FormBuilder);
   private auth = inject(AuthFacadeService);
   private router = inject(Router);
+  private currentUser = inject(CurrentUserService);
 
   form = this.fb.group({
     email: ['admin@market.local', [Validators.required, Validators.email]],
@@ -36,7 +38,8 @@ export class LoginComponent extends BaseComponent {
     this.auth.login(payload).subscribe({
       next: () => {
         this.stopLoading();
-        this.router.navigate(['/admin']);
+        const target = this.currentUser.getDefaultRoute();
+        this.router.navigate([target]);
       },
       error: (err) => {
         this.stopLoading('Invalid credentials. Please try again.');
