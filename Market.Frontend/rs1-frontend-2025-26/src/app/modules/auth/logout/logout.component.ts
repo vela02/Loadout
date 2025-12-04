@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { trigger, transition, style, animate } from '@angular/animations';
-import { AuthService } from '../../../feature-services/auth/auth.service';
+import { AuthFacadeService } from '../../../feature-services/auth/auth-facade.service';
 
 @Component({
   selector: 'app-logout',
@@ -19,7 +19,7 @@ import { AuthService } from '../../../feature-services/auth/auth.service';
 })
 export class LogoutComponent implements OnInit {
   private router = inject(Router);
-  private auth = inject(AuthService);
+  private auth = inject(AuthFacadeService);
 
   countdownSeconds = 2;
 

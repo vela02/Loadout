@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { BaseComponent } from '../../../core/components/baseComponent';
-import { AuthService } from '../../../feature-services/auth/auth.service';
+import { BaseComponent } from '../../../core/components/base-classes/base-component';
+import { AuthFacadeService } from '../../../feature-services/auth/auth-facade.service';
 import { LoginCommand } from '../../../api-services/auth/auth-api.model';
 
 @Component({
@@ -13,7 +13,7 @@ import { LoginCommand } from '../../../api-services/auth/auth-api.model';
 })
 export class LoginComponent extends BaseComponent {
   private fb = inject(FormBuilder);
-  private auth = inject(AuthService);
+  private auth = inject(AuthFacadeService);
   private router = inject(Router);
 
   form = this.fb.group({

@@ -7,7 +7,7 @@ import {
 import { inject } from '@angular/core';
 import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
-import { AuthService } from '../../feature-services/auth/auth.service';
+import { AuthFacadeService } from '../../feature-services/auth/auth-facade.service';
 
 // Global state for refresh (shared between requests)
 let refreshInProgress = false;
@@ -20,7 +20,7 @@ const refreshTokenSubject = new BehaviorSubject<string | null>(null);
  * 3. Retries failed request with new token
  */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-    const auth = inject(AuthService);
+    const auth = inject(AuthFacadeService);
 
     // 1) Skip auth endpoints (login/refresh/logout)
     if (isAuthEndpoint(req.url)) {
@@ -63,7 +63,7 @@ function isAuthEndpoint(url: string): boolean {
 function handle401Error(
     req: HttpRequest<unknown>,
     next: HttpHandlerFn,
-    auth: AuthService
+    auth: AuthFacadeService
 ): Observable<any> {
     const refreshToken = auth.getRefreshToken();
 

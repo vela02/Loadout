@@ -1,15 +1,13 @@
-import { PageResult } from '../models/pageResult';
-import {BaseListComponent} from './baseListComponent';
-import {BasePagedQuery} from '../models/basePagedQuery';
+import { PageResult } from '../../models/paging/page-result';
+import {BaseListComponent} from './base-list-component';
+import {BasePagedQuery} from '../../models/paging/base-paged-query';
 
-export abstract class BasePagedComponent<TItem, TRequest extends BasePagedQuery>
+export abstract class BaseListPagedComponent<TItem, TRequest extends BasePagedQuery>
   extends BaseListComponent<TItem> {
 
   request!: TRequest;
   totalItems = 0;
   totalPages = 0;
-
-  pageSizeOptions: number[] = [5, 10, 25, 50, 100];
 
   get paging(){
     return this.request.paging;

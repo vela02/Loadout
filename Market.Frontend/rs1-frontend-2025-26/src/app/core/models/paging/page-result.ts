@@ -1,4 +1,4 @@
-// src/app/core/models/pageResult.ts
+// src/app/core/models/page-result.ts
 
 export interface PageResult<T> {
   items: T[];

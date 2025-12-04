@@ -1,6 +1,6 @@
 // src/app/core/components/base-list.component.ts
 
-import {BaseComponent} from './baseComponent';
+import {BaseComponent} from './base-component';
 
 export abstract class BaseListComponent<TItem> extends BaseComponent{
   items: TItem[] = [];

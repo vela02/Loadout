@@ -2,7 +2,7 @@ import {Component, inject, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {forkJoin} from 'rxjs';
 import {ProductFormService} from '../product-form.service';
-import {BaseFormComponent} from '../../../../../core/components/baseFormComponent';
+import {BaseFormComponent} from '../../../../../core/components/base-classes/base-form-component';
 import {GetProductByIdQueryDto, UpdateProductCommand} from '../../../../../api-services/products/products-api.models';
 import {ProductsApiService} from '../../../../../api-services/products/products-api.service';
 import {
@@ -12,7 +12,7 @@ import {ToasterService} from '../../../../../core/services/toaster.service';
 import {
   ListProductCategoriesQueryDto
 } from '../../../../../api-services/product-categories/product-categories-api.model';
-import {largePaging} from '../../../../../core/models/pagingUtils';
+import {largePaging} from '../../../../../core/models/paging/paging-utils';
 
 
 @Component({

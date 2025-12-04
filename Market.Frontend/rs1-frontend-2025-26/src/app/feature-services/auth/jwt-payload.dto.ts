@@ -1,5 +1,5 @@
 // payload kako dolazi iz JWT-a
-export interface MyJwtPayload {
+export interface JwtPayloadDto {
   sub: string;
   email: string;
   is_admin: string;

@@ -1,6 +1,6 @@
 import { Directive, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { BaseComponent } from './baseComponent';
+import { BaseComponent } from './base-component';
 
 /**
  * Base component for forms (Add/Edit).

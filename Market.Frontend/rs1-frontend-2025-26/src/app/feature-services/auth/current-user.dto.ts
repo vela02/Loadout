@@ -1,5 +1,5 @@
 // src/app/core/auth/current-user.model.ts
-export interface CurrentUser {
+export interface CurrentUserDto {
   userId: number;
   email: string;
   isAdmin: boolean;

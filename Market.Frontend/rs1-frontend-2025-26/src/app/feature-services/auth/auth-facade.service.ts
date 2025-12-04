@@ -11,8 +11,8 @@ import {
   RefreshTokenCommand,
   RefreshTokenCommandDto
 } from '../../api-services/auth/auth-api.model';
-import { CurrentUser } from '../../core/models/currentUser';
-import { MyJwtPayload } from '../../core/models/myJwtPayload';
+import { CurrentUserDto } from './current-user.dto';
+import { JwtPayloadDto } from './jwt-payload.dto';
 
 /**
  * Main authentication service.
@@ -26,13 +26,13 @@ import { MyJwtPayload } from '../../core/models/myJwtPayload';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthFacadeService {
   private api = inject(AuthApiService);
   private storage = inject(AuthStorageService);
   private router = inject(Router);
 
   // Reactive state - current user as signal
-  private _currentUser = signal<CurrentUser | null>(null);
+  private _currentUser = signal<CurrentUserDto | null>(null);
 
   // Public readonly signals
   currentUser = this._currentUser.asReadonly();
@@ -136,9 +136,9 @@ export class AuthService {
    */
   private decodeAndSetUser(token: string): void {
     try {
-      const payload = jwtDecode<MyJwtPayload>(token);
+      const payload = jwtDecode<JwtPayloadDto>(token);
 
-      const user: CurrentUser = {
+      const user: CurrentUserDto = {
         userId: Number(payload.sub),
         email: payload.email,
         isAdmin: payload.is_admin === 'true',

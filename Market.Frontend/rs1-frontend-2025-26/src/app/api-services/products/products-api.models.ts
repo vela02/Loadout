@@ -1,5 +1,5 @@
-import { PageResult } from '../../core/models/pageResult';
-import { BasePagedQuery } from '../../core/models/basePagedQuery';
+import { PageResult } from '../../core/models/paging/page-result';
+import { BasePagedQuery } from '../../core/models/paging/base-paged-query';
 
 // === QUERIES (READ) ===
 

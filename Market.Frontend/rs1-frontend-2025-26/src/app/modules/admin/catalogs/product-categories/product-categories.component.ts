@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { BasePagedComponent } from '../../../../core/components/basePagedComponent';
+import { BaseListPagedComponent } from '../../../../core/components/base-classes/base-list-paged-component';
 import { ProductCategoriesApiService } from '../../../../api-services/product-categories/product-categories-api.service';
 import { ToasterService } from '../../../../core/services/toaster.service';
 import {
@@ -16,7 +16,7 @@ import { ProductCategoryUpsertComponent } from './product-category-upsert/produc
   styleUrl: './product-categories.component.scss'
 })
 export class ProductCategoriesComponent
-  extends BasePagedComponent<ListProductCategoriesQueryDto, ListProductCategoriesRequest>
+  extends BaseListPagedComponent<ListProductCategoriesQueryDto, ListProductCategoriesRequest>
   implements OnInit {
 
   private api = inject(ProductCategoriesApiService);

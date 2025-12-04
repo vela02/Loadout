@@ -5,7 +5,7 @@ import {
   ListProductsQueryDto
 } from '../../../../api-services/products/products-api.models';
 import { ProductsApiService } from '../../../../api-services/products/products-api.service';
-import { BasePagedComponent } from '../../../../core/components/basePagedComponent';
+import { BaseListPagedComponent } from '../../../../core/components/base-classes/base-list-paged-component';
 import { ToasterService } from '../../../../core/services/toaster.service';
 
 @Component({
@@ -15,7 +15,7 @@ import { ToasterService } from '../../../../core/services/toaster.service';
   styleUrl: './products.component.scss'
 })
 export class ProductsComponent
-  extends BasePagedComponent<ListProductsQueryDto, ListProductsRequest>
+  extends BaseListPagedComponent<ListProductsQueryDto, ListProductsRequest>
   implements OnInit {
 
   private api = inject(ProductsApiService);

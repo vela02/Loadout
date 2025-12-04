@@ -6,7 +6,7 @@ import {
 
 /**
  * Low-level service for managing auth tokens in localStorage.
- * Should not be used directly in components - use AuthService instead.
+ * Should not be used directly in components - use AuthFacadeService instead.
  */
 @Injectable({
   providedIn: 'root'

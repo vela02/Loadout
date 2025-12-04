@@ -1,4 +1,4 @@
-import { PageRequest } from './pageRequest';
+import { PageRequest } from './page-request';
 
 /**
  * Utility functions for creating common paging configurations.

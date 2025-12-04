@@ -299,7 +299,7 @@ API servise koristimo **DIREKTNO u komponentama**.
 
 ```typescript
 // ✅ DOBRO - direktno u komponenti
-export class ProductListComponent extends BasePagedComponent<
+export class ProductListComponent extends BaseListPagedComponent<
   ListProductsQueryDto,
   ListProductsRequest
 > {

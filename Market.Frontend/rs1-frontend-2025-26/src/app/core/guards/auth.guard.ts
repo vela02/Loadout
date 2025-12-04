@@ -1,13 +1,13 @@
 import { inject } from '@angular/core';
 import { Router, CanActivateFn } from '@angular/router';
-import { AuthService } from '../../feature-services/auth/auth.service';
+import { AuthFacadeService } from '../../feature-services/auth/auth-facade.service';
 
 /**
  * Guard that checks if user is authenticated.
  * Redirects to /login if not.
  */
 export const authGuard: CanActivateFn = () => {
-  const auth = inject(AuthService);
+  const auth = inject(AuthFacadeService);
   const router = inject(Router);
 
   if (auth.isAuthenticated()) {
@@ -22,7 +22,7 @@ export const authGuard: CanActivateFn = () => {
  * Redirects to /login if not authenticated or not admin.
  */
 export const adminGuard: CanActivateFn = () => {
-  const auth = inject(AuthService);
+  const auth = inject(AuthFacadeService);
   const router = inject(Router);
 
   if (!auth.isAuthenticated()) {

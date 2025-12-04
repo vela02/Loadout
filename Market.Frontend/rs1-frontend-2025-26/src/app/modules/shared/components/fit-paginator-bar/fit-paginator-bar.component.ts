@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {BasePagedComponent} from '../../../../core/components/basePagedComponent';
+import {BaseListPagedComponent} from '../../../../core/components/base-classes/base-list-paged-component';
 
 @Component({
   selector: 'app-fit-paginator-bar',
@@ -8,6 +8,6 @@ import {BasePagedComponent} from '../../../../core/components/basePagedComponent
   styleUrl: './fit-paginator-bar.component.scss',
 })
 export class FitPaginatorBarComponent {
-  // ViewModel je bilo koja komponenta koja nasljeđuje BasePagedComponent
-  @Input({ required: true }) vm!: BasePagedComponent<any, any>;
+  // ViewModel je bilo koja komponenta koja nasljeđuje BaseListPagedComponent
+  @Input({ required: true }) vm!: BaseListPagedComponent<any, any>;
 }

@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import {jwtDecode} from 'jwt-decode';
 import { AuthStorageService } from './auth-storage.service';
-import {CurrentUser} from '../../core/models/currentUser';
-import {MyJwtPayload} from '../../core/models/myJwtPayload';
+import {CurrentUserDto} from './current-user.dto';
+import {JwtPayloadDto} from './jwt-payload.dto';
 
 @Injectable({ providedIn: 'root' })
 export class CurrentUserService {
-  private readonly currentUserSubject = new BehaviorSubject<CurrentUser | null>(null);
+  private readonly currentUserSubject = new BehaviorSubject<CurrentUserDto | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private authState: AuthStorageService) {
@@ -24,8 +24,8 @@ export class CurrentUserService {
     }
 
     try {
-      const payload = jwtDecode<MyJwtPayload>(token);
-      const user: CurrentUser = {
+      const payload = jwtDecode<JwtPayloadDto>(token);
+      const user: CurrentUserDto = {
         userId: Number(payload.sub),
         email: payload.email,
         isAdmin: payload.is_admin === 'true',
@@ -40,7 +40,7 @@ export class CurrentUserService {
     }
   }
 
-  get snapshot(): CurrentUser | null {
+  get snapshot(): CurrentUserDto | null {
     return this.currentUserSubject.value;
   }
 

@@ -9,7 +9,7 @@ import {
   CreateProductCommand,
   UpdateProductCommand
 } from './products-api.models';
-import { buildHttpParams } from '../../core/models/buildHttpParams';
+import { buildHttpParams } from '../../core/models/build-http-params';
 
 @Injectable({
   providedIn: 'root'
