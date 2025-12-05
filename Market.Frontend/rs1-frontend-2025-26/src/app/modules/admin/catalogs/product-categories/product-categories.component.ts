@@ -3,6 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { BaseListPagedComponent } from '../../../../core/components/base-classes/base-list-paged-component';
 import { ProductCategoriesApiService } from '../../../../api-services/product-categories/product-categories-api.service';
 import { ToasterService } from '../../../../core/services/toaster.service';
+import { DialogHelperService } from '../../../shared/services/dialog-helper.service';
+import { DialogButton } from '../../../shared/models/dialog-config.model';
 import {
   ListProductCategoriesRequest,
   ListProductCategoriesQueryDto,
@@ -22,6 +24,7 @@ export class ProductCategoriesComponent
   private api = inject(ProductCategoriesApiService);
   private dialog = inject(MatDialog);
   private toaster = inject(ToasterService);
+  private dialogHelper = inject(DialogHelperService);
 
   displayedColumns: string[] = ['name', 'isEnabled', 'actions'];
   showOnlyEnabled = true;
@@ -55,14 +58,14 @@ export class ProductCategoriesComponent
 
   onSearchChange(searchTerm: string): void {
     this.request.search = searchTerm;
-    this.request.paging.page = 1; // Reset to first page
+    this.request.paging.page = 1;
     this.loadPagedData();
   }
 
   onToggleEnabledFilter(checked: boolean): void {
     this.showOnlyEnabled = checked;
     this.request.onlyEnabled = checked;
-    this.request.paging.page = 1; // Reset to first page
+    this.request.paging.page = 1;
     this.loadPagedData();
   }
 
@@ -82,7 +85,8 @@ export class ProductCategoriesComponent
 
     dialogRef.afterClosed().subscribe((success: boolean) => {
       if (success) {
-        this.loadPagedData(); // Reload list
+        this.dialogHelper.productCategory.showCreateSuccess().subscribe();
+        this.loadPagedData();
       }
     });
   }
@@ -102,27 +106,39 @@ export class ProductCategoriesComponent
 
     dialogRef.afterClosed().subscribe((success: boolean) => {
       if (success) {
-        this.loadPagedData(); // Reload list
+        this.dialogHelper.productCategory.showUpdateSuccess().subscribe();
+        this.loadPagedData();
       }
     });
   }
 
   onDelete(category: ListProductCategoriesQueryDto): void {
-    const confirmed = confirm(`Are you sure you want to delete category "${category.name}"?`);
+    this.dialogHelper.productCategory.confirmDelete(category.name).subscribe(result => {
+      if (result && result.button === DialogButton.DELETE) {
+        this.performDelete(category);
+      }
+    });
+  }
 
-    if (!confirmed) {
-      return;
-    }
-
+  private performDelete(category: ListProductCategoriesQueryDto): void {
     this.startLoading();
 
     this.api.delete(category.id).subscribe({
       next: () => {
-        this.toaster.success('Category deleted successfully');
-        this.loadPagedData(); // Reload current page
+        this.dialogHelper.productCategory.showDeleteSuccess().subscribe();
+        this.loadPagedData();
       },
       error: (err) => {
-        this.stopLoading('Failed to delete category');
+        this.stopLoading();
+
+        const errorMessage = this.extractErrorMessage(err);
+
+        // Show error dialog instead of toast
+        this.dialogHelper.showError(
+          'DIALOGS.TITLES.ERROR',
+          'PRODUCT_CATEGORIES.DIALOGS.ERROR_DELETE'
+        ).subscribe();
+
         console.error('Delete category error:', err);
       },
     });
@@ -131,20 +147,72 @@ export class ProductCategoriesComponent
   onToggleStatus(category: ListProductCategoriesQueryDto): void {
     this.startLoading();
 
-    const action = category.isEnabled
+    const apiAction = category.isEnabled
       ? this.api.disable(category.id)
       : this.api.enable(category.id);
 
-    action.subscribe({
+    apiAction.subscribe({
       next: () => {
         const status = category.isEnabled ? 'disabled' : 'enabled';
         this.toaster.success(`Category ${status} successfully`);
-        this.loadPagedData(); // Reload to show updated status
+        this.loadPagedData();
       },
       error: (err) => {
-        this.stopLoading('Failed to update category status');
+        this.stopLoading();
+
+        const errorMessage = this.extractErrorMessage(err);
+
+        if (err.status === 409) {
+          // Business rule conflict - show dialog for important errors
+          this.dialogHelper.showWarning(
+            'DIALOGS.TITLES.WARNING',
+            errorMessage || 'PRODUCT_CATEGORIES.DIALOGS.ERROR_TOGGLE',
+            { name: category.name }
+          ).subscribe();
+        } else {
+          // Generic error - just toast
+          this.toaster.error(errorMessage || 'Failed to change category status');
+        }
+
         console.error('Toggle status error:', err);
+        this.loadPagedData();
       },
     });
+  }
+
+  /**
+   * Extract user-friendly error message from HTTP error response
+   */
+  private extractErrorMessage(err: any): string | null {
+    if (err?.error) {
+      if (typeof err.error === 'string') {
+        return err.error;
+      }
+
+      if (err.error.message) {
+        return err.error.message;
+      }
+
+      if (err.error.title) {
+        return err.error.title;
+      }
+
+      if (err.error.errors && typeof err.error.errors === 'object') {
+        const errors = Object.values(err.error.errors).flat();
+        if (errors.length > 0) {
+          return errors.join(', ');
+        }
+      }
+    }
+
+    if (err?.message) {
+      return err.message;
+    }
+
+    if (err?.statusText && err.statusText !== 'Unknown Error') {
+      return err.statusText;
+    }
+
+    return null;
   }
 }

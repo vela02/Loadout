@@ -1,3 +1,5 @@
+// products.component.ts
+
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
@@ -7,6 +9,8 @@ import {
 import { ProductsApiService } from '../../../../api-services/products/products-api.service';
 import { BaseListPagedComponent } from '../../../../core/components/base-classes/base-list-paged-component';
 import { ToasterService } from '../../../../core/services/toaster.service';
+import { DialogHelperService } from '../../../shared/services/dialog-helper.service';
+import { DialogButton } from '../../../shared/models/dialog-config.model';
 
 @Component({
   selector: 'app-products',
@@ -21,6 +25,7 @@ export class ProductsComponent
   private api = inject(ProductsApiService);
   private router = inject(Router);
   private toaster = inject(ToasterService);
+  private dialogHelper = inject(DialogHelperService);
 
   displayedColumns: string[] = [
     'name',
@@ -66,30 +71,36 @@ export class ProductsComponent
   }
 
   onDelete(product: ListProductsQueryDto): void {
-    const confirmed = confirm(
-      `Are you sure you want to delete product "${product.name}"?`
-    );
+    this.dialogHelper.product.confirmDelete(product.name).subscribe(result => {
+      if (result && result.button === DialogButton.DELETE) {
+        this.performDelete(product);
+      }
+    });
+  }
 
-    if (!confirmed) {
-      return;
-    }
-
+  private performDelete(product: ListProductsQueryDto): void {
     this.startLoading();
 
     this.api.delete(product.id).subscribe({
       next: () => {
-        this.toaster.success('Product deleted successfully');
-        this.loadPagedData(); // Reload current page
+        this.dialogHelper.product.showDeleteSuccess().subscribe();
+        this.loadPagedData();
       },
       error: (err) => {
-        this.stopLoading('Failed to delete product');
+        this.stopLoading();
+
+        this.dialogHelper.showError(
+          'DIALOGS.TITLES.ERROR',
+          'PRODUCTS.DIALOGS.ERROR_DELETE'
+        ).subscribe();
+
         console.error('Delete product error:', err);
       }
     });
   }
 
   onSearch(): void {
-    this.request.paging.page = 1; // Reset to first page
+    this.request.paging.page = 1;
     this.loadPagedData();
   }
 }

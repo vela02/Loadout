@@ -40,10 +40,12 @@
   },
   "PRODUCT_CATEGORIES": {
     "TITLE": "Kategorije proizvoda",
+    "SUBTITLE": "Upravljajte kategorijama proizvoda",
     "SEARCH_PLACEHOLDER": "Pretraži kategorije",
     "SEARCH_INPUT_PLACEHOLDER": "Unesite naziv kategorije...",
     "ONLY_ENABLED": "Samo aktivne",
     "NEW_CATEGORY": "Nova kategorija",
+    "ADD_NEW": "Dodaj kategoriju",
     "LOADING": "Učitavanje kategorija...",
     "NO_DATA": "Nema kategorija za prikaz",
     "NO_DATA_FILTER": "Nema rezultata za pretragu",
@@ -65,13 +67,30 @@
       "CANCEL": "Otkaži",
       "SAVE": "Spremi",
       "UPDATE": "Ažuriraj"
+    },
+    "DIALOGS": {
+      "DELETE_TITLE": "Brisanje kategorije",
+      "DELETE_MESSAGE": "Da li ste sigurni da želite obrisati kategoriju \"{{name}}\"? Ova akcija će obrisati i sve proizvode u ovoj kategoriji.",
+      "CONFIRM_ENABLE": "Da li ste sigurni da želite aktivirati kategoriju \"{{name}}\"?",
+      "CONFIRM_DISABLE": "Da li ste sigurni da želite deaktivirati kategoriju \"{{name}}\"?",
+      "SUCCESS_CREATE": "Kategorija je uspješno kreirana.",
+      "SUCCESS_UPDATE": "Kategorija je uspješno ažurirana.",
+      "SUCCESS_DELETE": "Kategorija je uspješno obrisana.",
+      "SUCCESS_ENABLE": "Kategorija \"{{name}}\" je uspješno aktivirana.",
+      "SUCCESS_DISABLE": "Kategorija \"{{name}}\" je uspješno deaktivirana.",
+      "ERROR_CREATE": "Greška prilikom kreiranja kategorije.",
+      "ERROR_UPDATE": "Greška prilikom ažuriranja kategorije.",
+      "ERROR_DELETE": "Greška prilikom brisanja kategorije.",
+      "ERROR_TOGGLE": "Greška prilikom promjene statusa kategorije \"{{name}}\"."
     }
   },
   "PRODUCTS": {
     "TITLE": "Proizvodi",
+    "SUBTITLE": "Upravljajte proizvodima",
     "SEARCH_PLACEHOLDER": "Pretraži proizvode",
     "SEARCH_INPUT_PLACEHOLDER": "Unesite naziv proizvoda...",
     "NEW_PRODUCT": "Novi proizvod",
+    "ADD_NEW": "Dodaj proizvod",
     "LOADING": "Učitavanje proizvoda...",
     "NO_DATA": "Nema proizvoda za prikaz",
     "NO_DATA_FILTER": "Nema rezultata za pretragu",
@@ -103,9 +122,23 @@
       "PRICE": "Cijena",
       "PRICE_PLACEHOLDER": "0.00",
       "CATEGORY": "Kategorija",
+      "STOCK": "Stanje",
+      "STOCK_PLACEHOLDER": "0",
       "CANCEL": "Otkaži",
       "SAVE": "Spremi",
       "UPDATE": "Ažuriraj"
+    },
+    "DIALOGS": {
+      "DELETE_TITLE": "Brisanje proizvoda",
+      "DELETE_MESSAGE": "Da li ste sigurni da želite obrisati proizvod \"{{name}}\"?",
+      "SUCCESS_CREATE": "Proizvod je uspješno kreiran.",
+      "SUCCESS_UPDATE": "Proizvod je uspješno ažuriran.",
+      "SUCCESS_DELETE": "Proizvod je uspješno obrisan.",
+      "ERROR_CREATE": "Greška prilikom kreiranja proizvoda.",
+      "ERROR_UPDATE": "Greška prilikom ažuriranja proizvoda.",
+      "ERROR_DELETE": "Greška prilikom brisanja proizvoda.",
+      "UNSAVED_CHANGES": "Imate nesačuvane izmjene u formi.",
+      "CONFIRM_CANCEL": "Da li želite otkazati izmjene i vratiti se nazad?"
     }
   },
   "COMMON": {
@@ -118,6 +151,49 @@
     "CREATE": "Kreiraj",
     "SEARCH": "Pretraži",
     "LOADING": "Učitavanje...",
-    "ERROR": "Došlo je do greške"
+    "ERROR": "Došlo je do greške",
+    "SUCCESS": "Uspjeh",
+    "WARNING": "Upozorenje",
+    "INFO": "Informacija"
+  },
+  "DIALOGS": {
+    "TYPES": {
+      "INFO": "Informacija",
+      "SUCCESS": "Uspjeh",
+      "ERROR": "Greška",
+      "WARNING": "Upozorenje",
+      "QUESTION": "Pitanje"
+    },
+    "BUTTONS": {
+      "OK": "U redu",
+      "CANCEL": "Otkaži",
+      "YES": "Da",
+      "NO": "Ne",
+      "CLOSE": "Zatvori",
+      "DELETE": "Obriši",
+      "SAVE": "Sačuvaj",
+      "CONTINUE": "Nastavi",
+      "BACK": "Nazad"
+    },
+    "TITLES": {
+      "CONFIRM_DELETE": "Potvrda brisanja",
+      "CONFIRM_ACTION": "Potvrda akcije",
+      "UNSAVED_CHANGES": "Nesačuvane izmjene",
+      "SUCCESS": "Uspješno",
+      "ERROR": "Greška",
+      "WARNING": "Upozorenje",
+      "INFO": "Informacija"
+    },
+    "MESSAGES": {
+      "DELETE_CONFIRM": "Da li ste sigurni da želite obrisati \"{{name}}\"?",
+      "DELETE_WARNING": "Ova akcija se ne može poništiti.",
+      "UNSAVED_CHANGES": "Imate nesačuvane izmjene. Da li želite da nastavite?",
+      "SUCCESS_SAVE": "Podaci su uspješno sačuvani.",
+      "SUCCESS_DELETE": "Stavka je uspješno obrisana.",
+      "SUCCESS_UPDATE": "Podaci su uspješno ažurirani.",
+      "ERROR_GENERIC": "Došlo je do greške. Molimo pokušajte ponovo.",
+      "ERROR_NETWORK": "Greška u mreži. Provjerite vašu internet konekciju.",
+      "ARE_YOU_SURE": "Da li ste sigurni?"
+    }
   }
 }

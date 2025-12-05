@@ -40,10 +40,12 @@
   },
   "PRODUCT_CATEGORIES": {
     "TITLE": "Product Categories",
+    "SUBTITLE": "Manage product categories",
     "SEARCH_PLACEHOLDER": "Search categories",
     "SEARCH_INPUT_PLACEHOLDER": "Enter category name...",
     "ONLY_ENABLED": "Only Active",
     "NEW_CATEGORY": "New Category",
+    "ADD_NEW": "Add Category",
     "LOADING": "Loading categories...",
     "NO_DATA": "No categories to display",
     "NO_DATA_FILTER": "No results found for search",
@@ -65,13 +67,30 @@
       "CANCEL": "Cancel",
       "SAVE": "Save",
       "UPDATE": "Update"
+    },
+    "DIALOGS": {
+      "DELETE_TITLE": "Delete Category",
+      "DELETE_MESSAGE": "Are you sure you want to delete category \"{{name}}\"? This will also delete all products in this category.",
+      "CONFIRM_ENABLE": "Are you sure you want to enable category \"{{name}}\"?",
+      "CONFIRM_DISABLE": "Are you sure you want to disable category \"{{name}}\"?",
+      "SUCCESS_CREATE": "Category created successfully.",
+      "SUCCESS_UPDATE": "Category updated successfully.",
+      "SUCCESS_DELETE": "Category deleted successfully.",
+      "SUCCESS_ENABLE": "Category \"{{name}}\" has been enabled successfully.",
+      "SUCCESS_DISABLE": "Category \"{{name}}\" has been disabled successfully.",
+      "ERROR_CREATE": "Error creating category.",
+      "ERROR_UPDATE": "Error updating category.",
+      "ERROR_DELETE": "Error deleting category.",
+      "ERROR_TOGGLE": "Error changing status of category \"{{name}}\"."
     }
   },
   "PRODUCTS": {
     "TITLE": "Products",
+    "SUBTITLE": "Manage products",
     "SEARCH_PLACEHOLDER": "Search products",
     "SEARCH_INPUT_PLACEHOLDER": "Enter product name...",
     "NEW_PRODUCT": "New Product",
+    "ADD_NEW": "Add Product",
     "LOADING": "Loading products...",
     "NO_DATA": "No products to display",
     "NO_DATA_FILTER": "No results found for search",
@@ -103,9 +122,23 @@
       "PRICE": "Price",
       "PRICE_PLACEHOLDER": "0.00",
       "CATEGORY": "Category",
+      "STOCK": "Stock",
+      "STOCK_PLACEHOLDER": "0",
       "CANCEL": "Cancel",
       "SAVE": "Save",
       "UPDATE": "Update"
+    },
+    "DIALOGS": {
+      "DELETE_TITLE": "Delete Product",
+      "DELETE_MESSAGE": "Are you sure you want to delete product \"{{name}}\"?",
+      "SUCCESS_CREATE": "Product created successfully.",
+      "SUCCESS_UPDATE": "Product updated successfully.",
+      "SUCCESS_DELETE": "Product deleted successfully.",
+      "ERROR_CREATE": "Error creating product.",
+      "ERROR_UPDATE": "Error updating product.",
+      "ERROR_DELETE": "Error deleting product.",
+      "UNSAVED_CHANGES": "You have unsaved changes in the form.",
+      "CONFIRM_CANCEL": "Do you want to cancel changes and go back?"
     }
   },
   "COMMON": {
@@ -118,6 +151,49 @@
     "CREATE": "Create",
     "SEARCH": "Search",
     "LOADING": "Loading...",
-    "ERROR": "An error occurred"
+    "ERROR": "An error occurred",
+    "SUCCESS": "Success",
+    "WARNING": "Warning",
+    "INFO": "Information"
+  },
+  "DIALOGS": {
+    "TYPES": {
+      "INFO": "Information",
+      "SUCCESS": "Success",
+      "ERROR": "Error",
+      "WARNING": "Warning",
+      "QUESTION": "Question"
+    },
+    "BUTTONS": {
+      "OK": "OK",
+      "CANCEL": "Cancel",
+      "YES": "Yes",
+      "NO": "No",
+      "CLOSE": "Close",
+      "DELETE": "Delete",
+      "SAVE": "Save",
+      "CONTINUE": "Continue",
+      "BACK": "Back"
+    },
+    "TITLES": {
+      "CONFIRM_DELETE": "Confirm Deletion",
+      "CONFIRM_ACTION": "Confirm Action",
+      "UNSAVED_CHANGES": "Unsaved Changes",
+      "SUCCESS": "Success",
+      "ERROR": "Error",
+      "WARNING": "Warning",
+      "INFO": "Information"
+    },
+    "MESSAGES": {
+      "DELETE_CONFIRM": "Are you sure you want to delete \"{{name}}\"?",
+      "DELETE_WARNING": "This action cannot be undone.",
+      "UNSAVED_CHANGES": "You have unsaved changes. Do you want to continue?",
+      "SUCCESS_SAVE": "Data saved successfully.",
+      "SUCCESS_DELETE": "Item deleted successfully.",
+      "SUCCESS_UPDATE": "Data updated successfully.",
+      "ERROR_GENERIC": "An error occurred. Please try again.",
+      "ERROR_NETWORK": "Network error. Please check your internet connection.",
+      "ARE_YOU_SURE": "Are you sure?"
+    }
   }
 }
