@@ -5,7 +5,7 @@ import { ProductCategoriesApiService } from '../../../../api-services/product-ca
 import { ToasterService } from '../../../../core/services/toaster.service';
 import {
   ListProductCategoriesRequest,
-  ListProductCategoriesQueryDto
+  ListProductCategoriesQueryDto,
 } from '../../../../api-services/product-categories/product-categories-api.model';
 import { ProductCategoryUpsertComponent } from './product-category-upsert/product-category-upsert.component';
 
@@ -13,12 +13,12 @@ import { ProductCategoryUpsertComponent } from './product-category-upsert/produc
   selector: 'app-product-categories',
   standalone: false,
   templateUrl: './product-categories.component.html',
-  styleUrl: './product-categories.component.scss'
+  styleUrl: './product-categories.component.scss',
 })
 export class ProductCategoriesComponent
   extends BaseListPagedComponent<ListProductCategoriesQueryDto, ListProductCategoriesRequest>
-  implements OnInit {
-
+  implements OnInit
+{
   private api = inject(ProductCategoriesApiService);
   private dialog = inject(MatDialog);
   private toaster = inject(ToasterService);
@@ -47,7 +47,7 @@ export class ProductCategoriesComponent
       error: (err) => {
         this.stopLoading('Failed to load categories');
         console.error('Load categories error:', err);
-      }
+      },
     });
   }
 
@@ -71,10 +71,13 @@ export class ProductCategoriesComponent
   onCreate(): void {
     const dialogRef = this.dialog.open(ProductCategoryUpsertComponent, {
       width: '500px',
-      disableClose: true,
+      maxWidth: '90vw',
+      panelClass: 'product-category-dialog',
+      autoFocus: true,
+      disableClose: false,
       data: {
-        mode: 'create'
-      }
+        mode: 'create',
+      },
     });
 
     dialogRef.afterClosed().subscribe((success: boolean) => {
@@ -87,11 +90,14 @@ export class ProductCategoriesComponent
   onEdit(category: ListProductCategoriesQueryDto): void {
     const dialogRef = this.dialog.open(ProductCategoryUpsertComponent, {
       width: '500px',
-      disableClose: true,
+      maxWidth: '90vw',
+      panelClass: 'product-category-dialog',
+      autoFocus: true,
+      disableClose: false,
       data: {
         mode: 'edit',
-        categoryId: category.id
-      }
+        categoryId: category.id,
+      },
     });
 
     dialogRef.afterClosed().subscribe((success: boolean) => {
@@ -102,9 +108,7 @@ export class ProductCategoriesComponent
   }
 
   onDelete(category: ListProductCategoriesQueryDto): void {
-    const confirmed = confirm(
-      `Are you sure you want to delete category "${category.name}"?`
-    );
+    const confirmed = confirm(`Are you sure you want to delete category "${category.name}"?`);
 
     if (!confirmed) {
       return;
@@ -120,7 +124,7 @@ export class ProductCategoriesComponent
       error: (err) => {
         this.stopLoading('Failed to delete category');
         console.error('Delete category error:', err);
-      }
+      },
     });
   }
 
@@ -140,7 +144,7 @@ export class ProductCategoriesComponent
       error: (err) => {
         this.stopLoading('Failed to update category status');
         console.error('Toggle status error:', err);
-      }
+      },
     });
   }
 }
