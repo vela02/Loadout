@@ -1,4 +1,5 @@
 ﻿using Market.Domain.Common;
+using Market.Domain.Entities.Sales;
 
 namespace Market.Domain.Entities.Catalog;
 
@@ -42,8 +43,18 @@ public class ProductEntity : BaseEntity
     /// </summary>
     public bool IsEnabled { get; set; }
 
+
     // Many-to-many: Users who favorited this product
     public ICollection<UserProductFavoriteEntity> FavoritedByUsers { get; private set; } = new List<UserProductFavoriteEntity>();
+
+
+    ///// <summary>
+    ///// Collection of order items.
+    /////
+    ///// **Napomena za studente:**
+
+    ///// </summary>
+    //public IReadOnlyCollection<OrderItemEntity> Items { get; set; } = new List<OrderItemEntity>();
 
 
     /// <summary>

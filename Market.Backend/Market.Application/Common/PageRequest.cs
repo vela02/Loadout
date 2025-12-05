@@ -2,7 +2,7 @@
 
 public sealed class PageRequest
 {
-    private const int MaxPageSize = 100;
+    private const int MaxPageSize = 10000;
     public int Page { get; init; } = 1;
 
     private int _pageSize = 10;

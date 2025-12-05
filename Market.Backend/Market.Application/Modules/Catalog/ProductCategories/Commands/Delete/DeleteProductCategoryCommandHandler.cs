@@ -14,7 +14,7 @@ public class DeleteProductCategoryCommandHandler(IAppDbContext context, IAppCurr
         if (category is null)
             throw new MarketNotFoundException("Kategorija nije pronađena.");
 
-        category.IsDeleted = true; // Soft delete
+        context.ProductCategories.Remove(category);
         await context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
