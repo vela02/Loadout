@@ -3,7 +3,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { DialogConfig, DialogButton, DialogType, DialogResult } from '../../../models/dialog-config.model';
+import { DialogConfig, DialogButton, DialogType, DialogResult } from '../../models/dialog-config.model';
 
 @Component({
   selector: 'app-confirm-dialog',

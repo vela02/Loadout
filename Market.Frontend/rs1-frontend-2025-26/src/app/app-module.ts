@@ -6,9 +6,10 @@ import {HttpClient, provideHttpClient, withInterceptors} from '@angular/common/h
 import { AppRoutingModule } from './app-routing-module';
 import { AppComponent } from './app.component';
 import {authInterceptor} from './core/interceptors/auth-interceptor.service';
+import {loadingBarInterceptor} from './core/interceptors/loading-bar-interceptor.service';
+import {errorLoggingInterceptor} from './core/interceptors/error-logging-interceptor.service';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {CustomTranslateLoader} from './core/services/custom-translate-loader';
-import { FitPaginatorBarComponent } from './modules/shared/components/fit-paginator-bar/fit-paginator-bar.component';
 import {materialModules} from './modules/shared/material-modules';
 import {SharedModule} from './modules/shared/shared-module';
 
@@ -34,7 +35,11 @@ import {SharedModule} from './modules/shared/shared-module';
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection(),
     provideHttpClient(
-      withInterceptors([authInterceptor])
+      withInterceptors([
+        loadingBarInterceptor,
+        authInterceptor,
+        errorLoggingInterceptor
+      ])
     )
   ],
   exports: [

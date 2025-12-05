@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { DialogConfig, DialogType, DialogButton, DialogResult } from '../models/dialog-config.model';
-import {ConfirmDialogComponent} from '../components/confirm-dialog/confirm-dialog/confirm-dialog.component';
+import {ConfirmDialogComponent} from '../components/confirm-dialog/confirm-dialog.component';
 
 @Injectable({
   providedIn: 'root'
