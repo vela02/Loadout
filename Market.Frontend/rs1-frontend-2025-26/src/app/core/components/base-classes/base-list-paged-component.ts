@@ -5,6 +5,10 @@ import {BasePagedQuery} from '../../models/paging/base-paged-query';
 export abstract class BaseListPagedComponent<TItem, TRequest extends BasePagedQuery>
   extends BaseListComponent<TItem> {
 
+  constructor() {
+    super();
+  }
+
   request!: TRequest;
   totalItems = 0;
   totalPages = 0;

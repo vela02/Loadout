@@ -55,12 +55,12 @@
   </div>
 
   <!-- Skeleton Loader -->
-  <app-table-skeleton
+  <app-fit-table-skeleton
     *ngIf="isLoading && !errorMessage"
     [rows]="10"
     [columns]="5"
     [showActions]="true">
-  </app-table-skeleton>
+  </app-fit-table-skeleton>
 
   <!-- Error -->
   <div *ngIf="!isLoading && errorMessage" class="error-container">

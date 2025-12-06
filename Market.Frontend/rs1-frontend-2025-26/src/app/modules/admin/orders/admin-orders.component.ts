@@ -50,6 +50,7 @@ export class AdminOrdersComponent
   constructor() {
     super();
     this.request = new ListOrdersRequest();
+    this.request.paging.pageSize = 20;
   }
 
   ngOnInit(): void {

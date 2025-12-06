@@ -29,6 +29,9 @@ export enum OrderStatusType {
 export class ListOrdersRequest extends BasePagedQuery {
   search?: string | null;
   // Future filters: status?, dateFrom?, dateTo?, userId?
+  constructor() {
+    super();
+  }
 }
 
 /**
