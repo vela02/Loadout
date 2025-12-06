@@ -1,4 +1,5 @@
 using Market.Application.Modules.Sales.Orders.Commands.Create;
+using Market.Application.Modules.Sales.Orders.Commands.Status;
 using Market.Application.Modules.Sales.Orders.Commands.Update;
 using Market.Application.Modules.Sales.Orders.Queries.GetById;
 using Market.Application.Modules.Sales.Orders.Queries.List;
@@ -47,17 +48,11 @@ public class OrdersController(ISender sender) : ControllerBase
         return result;
     }
 
-    //[HttpPut("{id:int}/disable")]
-    //public async Task Disable(int id, CancellationToken ct)
-    //{
-    //    await sender.Send(new DisableProductCategoryCommand { Id = id }, ct);
-    //    // no return -> 204 No Content
-    //}
-
-    //[HttpPut("{id:int}/enable")]
-    //public async Task Enable(int id, CancellationToken ct)
-    //{
-    //    await sender.Send(new EnableProductCategoryCommand { Id = id }, ct);
-    //    // no return -> 204 No Content
-    //}
+    [HttpPut("{id:int}/change-status")]
+    public async Task ChangeStatus(int id, [FromBody] ChangeOrderStatusCommand command, CancellationToken ct)
+    {
+        command.Id = id;
+        await sender.Send(command, ct);
+        // no return -> 204 No Content
+    }
 }

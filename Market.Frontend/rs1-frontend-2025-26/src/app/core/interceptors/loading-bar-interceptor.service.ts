@@ -16,7 +16,7 @@ import { LoadingBarService } from '../services/loading-bar.service';
  * 1. Register in app.config.ts:
  *    withInterceptors([loadingBarInterceptor, ...])
  *
- * 2. Add <app-loading-bar></app-loading-bar> to app.component.html
+ * 2. Add <app-fit-loading-bar></app-fit-loading-bar> to app.component.html
  *
  * 3. Done! Loading bar will show automatically for all HTTP requests
  */

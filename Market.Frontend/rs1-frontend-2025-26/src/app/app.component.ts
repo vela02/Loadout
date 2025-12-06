@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading translations:', error);
-        console.error('Check if files exist at: /assets/i18n/' + savedLang + '.json');
+        console.error('Check if files exist at: /i18n/' + savedLang + '.json');
       }
     });
   }
@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
       if (res === 'PRODUCTS.TITLE') {
         console.error('⚠️ Translation not working! Key returned instead of value.');
         console.error('Possible causes:');
-        console.error('1. Translation files not in /assets/i18n/ folder');
+        console.error('1. Translation files not in /i18n/ folder');
         console.error('2. JSON files have syntax errors');
         console.error('3. TranslateService not properly initialized');
       }

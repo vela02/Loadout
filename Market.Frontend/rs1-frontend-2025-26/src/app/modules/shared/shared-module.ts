@@ -4,19 +4,19 @@ import {FitPaginatorBarComponent} from './components/fit-paginator-bar/fit-pagin
 import {materialModules} from './material-modules';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TranslatePipe} from '@ngx-translate/core';
-import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { FitConfirmDialogComponent } from './components/fit-confirm-dialog/fit-confirm-dialog.component';
 import {DialogHelperService} from './services/dialog-helper.service';
-import { LoadingBarComponent } from './components/loading-bar/loading-bar.component';
-import { TableSkeletonComponent } from './components/table-skeleton/table-skeleton.component';
+import { FitLoadingBarComponent } from './components/fit-loading-bar/fit-loading-bar.component';
+import { FitTableSkeletonComponent } from './components/fit-table-skeleton/fit-table-skeleton.component';
 
 
 
 @NgModule({
   declarations: [
     FitPaginatorBarComponent,
-    ConfirmDialogComponent,
-    LoadingBarComponent,
-    TableSkeletonComponent
+    FitConfirmDialogComponent,
+    FitLoadingBarComponent,
+    FitTableSkeletonComponent
   ],
   imports: [
     CommonModule,
@@ -34,8 +34,8 @@ import { TableSkeletonComponent } from './components/table-skeleton/table-skelet
     ReactiveFormsModule,
     TranslatePipe,
     FormsModule,
-    LoadingBarComponent,
-    TableSkeletonComponent,
+    FitLoadingBarComponent,
+    FitTableSkeletonComponent,
     materialModules
   ]
 })
