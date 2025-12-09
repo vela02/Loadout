@@ -99,24 +99,24 @@
           <tbody>
           <tr *ngFor="let item of order.items">
             <td class="product-cell">
-              <span class="product-name">{{ item.product.name }}</span>
+              <span class="product-name">{{ item.product.productName }}</span>
             </td>
             <td class="text-right">{{ item.quantity }}</td>
-            <td class="text-right">{{ item.unitPrice | currency:'BAM' }}</td>
+            <td class="text-right">{{ item.unitPrice | currency:'BAM':'symbol':'1.2-2' }}</td>
             <td class="text-right discount-cell">
-                <span *ngIf="item.discountAmount > 0">
-                  -{{ item.discountAmount | currency:'BAM' }}
-                  <span class="discount-percent">({{ item.discountPercent }}%)</span>
-                </span>
-              <span *ngIf="item.discountAmount === 0">-</span>
+              <span *ngIf="item.discountAmount && item.discountAmount > 0">
+                -{{ item.discountAmount | currency:'BAM':'symbol':'1.2-2' }}
+                <span class="discount-percent" *ngIf="item.discountPercent">({{ item.discountPercent }}%)</span>
+              </span>
+              <span *ngIf="!item.discountAmount || item.discountAmount === 0">-</span>
             </td>
-            <td class="text-right total-cell">{{ item.total | currency:'BAM' }}</td>
+            <td class="text-right total-cell">{{ item.total | currency:'BAM':'symbol':'1.2-2' }}</td>
           </tr>
           </tbody>
           <tfoot>
           <tr class="total-row">
             <td colspan="4" class="text-right"><strong>{{ 'ORDERS.DETAILS.ORDER_TOTAL' | translate }}</strong></td>
-            <td class="text-right total-amount"><strong>{{ order.totalAmount | currency:'BAM' }}</strong></td>
+            <td class="text-right total-amount"><strong>{{ order.totalAmount | currency:'BAM':'symbol':'1.2-2' }}</strong></td>
           </tr>
           </tfoot>
         </table>

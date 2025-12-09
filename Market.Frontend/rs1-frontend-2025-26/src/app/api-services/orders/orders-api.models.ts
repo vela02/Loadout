@@ -130,9 +130,9 @@ export interface GetByIdOrderQueryDtoUser {
  * Product info in GetById order item
  */
 export interface GetByIdOrderQueryDtoItemProduct {
-  id: number;
-  name: string | null;
-  price: number;
+  productId: number;
+  productName: string | null;
+  productCategoryName: number;
 }
 
 /**
