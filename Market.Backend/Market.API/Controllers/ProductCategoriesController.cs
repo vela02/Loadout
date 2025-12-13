@@ -44,6 +44,7 @@ public class ProductCategoriesController(ISender sender) : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<PageResult<ListProductCategoriesQueryDto>> List([FromQuery] ListProductCategoriesQuery query, CancellationToken ct)
     {
         var result = await sender.Send(query, ct);

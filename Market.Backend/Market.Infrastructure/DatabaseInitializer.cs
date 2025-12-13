@@ -24,7 +24,7 @@ public static class DatabaseInitializer
         }
 
         // SQL Server or similar
-        await ctx.Database.MigrateAsync();
+        await ctx.Database.MigrateAsync();//update-database
 
         if (env.IsDevelopment())
         {
