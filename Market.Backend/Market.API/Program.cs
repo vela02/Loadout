@@ -1,8 +1,12 @@
 ﻿using Market.API;
+using Market.API.Models;
 using Market.API.Middleware;
 using Market.Application;
 using Market.Infrastructure;
 using Serilog;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
+
 
 public partial class Program
 {
@@ -47,6 +51,7 @@ public partial class Program
             builder.Services
                 .AddAPI(builder.Configuration, builder.Environment)
                 .AddInfrastructure(builder.Configuration, builder.Environment)
+                .AddDbContext<LoadoutDbContext>(options=>options.UseSqlServer(builder.Configuration.GetConnectionString("Main")))
                 .AddApplication();
 
             // CORS policy to allow Angular dev server access
@@ -62,6 +67,8 @@ public partial class Program
                             .AllowCredentials();
                     });
             });
+                 builder.Services.AddControllers().AddJsonOptions(x =>
+                    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
             var app = builder.Build();
 
@@ -88,7 +95,7 @@ public partial class Program
             app.MapControllers();
 
             // Database migrations + seeding
-            await app.Services.InitializeDatabaseAsync(app.Environment);
+           
 
             Log.Information("Market API started successfully.");
             app.Run();
