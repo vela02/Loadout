@@ -1,6 +1,7 @@
-﻿using Market.Application.Abstractions;
+﻿using Market.Application;
+using Market.Application.Abstractions;
+using Market.Domain.Models;
 using Market.Infrastructure.Common;
-using Market.Infrastructure.Database;
 using Market.Shared.Constants;
 using Market.Shared.Options;
 using Microsoft.Extensions.Configuration;
@@ -24,7 +25,7 @@ public static class DependencyInjection
             .ValidateOnStart();
 
         // DbContext: InMemory for test environments; SQL Server otherwise
-        services.AddDbContext<DatabaseContext>((sp, options) =>
+        services.AddDbContext<LoadoutDbContext>((sp, options) =>
         {
             if (env.IsTest())
             {
@@ -37,11 +38,13 @@ public static class DependencyInjection
             options.UseSqlServer(cs);
         });
 
+
+
         // IAppDbContext mapping
-        services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<DatabaseContext>());
+        services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<LoadoutDbContext>());
 
         // Identity hasher
-        services.AddScoped<IPasswordHasher<MarketUserEntity>, PasswordHasher<MarketUserEntity>>();
+        services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
         // Token service (reads JwtOptions via IOptions<JwtOptions>)
         services.AddTransient<IJwtTokenService, JwtTokenService>();
