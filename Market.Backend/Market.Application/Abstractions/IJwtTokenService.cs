@@ -1,4 +1,6 @@
-﻿namespace Market.Application.Abstractions;
+﻿using Market.Domain.Models;
+
+namespace Market.Application.Abstractions;
 
 public sealed class JwtTokenPair
 {
@@ -13,7 +15,7 @@ public sealed class JwtTokenPair
 public interface IJwtTokenService
 {
     /// <summary>Issues an access token and returns all its technical details.</summary>
-    JwtTokenPair IssueTokens(MarketUserEntity user);
+    JwtTokenPair IssueTokens(User user);
 
     /// <summary>Hashes the refresh token for storage in the database.</summary>
     string HashRefreshToken(string rawToken);

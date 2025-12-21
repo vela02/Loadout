@@ -1,4 +1,5 @@
 ﻿using Market.Application.Abstractions;
+using Market.Domain.Models;
 using Market.Shared.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -20,7 +21,7 @@ public sealed class JwtTokenService : IJwtTokenService
         _time = time ?? throw new ArgumentNullException(nameof(time));
     }
 
-    public JwtTokenPair IssueTokens(MarketUserEntity user)
+    public JwtTokenPair IssueTokens(User user)
     {
         // Now from TimeProvider (consistent with the rest of the app)
         var nowInstant = _time.GetUtcNow();
@@ -32,15 +33,13 @@ public sealed class JwtTokenService : IJwtTokenService
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new(ClaimTypes.NameIdentifier,   user.Id.ToString()),
-            new(ClaimTypes.Email,            user.Email),
-            new("is_admin",    user.IsAdmin.ToString().ToLowerInvariant()),
-            new("is_manager",  user.IsManager.ToString().ToLowerInvariant()),
-            new("is_employee", user.IsEmployee.ToString().ToLowerInvariant()),
-            new("ver",         user.TokenVersion.ToString()),
-            new(JwtRegisteredClaimNames.Iat, ToUnixTimeSeconds(nowInstant).ToString(), ClaimValueTypes.Integer64),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
-            new(JwtRegisteredClaimNames.Aud, _jwt.Audience)
+             new(ClaimTypes.NameIdentifier,   user.Id.ToString()),
+             new(ClaimTypes.Name,             user.Username), 
+             new(ClaimTypes.Email,            user.Email),
+             new(ClaimTypes.Role,             user.Role?.Name ?? "Customer"),
+             new(JwtRegisteredClaimNames.Iat, ToUnixTimeSeconds(nowInstant).ToString(), ClaimValueTypes.Integer64),
+             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
+             new(JwtRegisteredClaimNames.Aud, _jwt.Audience)
         };
 
         // --- Signature ---
