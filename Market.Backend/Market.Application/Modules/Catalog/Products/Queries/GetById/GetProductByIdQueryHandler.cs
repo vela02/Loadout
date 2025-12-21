@@ -11,13 +11,12 @@ public class GetProductByIdQueryHandler(IAppDbContext context) : IRequestHandler
             .Select(x => new GetProductByIdQueryDto
             {
                 Id = x.Id,
-                Name = x.Name,
+                Name = x.Title,
                 IsEnabled = x.IsEnabled,
                 Description = x.Description,
-                Price = x.Price,
-                StockQuantity = x.StockQuantity,
+                Price = (decimal)x.Price,               
                 CategoryName = x.Category!.Name,
-                CategoryId = x.CategoryId
+                CategoryId = (int)x.CategoryId
             })
             .FirstOrDefaultAsync(cancellationToken);
 

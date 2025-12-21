@@ -12,18 +12,17 @@ public sealed class ListProductsQueryHandler(IAppDbContext ctx)
 
         if (!string.IsNullOrWhiteSpace(request.Search))
         {
-             q = q.Where(x => x.Name.ToLower().Contains(searchTerm));
+             q = q.Where(x => x.Title.ToLower().Contains(searchTerm));
         }
 
-        var projectedQuery = q.OrderBy(x => x.Name)
+        var projectedQuery = q.OrderBy(x => x.Title)
             .Select(x => new ListProductsQueryDto
             {
                 Id = x.Id,
-                Name = x.Name,
+                Name = x.Title,
                 IsEnabled = x.IsEnabled,
                 Description = x.Description,
-                Price = x.Price,
-                StockQuantity = x.StockQuantity,
+                Price = (decimal)x.Price,              
                 CategoryName = x.Category!.Name
             });
 

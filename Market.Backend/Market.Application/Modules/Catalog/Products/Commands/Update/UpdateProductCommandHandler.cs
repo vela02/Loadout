@@ -14,7 +14,7 @@ public sealed class UpdateProductCommandHandler(IAppDbContext ctx)
 
         // Check for duplicate name (case-insensitive, except for the same ID)
         var exists = await ctx.Products
-            .AnyAsync(x => x.Id != request.Id && x.Name.ToLower() == request.Name.ToLower(), ct);
+            .AnyAsync(x => x.Id != request.Id && x.Title.ToLower() == request.Name.ToLower(), ct);
 
         if (exists)
         {
@@ -35,7 +35,7 @@ public sealed class UpdateProductCommandHandler(IAppDbContext ctx)
             throw new ValidationException($"Category {productCategory.Name} is disabled.");
         }
 
-        entity.Name = request.Name.Trim();
+        entity.Title = request.Name.Trim();
         entity.Description = request.Description?.Trim();
         entity.Price = request.Price;
         entity.CategoryId = request.CategoryId;

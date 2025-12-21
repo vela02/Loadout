@@ -7,6 +7,12 @@
     <PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Controllers\OrdersController.cs" />
+    <Compile Remove="Controllers\ProductCategoriesController.cs" />
+    <Compile Remove="Controllers\ProductsController.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.5.0" />

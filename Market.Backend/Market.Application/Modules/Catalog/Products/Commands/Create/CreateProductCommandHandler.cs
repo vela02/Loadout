@@ -1,4 +1,6 @@
-﻿namespace Market.Application.Modules.Catalog.Products.Commands.Create;
+﻿using Market.Domain.Models;
+
+namespace Market.Application.Modules.Catalog.Products.Commands.Create;
 
 public class CreateProductCommandHandler(IAppDbContext ctx)
     : IRequestHandler<CreateProductCommand, int>
@@ -12,7 +14,7 @@ public class CreateProductCommandHandler(IAppDbContext ctx)
 
         // Check if a product with the same name already exists.
         bool exists = await ctx.Products
-            .AnyAsync(x => x.Name == normalized, ct);
+            .AnyAsync(x => x.Title == normalized, ct);
 
         if (exists)
         {
@@ -33,12 +35,11 @@ public class CreateProductCommandHandler(IAppDbContext ctx)
             throw new ValidationException($"Category {productCategory.Name} is disabled.");
         }
 
-        var category = new ProductEntity
+        var category = new Game
         {
-            Name = request.Name!.Trim(),
+            Title = request.Name!.Trim(),
             Description = request.Description?.Trim(),
-            Price = request.Price,
-            StockQuantity = 0, // default StockQuantity
+            Price = request.Price,            
             CategoryId = request.CategoryId,
             IsEnabled = true // deault IsEnabled
         };

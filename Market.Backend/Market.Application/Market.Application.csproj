@@ -7,10 +7,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Modules\Catalog\**" />
+    <Compile Remove="Modules\Sales\**" />
+    <EmbeddedResource Remove="Modules\Catalog\**" />
+    <EmbeddedResource Remove="Modules\Sales\**" />
+    <None Remove="Modules\Catalog\**" />
+    <None Remove="Modules\Sales\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="12.0.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
     <PackageReference Include="MediatR" Version="12.5.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.21" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.21" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.21" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.21">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.21" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.21" />
   </ItemGroup>
