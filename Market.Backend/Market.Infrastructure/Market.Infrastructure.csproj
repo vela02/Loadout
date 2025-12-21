@@ -7,6 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Database\Seeders\**" />
+    <EmbeddedResource Remove="Database\Seeders\**" />
+    <None Remove="Database\Seeders\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Database\DatabaseContext.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
 	<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	<PackageReference Include="MediatR" Version="12.5.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.21" />

@@ -1,42 +1,29 @@
-﻿namespace Market.Infrastructure.Database.Configurations.Identity;
+﻿using Market.Domain.Models;
 
-public sealed class UserEntityConfiguration : IEntityTypeConfiguration<MarketUserEntity>
+namespace Market.Infrastructure.Database.Configurations.Identity;
+
+public class UserEntityConfiguration : IEntityTypeConfiguration<User>
 {
-    public void Configure(EntityTypeBuilder<MarketUserEntity> b)
+    public void Configure(EntityTypeBuilder<User> b)
     {
         b.ToTable("Users");
-
         b.HasKey(x => x.Id);
 
-        b.HasIndex(x => x.Email)
-            .IsUnique();
+        
+        b.HasOne(x => x.Role)
+         .WithMany(r => r.Users)
+         .HasForeignKey(x => x.RoleId)
+         .OnDelete(DeleteBehavior.Restrict);
 
-        b.Property(x => x.Email)
-            .IsRequired()
-            .HasMaxLength(200);
-
-        b.Property(x => x.PasswordHash)
-            .IsRequired();
-
-        // Roles
-        b.Property(x => x.IsAdmin)
-            .HasDefaultValue(false);
-
-        b.Property(x => x.IsManager)
-            .HasDefaultValue(false);
-
-        b.Property(x => x.IsEmployee)
-            .HasDefaultValue(true); // Default: regular user
-
-        b.Property(x => x.TokenVersion)
-            .HasDefaultValue(0);
-
-        b.Property(x => x.IsEnabled)
-            .HasDefaultValue(true);
-
-        // Navigation
+        
         b.HasMany(x => x.RefreshTokens)
-            .WithOne(x => x.User)
-            .HasForeignKey(x => x.UserId);
+         .WithOne(x => x.User)
+         .HasForeignKey(x => x.UserId);
+
+        
+        b.Property(x => x.Username).IsRequired().HasMaxLength(50);
+        b.Property(x => x.Email).IsRequired().HasMaxLength(100);
+        b.Property(x => x.IsEnabled).HasDefaultValue(true);
+        b.Property(x => x.IsDeleted).HasDefaultValue(false);
     }
 }
