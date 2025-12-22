@@ -10,4 +10,8 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Market.Shared\Market.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

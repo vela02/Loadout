@@ -2,8 +2,12 @@
 using Market.Application.Abstractions;
 using Market.Domain.Models;
 using Market.Infrastructure.Common;
+using Market.Infrastructure.Database; 
+using Market.Infrastructure.Services; 
 using Market.Shared.Constants;
 using Market.Shared.Options;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -30,7 +34,6 @@ public static class DependencyInjection
             if (env.IsTest())
             {
                 options.UseInMemoryDatabase("IntegrationTestsDb");
-
                 return;
             }
 
@@ -38,10 +41,11 @@ public static class DependencyInjection
             options.UseSqlServer(cs);
         });
 
-
-
         // IAppDbContext mapping
         services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<LoadoutDbContext>());
+
+        // --- REGISTRACIJA TVOJIH NOVIH SERVISA ---
+        services.AddScoped<IGameService, GameService>();
 
         // Identity hasher
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();

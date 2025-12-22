@@ -1,7 +1,7 @@
 ﻿using Market.Domain.Models;
 using System;
 using System.Collections.Generic;
-
+using Market.Shared.Enums;
 namespace Market.Domain.Models;
 
 public partial class Game
@@ -47,4 +47,7 @@ public partial class Game
     public virtual ICollection<Wishlist> Wishlists { get; set; } = new List<Wishlist>();
 
     public virtual ICollection<GameTag> Tags { get; set; } = new List<GameTag>();
+    public GameContentType ContentType { get; set; } = GameContentType.Game;
+    public string? TrailerUrl { get; set; }
+    public string? SystemRequirements { get; set; }
 }

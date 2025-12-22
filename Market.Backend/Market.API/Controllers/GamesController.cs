@@ -1,6 +1,11 @@
-﻿
+﻿using Market.Application;
+using Market.Application.Abstractions;
+using Market.Domain.Models;
+using Market.Shared.Dtos;
+using Market.Shared.Enums;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Market.API.Models; // Ovdje koristimo tvoj namespace
 
 namespace Market.API.Controllers
 {
@@ -9,70 +14,91 @@ namespace Market.API.Controllers
     public class GamesController : ControllerBase
     {
         private readonly LoadoutDbContext _context;
+        private readonly IGameService _gameService;
 
-        // Konstruktor: Prima pristup bazi (Dependency Injection)
-        public GamesController(LoadoutDbContext context)
+        public GamesController(LoadoutDbContext context, IGameService gameService)
         {
             _context = context;
+            _gameService = gameService;
         }
 
         // 1. GET: api/Games
-        // Vraća listu svih igara
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<Game>>> GetGames()
+        public async Task<ActionResult<List<GameListDto>>> GetGames(
+            [FromQuery] decimal? minPrice,
+            [FromQuery] decimal? maxPrice,
+            [FromQuery] string? genre,
+            [FromQuery] int? categoryId,
+            [FromQuery] Market.Shared.Enums.GameContentType? type,
+            [FromQuery] int? minRating)
         {
-            // .Include(g => g.Category) znači: "Kad povučeš igru, povuci i njenu Kategoriju"
-            // Tako na frontendu nećeš imati samo CategoryId, nego i ime kategorije.
-            return await _context.Games
-                                 .Include(g => g.Category)
-                                 .ToListAsync();
+            var games = await _gameService.GetFilteredGamesAsync(minPrice, maxPrice, genre, categoryId, type, minRating);
+            return Ok(games);
         }
 
         // 2. GET: api/Games/5
-        // Vraća samo jednu igru po ID-u
         [HttpGet("{id}")]
         [AllowAnonymous]
-        public async Task<ActionResult<Game>> GetGame(int id)
+        public async Task<ActionResult<GameDetailsDto>> GetGame(int id)
         {
-            var game = await _context.Games
-                                     .Include(g => g.Category) // Uključi kategoriju i ovdje
-                                     .Include(g => g.Tags)     // Možda želiš i tagove za detaljan prikaz
-                                     .FirstOrDefaultAsync(g => g.Id == id);
-
-            if (game == null)
-            {
-                return NotFound();
-            }
-
-            return game;
+            var game = await _gameService.GetGameDetailsAsync(id);
+            if (game == null) return NotFound();
+            return Ok(game);
         }
 
         // 3. POST: api/Games
-        // Dodaje novu igru (ovo će ti trebati za Admin panel)
+        // POPRAVLJENO: Koristi CreateGameDto za čist Swagger JSON
         [HttpPost]
         [AllowAnonymous]
-        public async Task<ActionResult<Game>> PostGame(Game game)
+        public async Task<ActionResult> PostGame(CreateGameDTO dto)
         {
-            // Ako frontend pokuša poslati Category objekat, ignoriši ga, gledamo samo CategoryId
-            game.Category = null;
+            var game = new Game
+            {
+                Title = dto.Title,
+                Description = dto.Description,
+                Price = dto.Price,
+                ImageUrl = dto.ImageUrl,
+                Genre = dto.Genre,
+                ReleaseDate = dto.ReleaseDate,
+                Developer = dto.Developer,
+                Publisher = dto.Publisher,
+                CategoryId = dto.CategoryId,
+                ContentType = dto.ContentType,
+                TrailerUrl = dto.TrailerUrl,
+                SystemRequirements = dto.SystemRequirements,
+                IsEnabled = true,
+                IsDeleted = false
+            };
 
             _context.Games.Add(game);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetGame", new { id = game.Id }, game);
+            return CreatedAtAction("GetGame", new { id = game.Id }, new { id = game.Id, title = game.Title });
         }
 
         // 4. PUT: api/Games/5
-        // Ažurira postojeću igru (mijenja cijenu, naslov itd.)
+        // POPRAVLJENO: Koristi CreateGameDto za ažuriranje
         [HttpPut("{id}")]
         [AllowAnonymous]
-        public async Task<IActionResult> PutGame(int id, Game game)
+        public async Task<IActionResult> PutGame(int id, CreateGameDTO dto)
         {
-            if (id != game.Id)
-            {
-                return BadRequest();
-            }
+            var game = await _context.Games.FindAsync(id);
+            if (game == null) return NotFound();
+
+            // Ažuriranje polja
+            game.Title = dto.Title;
+            game.Description = dto.Description;
+            game.Price = dto.Price;
+            game.ImageUrl = dto.ImageUrl;
+            game.Genre = dto.Genre;
+            game.ReleaseDate = dto.ReleaseDate;
+            game.Developer = dto.Developer;
+            game.Publisher = dto.Publisher;
+            game.CategoryId = dto.CategoryId;
+            game.ContentType = dto.ContentType;
+            game.TrailerUrl = dto.TrailerUrl;
+            game.SystemRequirements = dto.SystemRequirements;
 
             _context.Entry(game).State = EntityState.Modified;
 
@@ -82,38 +108,28 @@ namespace Market.API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!GameExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                if (!GameExists(id)) return NotFound();
+                else throw;
             }
 
             return NoContent();
         }
 
         // 5. DELETE: api/Games/5
-        // Briše igru
         [HttpDelete("{id}")]
         [AllowAnonymous]
         public async Task<IActionResult> DeleteGame(int id)
         {
             var game = await _context.Games.FindAsync(id);
-            if (game == null)
-            {
-                return NotFound();
-            }
+            if (game == null) return NotFound();
 
-            _context.Games.Remove(game);
+            // Umjesto fizičkog brisanja, možemo raditi soft delete
+            game.IsDeleted = true;
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        // Pomoćna metoda da provjerimo postoji li igra
         private bool GameExists(int id)
         {
             return _context.Games.Any(e => e.Id == id);
