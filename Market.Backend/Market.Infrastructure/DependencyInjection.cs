@@ -2,8 +2,8 @@
 using Market.Application.Abstractions;
 using Market.Domain.Models;
 using Market.Infrastructure.Common;
-using Market.Infrastructure.Database; 
-using Market.Infrastructure.Services; 
+using Market.Infrastructure.Database;
+using Market.Infrastructure.Services;
 using Market.Shared.Constants;
 using Market.Shared.Options;
 using Microsoft.AspNetCore.Identity;
@@ -46,6 +46,7 @@ public static class DependencyInjection
 
         // --- REGISTRACIJA TVOJIH NOVIH SERVISA ---
         services.AddScoped<IGameService, GameService>();
+        services.AddScoped<IOrderService, OrderService>(); // <--- DODANO OVDJE
 
         // Identity hasher
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
