@@ -18,4 +18,5 @@ public partial class Comment
     public virtual Game? Game { get; set; }
 
     public virtual User? User { get; set; }
+    public bool IsReported { get; set; }
 }
