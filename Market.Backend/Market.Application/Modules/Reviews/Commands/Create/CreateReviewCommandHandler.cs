@@ -28,7 +28,7 @@ public sealed class CreateReviewCommandHandler(IAppDbContext ctx)
             UserId = request.UserId,
             GameId = request.GameId,
             Stars = request.RatingValue,
-            CreatedAt = DateTime.Now
+            CreatedAt = DateTime.UtcNow
 
         };
         ctx.Ratings.Add(rating);
@@ -39,7 +39,7 @@ public sealed class CreateReviewCommandHandler(IAppDbContext ctx)
             UserId = request.UserId,
             GameId = request.GameId,
             Content = request.Text,
-            CreatedAt = DateTime.Now 
+            CreatedAt = DateTime.UtcNow
         };
         ctx.Comments.Add(comment);
 
