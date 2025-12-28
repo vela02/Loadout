@@ -59,30 +59,30 @@ public class OrderService : IOrderService
     // 2. KUPOVINA (CHECKOUT)
     public async Task<CheckoutResultDto> CheckoutAsync(int userId)
     {
-        // 1. Povuci korpu sa svim stavkama i podacima o igrama
+        // Povuci korpu sa svim podacima
         var cart = await _context.Carts
             .Include(c => c.CartItems)
             .ThenInclude(ci => ci.Game)
             .FirstOrDefaultAsync(c => c.UserId == userId);
 
-        // Provjera da li je korpa prazna
         if (cart == null || !cart.CartItems.Any())
         {
             return new CheckoutResultDto { OrderId = 0, Message = "Korpa je prazna.", IsPreOrder = false };
         }
 
-        // 2. Provjera: Da li u korpi imamo igru koja tek treba izaći (Pre-order)?
+        // Provjera da li je bar jedna igra Pre-order (datum u budućnosti)
         var today = DateOnly.FromDateTime(DateTime.Now);
         bool isPreOrder = cart.CartItems.Any(ci => ci.Game != null && ci.Game.ReleaseDate > today);
 
-        // 3. Kreiraj novu Narudžbu
+        // Kreiranje Narudžbe
         var order = new Order
         {
             UserId = userId,
             Date = DateTime.Now,
             TotalAmount = cart.CartItems.Sum(ci => (ci.Game?.Price ?? 0) * ci.Quantity),
 
-            // Postavi status 4 (Pre-ordered) ako je pre-order, inače status 1 (Plaćeno)
+            // POSTAVLJANJE STATUSA PREMA TVOJOJ TABELI:
+            // Ako je pre-order ID 4 (Pre-ordered), inače ID 1 (Placeno)
             StatusId = isPreOrder ? 4 : 1,
 
             ReferenceNumber = "ORD-" + Guid.NewGuid().ToString().ToUpper().Substring(0, 8),
@@ -90,12 +90,12 @@ public class OrderService : IOrderService
         };
         _context.Orders.Add(order);
 
-        // 4. Obradi svaku stavku iz korpe
+        // Obrada stavki i licenci
         foreach (var item in cart.CartItems)
         {
             if (item.GameId == null) continue;
 
-            // Spasi zapis u OrderGame (istorija cijena pri kupovini)
+            // Stavka narudžbe
             var orderGame = new OrderGame
             {
                 Order = order,
@@ -105,7 +105,7 @@ public class OrderService : IOrderService
             };
             _context.OrderGames.Add(orderGame);
 
-            // 5. GENERISANJE KLJUČEVA: Samo ako je igra VEĆ izašla
+            // GENERISANJE LICENCI: Samo ako igra NIJE pre-order (već je izašla)
             if (item.Game != null && item.Game.ReleaseDate <= today)
             {
                 for (int i = 0; i < item.Quantity; i++)
@@ -123,20 +123,18 @@ public class OrderService : IOrderService
             }
         }
 
-        // 6. Isprazni korpu nakon uspješne obrade
+        // Isprazni korpu
         _context.CartItems.RemoveRange(cart.CartItems);
 
-        // 7. Spasi sve u bazu
         await _context.SaveChangesAsync();
 
-        // 8. Vrati rezultat sa personalizovanom porukom
         return new CheckoutResultDto
         {
             OrderId = order.Id,
             IsPreOrder = isPreOrder,
             Message = isPreOrder
-                ? "Pre-order uspješan! Igra je rezervisana, ključ će biti dostupan na dan izlaska."
-                : "Kupovina uspješna! Digitalni ključevi su generisani i dostupni u historiji."
+                ? "Pre-order uspješan! Igra je rezervisana, status je postavljen na 'Pre-ordered'."
+                : "Kupovina uspješna! Status je postavljen na 'Placeno' i ključevi su dostupni."
         };
     }
     public async Task<bool> CancelPreOrderAsync(int orderId)
@@ -165,17 +163,24 @@ public class OrderService : IOrderService
     {
         return await _context.Orders
             .Where(o => o.UserId == userId)
-            .Include(o => o.OrderGames).ThenInclude(og => og.Game)
+            .Include(o => o.Status) // Povlači tabelu OrderStatus (onu sa tvoje slike)
+            .Include(o => o.OrderGames)
+                .ThenInclude(og => og.Game)
+            .OrderByDescending(o => o.Date)
             .Select(o => new OrderHistoryDto
             {
                 Id = o.Id,
                 Date = o.Date,
                 TotalAmount = o.TotalAmount ?? 0,
+
+                // Čitamo "Name" direktno iz tvoje tabele statusa
                 Status = o.Status != null ? o.Status.Name : "N/A",
+
                 Games = o.OrderGames.Select(og => new BoughtGameDto
                 {
                     Title = og.Game.Title,
                     PriceAtPurchase = og.PriceAtPurchase ?? 0,
+                    // Povlačimo ključeve iz tabele License
                     LicenseKeys = _context.Licenses
                         .Where(l => l.UserId == userId && l.GameId == og.GameId)
                         .Select(l => l.LicenseKey)
