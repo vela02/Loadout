@@ -46,7 +46,8 @@ public static class DependencyInjection
 
         // --- REGISTRACIJA TVOJIH NOVIH SERVISA ---
         services.AddScoped<IGameService, GameService>();
-        services.AddScoped<IOrderService, OrderService>(); // <--- DODANO OVDJE
+        services.AddScoped<IOrderService, OrderService>();
+        services.AddScoped<IUserService, UserService>(); // <--- DODANO OVDJE
 
         // Identity hasher
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();

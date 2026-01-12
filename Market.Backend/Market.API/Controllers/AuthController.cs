@@ -1,37 +1,34 @@
-﻿using Market.Application.Modules.Auth.Commands.Login;
-using Market.Application.Modules.Auth.Commands.Logout;
-using Market.Application.Modules.Auth.Commands.Refresh;
-using Market.Application.Modules.Auth.Commands.Register;
+﻿using Market.Application.Abstractions;
+using Market.Shared.Dtos;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
+namespace Market.API.Controllers;
+
+[Route("api/[controller]")]
 [ApiController]
-[Route("api/auth")]
-public sealed class AuthController(IMediator mediator) : ControllerBase
+public class AuthController : ControllerBase
 {
-    [HttpPost("register")]
-    [AllowAnonymous]
-    public async Task<ActionResult<RegisterCommandDto>> Register([FromBody] RegisterCommand command, CancellationToken ct)
+    private readonly IUserService _userService;
+
+    public AuthController(IUserService userService)
     {
-        return Ok(await mediator.Send(command, ct));
+        _userService = userService;
     }
 
+    // POST: api/Auth/login
     [HttpPost("login")]
-    [AllowAnonymous]
-    public async Task<ActionResult<LoginCommandDto>> Login([FromBody] LoginCommand command, CancellationToken ct)
+    [AllowAnonymous] // Dozvoljava pristup bez tokena 
+    public async Task<IActionResult> Login([FromBody] LoginRequestDto dto)
     {
-        return Ok(await mediator.Send(command, ct));
-    }
+        var result = await _userService.LoginAsync(dto);
 
-    [HttpPost("refresh")]
-    [AllowAnonymous]
-    public async Task<ActionResult<LoginCommandDto>> Refresh([FromBody] RefreshTokenCommand command, CancellationToken ct)
-    {
-        return Ok(await mediator.Send(command, ct));
-    }
+        if (result == null)
+        {
+            return Unauthorized(new { Message = "Pogrešan email ili lozinka!" });
+        }
 
-    [AllowAnonymous]
-    [HttpPost("logout")]
-    public async Task Logout([FromBody] LogoutCommand command, CancellationToken ct)
-    {
-        await mediator.Send(command, ct);
+        // Ako je sve u redu, vraća tokene (Access i Refresh), username i ulogu
+        return Ok(result);
     }
 }

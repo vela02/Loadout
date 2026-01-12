@@ -2,6 +2,7 @@
 using Market.Shared.Dtos;
 using Market.Shared.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization; // DODANO
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -65,32 +66,45 @@ public static class DependencyInjection
 
         services.AddAuthorization(o =>
         {
-            o.FallbackPolicy = new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
-                .Build();
+            // Dozvoljavamo [AllowAnonymous] da radi svoj posao
+            // ali defaultno tražimo ulogovanog korisnika
         });
 
-        // Swagger with Bearer auth
+        // Swagger with Bearer auth - POPRAVLJENO
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Market API", Version = "v1" });
+
             var xml = Path.Combine(AppContext.BaseDirectory, "Market.API.xml");
             if (File.Exists(xml))
                 c.IncludeXmlComments(xml, includeControllerXmlComments: true);
 
-            var bearer = new OpenApiSecurityScheme
+            // Definisanje sigurnosne šeme
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 Name = "Authorization",
-                Description = "Unesi JWT token. Format: **Bearer {token}**",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.Http,
-                Scheme = "bearer",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
                 BearerFormat = "JWT",
-                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-            };
-            c.AddSecurityDefinition("Bearer", bearer);
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement { { bearer, Array.Empty<string>() } });
+                In = ParameterLocation.Header,
+                Description = "Unesite token u formatu: **Bearer {tvoj_token}**"
+            });
+
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
         });
 
         services.AddExceptionHandler<MarketExceptionHandler>();
