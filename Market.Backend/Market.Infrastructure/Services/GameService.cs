@@ -15,30 +15,60 @@ public class GameService : IGameService
     {
         _context = context;
     }
-
     public async Task<List<GameListDto>> GetFilteredGamesAsync(
-        decimal? minPrice,
-        decimal? maxPrice,
-        string? genre,
-        int? categoryId,
-        GameContentType? type,
-        int? minRating)
+    string? searchTerm,
+    decimal? minPrice,
+    decimal? maxPrice,
+    string? genre,
+    int? categoryId,
+    Market.Shared.Enums.GameContentType? type,
+    int? minRating)
     {
+        // 1. Osnovni upit sa potrebnim relacijama
         var query = _context.Games
             .Include(g => g.Category)
             .Include(g => g.Ratings)
             .Where(g => !g.IsDeleted && g.IsEnabled)
             .AsQueryable();
 
-        if (minPrice.HasValue) query = query.Where(g => g.Price >= minPrice);
-        if (maxPrice.HasValue) query = query.Where(g => g.Price <= maxPrice);
-        if (!string.IsNullOrEmpty(genre)) query = query.Where(g => g.Genre == genre);
-        if (categoryId.HasValue) query = query.Where(g => g.CategoryId == categoryId);
+        // 2. GLOBALNA PRETRAGA (Search) - Naslov ili Opis
+        if (!string.IsNullOrWhiteSpace(searchTerm))
+        {
+            // .Contains generiše SQL LIKE '%pojam%'
+            query = query.Where(g => g.Title.Contains(searchTerm) ||
+                                     (g.Description != null && g.Description.Contains(searchTerm)));
+        }
 
+        // 3. Filtriranje po CIJENI
+        if (minPrice.HasValue)
+        {
+            query = query.Where(g => g.Price != null && g.Price.Value >= minPrice.Value);
+        }
 
-        if (type.HasValue) query = query.Where(g => (int)g.ContentType == (int)type);
+        if (maxPrice.HasValue)
+        {
+            query = query.Where(g => g.Price != null && g.Price.Value <= maxPrice.Value);
+        }
 
-        
+        // 4. Filtriranje po ŽANRU
+        if (!string.IsNullOrEmpty(genre))
+        {
+            query = query.Where(g => g.Genre == genre);
+        }
+
+        // 5. Filtriranje po KATEGORIJI
+        if (categoryId.HasValue)
+        {
+            query = query.Where(g => g.CategoryId == categoryId);
+        }
+
+        // 6. Filtriranje po TIPU SADRŽAJA (Enum)
+        if (type.HasValue)
+        {
+            query = query.Where(g => g.ContentType == type);
+        }
+
+        // 7. Mapiranje na DTO i računanje prosječne ocjene (SQL strana)
         var games = await query.Select(g => new GameListDto
         {
             Id = g.Id,
@@ -47,10 +77,11 @@ public class GameService : IGameService
             ImageUrl = g.ImageUrl,
             Genre = g.Genre,
             CategoryName = g.Category != null ? g.Category.Name : "N/A",
+            // Pretpostavka: polje u tabeli Ratings se zove Value
             AverageRating = g.Ratings.Any() ? g.Ratings.Average(r => (double)r.Stars) : 0
         }).ToListAsync();
 
-        // 4. Naknadno filtriranje po ocjeni (nakon što je prosjek izračunat)
+        // 8. Naknadno filtriranje po OCJENI (Memorijska strana, jer je AverageRating izračunat)
         if (minRating.HasValue)
         {
             games = games.Where(g => g.AverageRating >= minRating.Value).ToList();
@@ -58,6 +89,7 @@ public class GameService : IGameService
 
         return games;
     }
+
 
     public async Task<GameDetailsDto?> GetGameDetailsAsync(int id)
     {

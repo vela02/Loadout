@@ -11,11 +11,13 @@ public partial class Notification
 
     public string Message { get; set; } = null!;
 
-    public string? Type { get; set; }
+    public string Type { get; set; } = "General";
 
     public bool IsRead { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
     public virtual User? User { get; set; }
+    public bool IsActive { get; set; } = true;
+    public string Title { get; set; } = null!;
 }

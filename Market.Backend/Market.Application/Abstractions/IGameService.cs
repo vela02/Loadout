@@ -11,6 +11,7 @@ namespace Market.Application.Abstractions
     public interface IGameService
     {
         Task<List<GameListDto>> GetFilteredGamesAsync(
+        string? searchTerm,
         decimal? minPrice,
         decimal? maxPrice,
         string? genre,

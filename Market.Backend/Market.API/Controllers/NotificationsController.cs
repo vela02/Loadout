@@ -1,30 +1,41 @@
-﻿using Market.Application.Modules.Notifications.Commands.MarkAsRead;
+﻿using Market.Application.Abstractions;
+using Market.Application.Modules.Notifications.Commands.MarkAsRead;
 using Market.Application.Modules.Notifications.Queries.GetByUser;
+// Makni "using Market.Shared.Dtos;" ako pravi problem, ili koristi punu putanju ispod
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
-
+namespace Market.API.Controllers
+{
     [ApiController]
     [Route("api/notifications")]
-    public class NotificationsController(IMediator mediator) : ControllerBase
+    public class NotificationsController(IMediator mediator, IAdminService adminService) : ControllerBase
     {
+        // OVDJE SMO STAVILI PUNU PUTANJU: Market.Shared.Dtos.NotificationDto
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult<List<Market.Shared.Dtos.NotificationDto>>> GetGlobalAnnouncements()
+        {
+            var news = await adminService.GetLatestNotificationsAsync();
+            return Ok(news);
+        }
 
-     [HttpGet("{userId}")]
-     [AllowAnonymous]
-     public async Task<IActionResult> GetNotifications(int userId)
-     {
-        return Ok(await mediator.Send(new GetUserNotificationsQuery(userId)));
-     }
+        [HttpGet("{userId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetNotifications(int userId)
+        {
+            // Ovo koristi kolegino rješenje preko MediatR-a
+            return Ok(await mediator.Send(new GetUserNotificationsQuery(userId)));
+        }
 
-     [HttpPost("/read/{id}")]
+        [HttpPost("read/{id}")]
         [AllowAnonymous]
         public async Task<IActionResult> MarkAsRead(int id)
         {
-
             var result = await mediator.Send(new MarkNotificationAsReadCommand(id));
-
             if (!result) return NotFound("Notifikacija nije pronađena.");
-
             return Ok("Notifikacija označena kao pročitana.");
         }
     }
-
+}

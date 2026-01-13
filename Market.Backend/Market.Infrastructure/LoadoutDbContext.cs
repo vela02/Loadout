@@ -64,6 +64,7 @@ public partial class LoadoutDbContext : DbContext, IAppDbContext
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<Wishlist> Wishlists { get; set; }
+    public virtual DbSet<LogAction> LogActions { get; set; }
 
     public Task<int> SaveChangesAsync(CancellationToken ct) => base.SaveChangesAsync(ct);
 

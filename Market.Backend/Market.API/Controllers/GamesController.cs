@@ -26,6 +26,7 @@ namespace Market.API.Controllers
         [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<List<GameListDto>>> GetGames(
+            [FromQuery] string? searchTerm,
             [FromQuery] decimal? minPrice,
             [FromQuery] decimal? maxPrice,
             [FromQuery] string? genre,
@@ -33,7 +34,7 @@ namespace Market.API.Controllers
             [FromQuery] Market.Shared.Enums.GameContentType? type,
             [FromQuery] int? minRating)
         {
-            var games = await _gameService.GetFilteredGamesAsync(minPrice, maxPrice, genre, categoryId, type, minRating);
+            var games = await _gameService.GetFilteredGamesAsync(searchTerm,minPrice, maxPrice, genre, categoryId, type, minRating);
             return Ok(games);
         }
 

@@ -36,43 +36,58 @@ public partial class Program
             // 3. Layer registrations
             // ---------------------------------------------------------
             builder.Services
-                .AddAPI(builder.Configuration, builder.Environment) // <--- Ovdje je već Swagger!
+                .AddAPI(builder.Configuration, builder.Environment)
                 .AddInfrastructure(builder.Configuration, builder.Environment)
-                .AddDbContext<LoadoutDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Main")))
                 .AddApplication();
 
-            // CORS policy
+            // DODANO: Eksplicitna registracija HttpContextAccessor-a 
+            // (Potrebno za naš Audit Log da izvuče IP adresu i korisnika)
+            builder.Services.AddHttpContextAccessor();
+
+            // ---------------------------------------------------------
+            // CORS policy - Prilagođeno za Angular (localhost:4200)
+            // ---------------------------------------------------------
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowAngularDev",
                     policy =>
                     {
                         policy
-                            .WithOrigins("http://localhost:4200")
+                            .WithOrigins("http://localhost:4200") // Angular default port
                             .AllowAnyHeader()
                             .AllowAnyMethod()
-                            .AllowCredentials();
+                            .AllowCredentials(); // Dozvoljava slanje JWT tokena
                     });
             });
 
+            // JSON Options: Spriječavamo kružne reference (iako koristimo DTO modele)
             builder.Services.AddControllers().AddJsonOptions(x =>
-               x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+            {
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                // Osiguravamo da JSON koristi camelCase (standard za Angular)
+                x.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+            });
 
             var app = builder.Build();
 
             // ---------------------------------------------------------
             // 4. Middleware pipeline
             // ---------------------------------------------------------
+
+            // 1. Redoslijed je bitan: Prvo hvatamo greške
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
-            app.UseExceptionHandler();
+            // 2. Logging i Sigurnost
             app.UseMiddleware<RequestResponseLoggingMiddleware>();
-
             app.UseHttpsRedirection();
+
+            // 3. CORS MORA biti prije Auth-a
             app.UseCors("AllowAngularDev");
 
             app.UseAuthentication();
