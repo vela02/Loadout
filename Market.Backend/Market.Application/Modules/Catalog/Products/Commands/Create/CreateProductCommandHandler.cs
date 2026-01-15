@@ -1,4 +1,5 @@
 ﻿using Market.Domain.Models;
+using Market.Shared.Enums;
 
 namespace Market.Application.Modules.Catalog.Products.Commands.Create;
 
@@ -7,46 +8,55 @@ public class CreateProductCommandHandler(IAppDbContext ctx)
 {
     public async Task<int> Handle(CreateProductCommand request, CancellationToken ct)
     {
-        var normalized = request.Name?.Trim();
-
-        if (string.IsNullOrWhiteSpace(normalized))
-            throw new ValidationException("Name is required.");
-
-        // Check if a product with the same name already exists.
-        bool exists = await ctx.Products
-            .AnyAsync(x => x.Title == normalized, ct);
-
-        if (exists)
+        // check if game with the same title already exists
+        if (await ctx.Products.AnyAsync(x => x.Title == request.Title, ct))
         {
-            throw new MarketConflictException("Name already exists.");
+            throw new Exception($"Igra '{request.Title}' već postoji.");
         }
 
-        var productCategory = await ctx.ProductCategories
-            .Where(x => x.Id == request.CategoryId)
-            .FirstOrDefaultAsync(ct);
-
-        if (productCategory is null)
-        {
-            throw new ValidationException("Invalid CategoryId.");
-        }
-
-        if (productCategory.IsEnabled == false)
-        {
-            throw new ValidationException($"Category {productCategory.Name} is disabled.");
-        }
-
-        var category = new Game
-        {
-            Title = request.Name!.Trim(),
-            Description = request.Description?.Trim(),
-            Price = request.Price,            
+        // create new game entity
+        var game = new Game
+        { 
+        
+            Title = request.Title, 
+            Description = request.Description,
+            Price = request.Price,
             CategoryId = request.CategoryId,
-            IsEnabled = true // deault IsEnabled
+            Genre = request.Genre,
+
+            ImageUrl = request.ImageUrl,
+            TrailerUrl = request.TrailerUrl,
+
+            ReleaseDate = request.ReleaseDate,
+            Developer = request.Developer,
+            Publisher = request.Publisher,
+            SystemRequirements = request.SystemRequirements,
+
+            IsEnabled = true,
+            IsDeleted = false,
+            ContentType = GameContentType.Game,
+
+            
+            Tags = new List<GameTag>()
         };
 
-        ctx.Products.Add(category);
+        // associate tags if provided
+        if (request.TagIds != null && request.TagIds.Count > 0)
+        {
+            var tags = await ctx.GameTags
+                .Where(t => request.TagIds.Contains(t.Id))
+                .ToListAsync(ct);
+
+            foreach (var tag in tags)
+            {
+                game.Tags.Add(tag);
+            }
+        }
+
+        
+        ctx.Products.Add(game);
         await ctx.SaveChangesAsync(ct);
 
-        return category.Id;
+        return game.Id;
     }
-}
+ }

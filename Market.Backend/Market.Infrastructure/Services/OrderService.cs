@@ -224,4 +224,28 @@ public class OrderService : IOrderService
                 Quantity = ci.Quantity
             }).ToListAsync();
     }
+
+    public async Task<SalesReportDto> GetSalesReportAsync(DateTime from, DateTime to)
+    {
+        //date filter
+        var ordersQuery = _context.Orders.AsNoTracking()
+            .Where(x => x.Date >= from && x.Date <= to);
+
+        var totalOrders = await ordersQuery.CountAsync();
+
+        var totalRevenue = await ordersQuery
+       .Where(x => x.TotalAmount != null)
+       .SumAsync(x => x.TotalAmount!.Value);
+
+        var totalItemsSold = await _context.OrderGames
+            .Where(x => x.Order.Date >= from && x.Order.Date <= to)
+            .SumAsync(x => x.Quantity);
+
+        return new SalesReportDto
+        {
+            TotalOrders=totalOrders,
+            TotalRevenue=totalRevenue,
+            TotalItemsSold= totalItemsSold
+        };
+    }
 } 

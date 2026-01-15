@@ -5,50 +5,61 @@ public sealed class ListOrdersQueryHandler(IAppDbContext ctx, IAppCurrentUser cu
 {
 
     public async Task<PageResult<ListOrdersQueryDto>> Handle(ListOrdersQuery request, CancellationToken ct)
-    {
-        //var q = ctx.Orders.AsNoTracking();
+    {  
+        var query = ctx.Orders.AsNoTracking();
 
-        //if (!currentUser.IsAdmin)
-        //{
-        //    q = q.Where(x => x.MarketUserId == currentUser.UserId);
-        //}
-        //var searchTerm = request.Search?.Trim().ToLower() ?? string.Empty;
+        // if not admin, filter by current user
+        if (!currentUser.IsAdmin)
+        {         
+           query = query.Where(x => x.UserId == currentUser.UserId);
+        }
 
-        //if (!string.IsNullOrWhiteSpace(request.Search))
-        //{
-        //    q = q.Where(x => x.ReferenceNumber.ToLower().Contains(searchTerm));
-        //}
-
-        //var projectedQuery = q.OrderBy(x => x.OrderedAtUtc)
-        //    .Select(x => new ListOrdersQueryDto
-        //    {
-        //        Id = x.Id,
-        //        ReferenceNumber = x.ReferenceNumber,
-        //        User = new ListOrdersQueryDtoUser
-        //        {
-        //            UserFirstname = x.MarketUser!.Firstname,
-        //            UserLastname = x.MarketUser!.Lastname,
-        //            UserAddress = "Todo",//todo: ticket no 126
-        //            UserCity = "Todo",//todo: ticket no 126
-        //        },
-        //        OrderedAtUtc = x.OrderedAtUtc,
-        //        PaidAtUtc = x.PaidAtUtc,
-        //        Status = x.Status,
-        //        TotalAmount = (decimal)x.TotalAmount,
-        //        Note = x.Note,
-        //    });
-
-        //return await PageResult<ListOrdersQueryDto>.FromQueryableAsync(projectedQuery, request.Paging, ct);
-
-
-        return new PageResult<ListOrdersQueryDto>
+        // search
+        if (!string.IsNullOrWhiteSpace(request.Search))
         {
-            Items = new List<ListOrdersQueryDto>(),
-            TotalItems = 0,      
-            CurrentPage = 1,     // Ovo je required
-            TotalPages = 0,      // Ovo je required
-            PageSize = 10,       // Ovo je required
-            IncludedTotal = false    // Ovo je required
-        };
+            var term = request.Search.Trim().ToLower();
+            query = query.Where(x => x.Id.ToString().Contains(term));
+        }
+
+        // filters
+        if (request.StatusId.HasValue)
+        {
+            query = query.Where(x => x.StatusId == request.StatusId);
+        }
+
+        if (request.DateFrom.HasValue)
+        {
+            query = query.Where(x => x.Date >= request.DateFrom.Value);
+        }
+
+        if (request.DateTo.HasValue)
+        {
+            query = query.Where(x => x.Date <= request.DateTo.Value);
+        }
+
+        // data projection
+        var projectedQuery = query
+            .OrderByDescending(x => x.Date) 
+            .Select(x => new ListOrdersQueryDto
+            {
+                Id = x.Id,
+                ReferenceNumber = $"ORD-{x.Id}",
+                OrderedAtUtc = x.Date,
+                PaidAtUtc = x.Date,              
+                Status = x.Status != null ? x.Status.Name : "-",
+
+                TotalAmount = x.TotalAmount ?? 0,
+                Note = "",
+
+                User = new ListOrdersQueryDtoUser
+                {
+                    UserFirstname = x.User != null ? x.User.Username : "Guest",
+                    UserLastname = x.User != null ? x.User.Email : "",
+                    UserAddress = "-",
+                    UserCity = "-"
+                }
+            });
+     
+        return await PageResult<ListOrdersQueryDto>.FromQueryableAsync(projectedQuery, request.Paging, ct);         
     }
 }
