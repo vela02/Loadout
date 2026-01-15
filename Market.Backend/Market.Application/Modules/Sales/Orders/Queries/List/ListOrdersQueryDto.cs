@@ -9,7 +9,7 @@ public sealed class ListOrdersQueryDto
     public required ListOrdersQueryDtoUser User { get; init; }
     public required DateTime OrderedAtUtc { get; set; }
     public required DateTime? PaidAtUtc { get; set; }
-    public required OrderStatusType Status { get; set; }
+    public required string Status { get; set; }
     public required decimal TotalAmount { get; set; }
     public required string? Note { get; set; }
 
@@ -20,4 +20,9 @@ public sealed class ListOrdersQueryDtoUser
     public required string UserLastname { get; set; }
     public required string UserAddress { get; set; }//todo
     public required string UserCity { get; set; }//todo
+}
+public sealed class PagedListOrdersQueryDto
+{
+    public required List<ListOrdersQueryDto> Items { get; init; }
+    public required int TotalCount { get; init; }
 }

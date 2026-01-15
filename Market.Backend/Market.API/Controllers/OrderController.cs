@@ -1,5 +1,6 @@
 ﻿using Market.Application.Abstractions;
 using Market.Shared.Dtos;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -64,6 +65,19 @@ namespace Market.API.Controllers
 
             if(!success) return BadRequest("Failed to cancel pre-order.");
             return Ok("Pre-order cancelled successfully.");
+        }
+
+        //  Admin report
+        [HttpGet("report")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<SalesReportDto>> GetReport([FromQuery] DateTime from, [FromQuery] DateTime to)
+        {
+            if (from == default) from = DateTime.UtcNow.AddDays(-30);
+            if (to == default) to = DateTime.UtcNow;
+
+            var report = await _orderService.GetSalesReportAsync(from, to);
+
+            return Ok(report);
         }
 
     }
