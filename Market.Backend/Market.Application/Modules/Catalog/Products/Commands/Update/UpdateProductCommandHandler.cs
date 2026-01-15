@@ -5,41 +5,69 @@ public sealed class UpdateProductCommandHandler(IAppDbContext ctx)
 {
     public async Task<Unit> Handle(UpdateProductCommand request, CancellationToken ct)
     {
+        
         var entity = await ctx.Products
-            .Where(x => x.Id == request.Id)
-            .FirstOrDefaultAsync(ct);
+            .Include(x => x.Tags)
+            .FirstOrDefaultAsync(x => x.Id == request.Id, ct);
 
         if (entity is null)
-            throw new MarketNotFoundException($"Product (ID={request.Id}) nije pronađena.");
+            throw new MarketNotFoundException($"Proizvod (ID={request.Id}) nije pronađen.");
 
-        // Check for duplicate name (case-insensitive, except for the same ID)
+        // check for title uniqueness
         var exists = await ctx.Products
-            .AnyAsync(x => x.Id != request.Id && x.Title.ToLower() == request.Name.ToLower(), ct);
+            .AnyAsync(x => x.Id != request.Id && x.Title == request.Title, ct);
 
         if (exists)
         {
-            throw new MarketConflictException("Name already exists.");
+            throw new MarketConflictException($"Igra s nazivom '{request.Title}' već postoji.");
         }
 
+
+        // check if category exists
         var productCategory = await ctx.ProductCategories
           .Where(x => x.Id == request.CategoryId)
           .FirstOrDefaultAsync(ct);
 
         if (productCategory is null)
         {
-            throw new ValidationException("Invalid CategoryId.");
+            throw new ValidationException("Nepostojeća kategorija.");
         }
 
-        if (productCategory.IsEnabled == false)
-        {
-            throw new ValidationException($"Category {productCategory.Name} is disabled.");
-        }
 
-        entity.Title = request.Name.Trim();
+        // mapping  
+        entity.Title = request.Title.Trim();
         entity.Description = request.Description?.Trim();
         entity.Price = request.Price;
         entity.CategoryId = request.CategoryId;
+        entity.Genre = request.Genre;
 
+        entity.ImageUrl = request.ImageUrl;
+        entity.TrailerUrl = request.TrailerUrl;
+
+        entity.ReleaseDate = request.ReleaseDate;
+        entity.Developer = request.Developer;
+        entity.Publisher = request.Publisher;
+        entity.SystemRequirements = request.SystemRequirements;
+
+
+        // adding tags
+        if (request.TagIds != null)
+        {
+            entity.Tags.Clear(); 
+
+            if (request.TagIds.Count > 0)
+            {
+                var tags = await ctx.GameTags
+                    .Where(t => request.TagIds.Contains(t.Id))
+                    .ToListAsync(ct);
+
+                foreach (var tag in tags)
+                {
+                    entity.Tags.Add(tag);
+                }
+            }
+        }
+     
         await ctx.SaveChangesAsync(ct);
 
         return Unit.Value;
