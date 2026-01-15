@@ -7,7 +7,9 @@ namespace Market.Application.Modules.Sales.Orders.Commands.Status
     /// </summary>
     public class ChangeOrderStatusCommand : IRequest
     {
+        [JsonIgnore]
         public int Id { get; set; }
-        public OrderStatusType NewStatus { get; set; }
+
+        public int NewStatusId { get; set; }
     }
 }

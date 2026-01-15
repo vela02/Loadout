@@ -14,5 +14,6 @@ namespace Market.Application.Abstractions
         Task<CheckoutResultDto> CheckoutAsync(int userId);
         Task<List<OrderHistoryDto>> GetOrderHistoryAsync(int userId);
         Task<bool> CancelPreOrderAsync(int orderId);
+        Task<SalesReportDto> GetSalesReportAsync(DateTime from, DateTime to);
     }
 }
