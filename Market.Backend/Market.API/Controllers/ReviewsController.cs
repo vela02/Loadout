@@ -7,15 +7,18 @@ using Market.Application.Modules.Reviews.Queries.GetByGame;
 public class ReviewsController(IMediator mediator) : ControllerBase
 {
     [HttpGet("{gameId}")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetByGame(int gameId)
         => Ok(await mediator.Send(new GetGameReviewsQuery(gameId)));
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Create([FromBody] CreateReviewCommand command)
         => Ok(await mediator.Send(command));
 
    
     [HttpPost("report/{commentId}")]
+    [Authorize]
     public async Task<IActionResult> Report(int commentId)
     {
         var result = await mediator.Send(new ReportCommentCommand(commentId));

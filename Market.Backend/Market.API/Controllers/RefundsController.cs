@@ -10,6 +10,7 @@ public class RefundsController(IMediator mediator) : ControllerBase
 {
     // GET: api/refunds
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetMyRefunds()
     {
         var result = await mediator.Send(new GetUserRefundsQuery());
@@ -18,6 +19,7 @@ public class RefundsController(IMediator mediator) : ControllerBase
 
     // POST: api/refunds
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> RequestRefund([FromBody] CreateRefundDto dto)
     {
         try

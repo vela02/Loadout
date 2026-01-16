@@ -8,7 +8,7 @@ namespace Market.API.Controllers
     public class DiscountsController(IMediator mediator) : ControllerBase
     {
         [HttpPost]
-         [Authorize(Roles = "Admin")]
+         [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<int>> Create([FromBody] CreateDiscountCommand command, CancellationToken ct)
         {
             var id = await mediator.Send(command, ct);
@@ -16,7 +16,7 @@ namespace Market.API.Controllers
         }
 
         [HttpDelete("{id}")]
-         [Authorize(Roles = "Admin")]
+         [Authorize(Roles = "Administrator")]
         public async Task<ActionResult> Delete(int id, CancellationToken ct)
         {
             await mediator.Send(new DeleteDiscountCommand { Id = id }, ct);
