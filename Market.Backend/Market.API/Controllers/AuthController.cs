@@ -10,7 +10,7 @@ namespace Market.API.Controllers;
 [ApiController]
 public sealed class AuthController(IMediator mediator) : ControllerBase
 {
-    [HttpPost("register")]
+    [HttpPost("register")] //the method registers a new user with a customer role, to register as admin use DataSeeder
     [AllowAnonymous]
     public async Task<ActionResult<RegisterCommandDto>> Register([FromBody] RegisterCommand command, CancellationToken ct)
     {

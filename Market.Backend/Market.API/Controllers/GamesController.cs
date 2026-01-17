@@ -81,7 +81,7 @@ namespace Market.API.Controllers
         // 4. PUT: api/Games/5
         // POPRAVLJENO: Koristi CreateGameDto za ažuriranje
         [HttpPut("{id}")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> PutGame(int id, CreateGameDTO dto)
         {
             var game = await _context.Games.FindAsync(id);
@@ -118,7 +118,7 @@ namespace Market.API.Controllers
 
         // 5. DELETE: api/Games/5
         [HttpDelete("{id}")]
-        [AllowAnonymous]
+        [Authorize(Roles ="Administrator")]
         public async Task<IActionResult> DeleteGame(int id)
         {
             var game = await _context.Games.FindAsync(id);

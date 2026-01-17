@@ -42,6 +42,12 @@ public sealed class JwtTokenService : IJwtTokenService
              new(JwtRegisteredClaimNames.Aud, _jwt.Audience)
         };
 
+        //  add is_admin claim for convenience
+        if (user.Role?.Name == "Administrator")
+        {
+            claims.Add(new Claim("is_admin", "true"));
+        }
+
         // --- Signature ---
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
         var creds = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);

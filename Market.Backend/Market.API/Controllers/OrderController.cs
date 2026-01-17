@@ -68,8 +68,8 @@ namespace Market.API.Controllers
         }
 
         //  Admin report
-        [HttpGet("report")]
-        [Authorize(Roles = "Admin")]
+        [HttpGet("sales_report-admin")]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<SalesReportDto>> GetReport([FromQuery] DateTime from, [FromQuery] DateTime to)
         {
             if (from == default) from = DateTime.UtcNow.AddDays(-30);
