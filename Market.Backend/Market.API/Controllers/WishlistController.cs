@@ -7,13 +7,16 @@ using Market.Application.Modules.Wishlist.Commands.Remove;
 [Route("api/wishlist")]
 public class WishlistController(IMediator mediator) : ControllerBase
 {
-    [HttpGet("{userId}")]
-    [AllowAnonymous]
+    [HttpGet]
+    [Authorize]
     //  SECURITY - Kad frontend implementira Login, zamijeni userId parametar sa IAppCurrentUser servisom i na drugim  mjestima gdje je potrebno
-    public async Task<IActionResult> Get(int userId) => Ok(await mediator.Send(new GetWishlistQuery(userId)));
+    public async Task<IActionResult> Get()
+    { 
+        return Ok(await mediator.Send(new GetWishlistQuery()));
+    }
 
     [HttpPost]
-    [AllowAnonymous]
+    [Authorize]
     public async Task<IActionResult> Add([FromBody] AddWishlistCommand command)
     {
         var success = await mediator.Send(command);
@@ -27,9 +30,9 @@ public class WishlistController(IMediator mediator) : ControllerBase
     }
 
 
-    [HttpDelete("{userId}/{gameId}")]
-    [AllowAnonymous]
-    public async Task<IActionResult> Remove(int userId, int gameId) => Ok(await mediator.Send(new RemoveWishlistCommand(userId, gameId)));
+    [HttpDelete("{gameId}")]
+    [Authorize]
+    public async Task<IActionResult> Remove(int gameId) => Ok(await mediator.Send(new RemoveWishlistCommand(gameId)));
 
    
 }

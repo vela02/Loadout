@@ -2,14 +2,17 @@
 
 namespace Market.Application.Modules.Reviews.Commands.Create;
 
-public sealed class CreateReviewCommandHandler(IAppDbContext ctx)
+public sealed class CreateReviewCommandHandler(IAppDbContext ctx,IAppCurrentUser currentUser)
     : IRequestHandler<CreateReviewCommand, bool>
 {
     public async Task<bool> Handle(CreateReviewCommand request, CancellationToken ct)
     {
+        var userId = currentUser.UserId;
+        if (userId is null)
+            throw new UnauthorizedAccessException("Korisnik nije prijavljen.");
         //  checking if user has purchased the game
         var hasPurchased = await ctx.Orders
-            .AnyAsync(o => o.UserId == request.UserId &&
+            .AnyAsync(o => o.UserId == userId &&
                            o.OrderGames.Any(og => og.GameId == request.GameId), ct);
 
         if (!hasPurchased)
@@ -17,7 +20,7 @@ public sealed class CreateReviewCommandHandler(IAppDbContext ctx)
 
         // checiking if user has already reviewed the game
         var alreadyReviewed = await ctx.Comments
-            .AnyAsync(c => c.UserId == request.UserId && c.GameId == request.GameId, ct);
+            .AnyAsync(c => c.UserId == userId && c.GameId == request.GameId, ct);
 
         if (alreadyReviewed)
             throw new Exception("Već ste ostavili recenziju za ovu igru.");
@@ -25,7 +28,7 @@ public sealed class CreateReviewCommandHandler(IAppDbContext ctx)
         
         var rating = new Rating
         {
-            UserId = request.UserId,
+            UserId = userId.Value,
             GameId = request.GameId,
             Stars = request.RatingValue,
             CreatedAt = DateTime.UtcNow
@@ -36,10 +39,11 @@ public sealed class CreateReviewCommandHandler(IAppDbContext ctx)
         
         var comment = new Comment
         {
-            UserId = request.UserId,
+            UserId =userId.Value,
             GameId = request.GameId,
             Content = request.Text,
             CreatedAt = DateTime.UtcNow
+       
         };
         ctx.Comments.Add(comment);
 

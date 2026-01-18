@@ -1,4 +1,6 @@
-﻿using Market.Application.Modules.Refunds.Commands.Create;
+﻿using FluentValidation;
+using Market.Application.Common.Exceptions;
+using Market.Application.Modules.Refunds.Commands.Create;
 using Market.Application.Modules.Refunds.Queries.GetByUser;
 
 namespace Market.API.Controllers;
@@ -24,13 +26,21 @@ public class RefundsController(IMediator mediator) : ControllerBase
     {
         try
         {
-            var result = await mediator.Send(new CreateRefundCommand(dto));
-
-            
-            if (!result) return BadRequest("Order not found or invalid.");
-
+            await mediator.Send(new CreateRefundCommand(dto));
             return Ok("Refund request submitted successfully.");
         }
+        catch (ValidationException ex)
+        {
+            var errors = ex.Errors.Select(e => e.ErrorMessage).ToList();
+            return BadRequest(new { message = "Validacija nije prošla", errors = errors });
+        }  
+
+        catch (MarketNotFoundException ex)
+        {
+
+            return NotFound(ex.Message);
+        }
+
         catch (InvalidOperationException ex)
         {
             // Returns 400 for business logic errors (e.g. "Refund period expired", "Duplicate request")
@@ -43,7 +53,7 @@ public class RefundsController(IMediator mediator) : ControllerBase
         }
         catch (Exception ex)
         {
-            
+
             return StatusCode(500, "An error occurred while processing your request."); //could be anything unexpected but its aight
         }
     }

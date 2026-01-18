@@ -10,11 +10,13 @@ public sealed class CreateRefundCommandHandler(
     public async Task<bool> Handle(CreateRefundCommand request, CancellationToken ct)
     {
         var userId = currentUser.UserId;
+        if (userId==null) throw new UnauthorizedAccessException(" User not logged ");
+        
         var orderId = request.Dto.OrderId;
 
         var order = await ctx.Orders.FirstOrDefaultAsync(o => o.Id == orderId, ct);
 
-        if (order == null) return false;
+        if (order == null) throw new MarketNotFoundException("Such order does not exist");
 
         // validations
         if (order.UserId != userId) throw new UnauthorizedAccessException("You can only refund your own orders.");
@@ -34,7 +36,7 @@ public sealed class CreateRefundCommandHandler(
             Reason = request.Dto.Reason,
             StatusId = 1,
             RefundDate = DateTime.UtcNow,
-            Amount = order.TotalAmount,
+            Amount = order.TotalAmount ?? 0,
             AdminResponse = null
         };
 

@@ -1,7 +1,6 @@
 ﻿namespace Market.Application.Modules.Reviews.Commands.Create;
 
-public record CreateReviewCommand(
-    int UserId,
+public record CreateReviewCommand( 
     int GameId,
     string Text,
     int RatingValue

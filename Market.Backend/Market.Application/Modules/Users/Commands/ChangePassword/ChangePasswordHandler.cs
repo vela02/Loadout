@@ -6,12 +6,16 @@ using Market.Domain.Models;
 
 namespace Market.Application.Modules.Users.Commands.ChangePassword;
 
-public sealed class ChangePasswordHandler(IAppDbContext ctx, IPasswordHasher<User> hasher)
+public sealed class ChangePasswordHandler(IAppDbContext ctx, IPasswordHasher<User> hasher,IAppCurrentUser currentUser)
     : IRequestHandler<ChangePasswordCommand, bool>
 {
     public async Task<bool> Handle(ChangePasswordCommand request, CancellationToken ct)
     {
-        var user = await ctx.Users.FirstOrDefaultAsync(u => u.Id == request.UserId, ct)
+        var userId = currentUser.UserId;
+        if (userId is null)
+            throw new Exception("Korisnik nije prijavljen.");
+
+        var user = await ctx.Users.FirstOrDefaultAsync(u => u.Id == userId, ct)
             ?? throw new Exception("Korisnik nije pronađen.");
 
         // check old password

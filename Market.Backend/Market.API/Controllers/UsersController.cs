@@ -8,14 +8,14 @@ namespace Market.API.Controllers;
 public class UsersController(IMediator mediator) : ControllerBase
 {
     
-    [HttpGet("profile/{id}")]
-    [AllowAnonymous]
-    public async Task<ActionResult<GetProfileDto>> GetProfile(int id)
-        => Ok(await mediator.Send(new GetProfileQuery(id)));
+    [HttpGet("profile")]
+    [Authorize]
+    public async Task<ActionResult<GetProfileDto>> GetProfile()
+        => Ok(await mediator.Send(new GetProfileQuery()));
 
     
     [HttpPost("change-password")]
-    [AllowAnonymous]
+    [Authorize]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
     {
         await mediator.Send(command);

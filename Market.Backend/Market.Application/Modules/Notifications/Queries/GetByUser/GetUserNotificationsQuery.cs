@@ -1,6 +1,6 @@
 ﻿using MediatR;
 namespace Market.Application.Modules.Notifications.Queries.GetByUser;
-public record GetUserNotificationsQuery(int UserId) : IRequest<List<NotificationDto>>;
+public record GetUserNotificationsQuery() : IRequest<List<NotificationDto>>;
 
 public class NotificationDto
 {

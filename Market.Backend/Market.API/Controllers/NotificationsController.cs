@@ -21,16 +21,16 @@ namespace Market.API.Controllers
             return Ok(news);
         }
 
-        [HttpGet("{userId}")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetNotifications(int userId)
+        [HttpGet("my-notifications")]
+        [Authorize]
+        public async Task<IActionResult> GetNotifications()
         {
-            // Ovo koristi kolegino rješenje preko MediatR-a
-            return Ok(await mediator.Send(new GetUserNotificationsQuery(userId)));
+           
+            return Ok(await mediator.Send(new GetUserNotificationsQuery()));
         }
 
         [HttpPost("read/{id}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> MarkAsRead(int id)
         {
             var result = await mediator.Send(new MarkNotificationAsReadCommand(id));

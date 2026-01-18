@@ -4,15 +4,18 @@ using Market.Application.Abstractions;
 
 namespace Market.Application.Modules.Users.Queries.GetProfile;
 
-public sealed class GetProfileHandler(IAppDbContext ctx) : IRequestHandler<GetProfileQuery, GetProfileDto>
+public sealed class GetProfileHandler(IAppDbContext ctx,IAppCurrentUser currentUser) : IRequestHandler<GetProfileQuery, GetProfileDto>
 {
     public async Task<GetProfileDto> Handle(GetProfileQuery request, CancellationToken ct)
     {
+        //if (currentUser.UserId is null)
+        //{
+        //    throw new Exception("Korisnik nije prijavljen.");
+        //}
         return await ctx.Users
-            .Where(u => u.Id == request.UserId)
+            .Where(u => u.Id == currentUser.UserId)
             .Select(u => new GetProfileDto
-            {
-                Id = u.Id,
+            {         
                 Username = u.Username,
                 Email = u.Email,
                 CreatedAt = u.CreatedAt
