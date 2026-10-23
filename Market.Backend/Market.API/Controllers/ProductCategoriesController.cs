@@ -9,7 +9,7 @@ using Market.Application.Modules.Catalog.ProductCategories.Queries.List;
 namespace Market.API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class ProductCategoriesController(ISender sender) : ControllerBase
 {
     [HttpPost]

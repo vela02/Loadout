@@ -34,6 +34,7 @@ public interface IAppDbContext
     // marketing
     DbSet<Coupon> Coupons { get; }
     DbSet<Discount> Discounts { get; }
+    DbSet<Promotion> Promotions { get; }
     DbSet<License> Licenses { get; }
     DbSet<Refund> Refunds { get; }
     DbSet<RefundStatus> RefundStatuses { get; }

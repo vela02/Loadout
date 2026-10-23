@@ -93,11 +93,13 @@ public class OrderService : IOrderService
         {
             if (item.GameId == null || item.Game == null) continue;
 
-            // Provjeri postoji li aktivan popust (da je danas između početka i kraja popusta)
+            // Provjeri postoji li aktivan popust (da je danas između početka i kraja popusta).
+            // Ako se više promocija preklapa, kupac dobija najveći popust.
             var activeDiscount = await _context.Discounts
                 .Where(d => d.GameId == item.GameId &&
                             d.StartDate <= DateTime.Now &&
                             d.EndDate >= DateTime.Now)
+                .OrderByDescending(d => d.DiscountPercentage)
                 .FirstOrDefaultAsync();
 
             decimal basePrice = item.Game.Price ?? 0;

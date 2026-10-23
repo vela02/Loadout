@@ -232,6 +232,9 @@ namespace Market.Infrastructure.Migrations
                     b.Property<int?>("GameId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("PromotionId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime");
 
@@ -241,6 +244,8 @@ namespace Market.Infrastructure.Migrations
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("GameId");
+
+                    b.HasIndex("PromotionId");
 
                     b.ToTable("Discount", (string)null);
                 });
@@ -618,6 +623,49 @@ namespace Market.Infrastructure.Migrations
                     b.ToTable("PaymentStatus", (string)null);
                 });
 
+            modelBuilder.Entity("Market.Domain.Models.Promotion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<decimal>("DiscountPercentage")
+                        .HasColumnType("decimal(5, 2)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("TargetType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("TargetValue")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Promotion", (string)null);
+                });
+
             modelBuilder.Entity("Market.Domain.Models.Rating", b =>
                 {
                     b.Property<int>("Id")
@@ -908,9 +956,17 @@ namespace Market.Infrastructure.Migrations
                         .HasForeignKey("GameId")
                         .HasConstraintName("FK__Discount__GameId__74AE54BC");
 
+                    b.HasOne("Market.Domain.Models.Promotion", "Promotion")
+                        .WithMany("Discounts")
+                        .HasForeignKey("PromotionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("FK_Discount_Promotion_PromotionId");
+
                     b.Navigation("Category");
 
                     b.Navigation("Game");
+
+                    b.Navigation("Promotion");
                 });
 
             modelBuilder.Entity("Market.Domain.Models.Game", b =>
@@ -1133,6 +1189,11 @@ namespace Market.Infrastructure.Migrations
             modelBuilder.Entity("Market.Domain.Models.PaymentStatus", b =>
                 {
                     b.Navigation("Payments");
+                });
+
+            modelBuilder.Entity("Market.Domain.Models.Promotion", b =>
+                {
+                    b.Navigation("Discounts");
                 });
 
             modelBuilder.Entity("Market.Domain.Models.RefundStatus", b =>

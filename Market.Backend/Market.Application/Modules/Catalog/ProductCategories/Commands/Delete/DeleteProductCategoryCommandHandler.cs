@@ -14,6 +14,16 @@ public class DeleteProductCategoryCommandHandler(IAppDbContext context, IAppCurr
         if (category is null)
             throw new MarketNotFoundException("Kategorija nije pronađena.");
 
+        var isUsed = await context.Products
+       .AnyAsync(p => p.CategoryId == request.Id, cancellationToken);
+
+        if (isUsed)
+        {
+            
+            throw new MarketBusinessRuleException("category.delete.blocked",
+                "Ne možete obrisati ovu kategoriju jer postoje igre koje joj pripadaju. Prvo obrišite ili premjestite te igre.");
+        }
+
         context.ProductCategories.Remove(category);
         await context.SaveChangesAsync(cancellationToken);
 

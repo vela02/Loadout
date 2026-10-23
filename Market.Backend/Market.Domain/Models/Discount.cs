@@ -19,7 +19,11 @@ public partial class Discount
 
     public string? Description { get; set; }
 
+    public int? PromotionId { get; set; }
+
     public virtual GameCategory? Category { get; set; }
 
     public virtual Game? Game { get; set; }
+
+    public virtual Promotion? Promotion { get; set; }
 }

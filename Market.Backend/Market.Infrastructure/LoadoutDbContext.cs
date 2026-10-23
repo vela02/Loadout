@@ -33,6 +33,8 @@ public partial class LoadoutDbContext : DbContext, IAppDbContext
 
     public virtual DbSet<Discount> Discounts { get; set; }
 
+    public virtual DbSet<Promotion> Promotions { get; set; }
+
     public virtual DbSet<Game> Games { get; set; }
 
     public virtual DbSet<GameCategory> GameCategories { get; set; }
@@ -159,6 +161,28 @@ public partial class LoadoutDbContext : DbContext, IAppDbContext
             entity.HasOne(d => d.Game).WithMany(p => p.Discounts)
                 .HasForeignKey(d => d.GameId)
                 .HasConstraintName("FK__Discount__GameId__74AE54BC");
+
+            // Deleting a promotion removes the per-game discounts it created
+            entity.HasOne(d => d.Promotion).WithMany(p => p.Discounts)
+                .HasForeignKey(d => d.PromotionId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_Discount_Promotion_PromotionId");
+        });
+
+        modelBuilder.Entity<Promotion>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.ToTable("Promotion");
+
+            entity.Property(e => e.Name).HasMaxLength(150);
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.DiscountPercentage).HasColumnType("decimal(5, 2)");
+            entity.Property(e => e.StartDate).HasColumnType("datetime");
+            entity.Property(e => e.EndDate).HasColumnType("datetime");
+            entity.Property(e => e.TargetType).HasMaxLength(20);
+            entity.Property(e => e.TargetValue).HasMaxLength(255);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
         });
 
         modelBuilder.Entity<Game>(entity =>

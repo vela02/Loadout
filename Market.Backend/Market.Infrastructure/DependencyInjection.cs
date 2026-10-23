@@ -50,6 +50,8 @@ public static class DependencyInjection
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAdminService, AdminService>(); // <--- DODANO OVDJE ZA ADMINISTRACIJU
 
+        services.AddScoped<IAppCurrentUser, AppCurrentUser>();
+
         // Identity hasher
         services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
