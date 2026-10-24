@@ -1,0 +1,559 @@
+// === VARIJABLE (iste kao landing page) ===
+$bg-deep: #0b0c1a;
+$panel: #171a36;
+$panel-edge: #2a2e5c;
+$cyan: #22d3ee;
+$magenta: #e040fb;
+$text: #e8e9ff;
+$text-muted: #8d90b8;
+$danger: #ff6b8a;
+$neon-gradient: linear-gradient(90deg, $cyan 0%, $magenta 100%);
+
+@mixin icon-size($size) {
+  font-size: $size;
+  width: $size;
+  height: $size;
+}
+
+:host {
+  display: block;
+  color: $text;
+  line-height: 1.5;
+}
+
+.promo-dialog {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  background:
+    radial-gradient(circle at 0% 0%, rgba($cyan, 0.12), transparent 40%),
+    radial-gradient(circle at 100% 100%, rgba($magenta, 0.12), transparent 40%),
+    $panel;
+
+  // Neon accent line on top
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 28px;
+    right: 28px;
+    height: 2px;
+    border-radius: 2px;
+    background: $neon-gradient;
+    box-shadow: 0 0 12px rgba($cyan, 0.6);
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+// === HEADER ===
+.dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 24px 28px 16px;
+
+  .header-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    color: $bg-deep;
+    background: $neon-gradient;
+    box-shadow: 0 0 16px rgba($magenta, 0.4);
+  }
+
+  .header-text {
+    flex: 1;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: $cyan;
+  }
+
+  h2 {
+    margin: 2px 0 0;
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.25;
+    color: $text;
+  }
+}
+
+.close-btn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid $panel-edge;
+  border-radius: 10px;
+  color: $text-muted;
+  background: transparent;
+  cursor: pointer;
+
+  &:hover {
+    color: $text;
+    border-color: $text-muted;
+  }
+}
+
+// === BODY ===
+.dialog-body {
+  overflow-y: auto;
+  padding: 4px 28px 8px;
+}
+
+.step {
+  margin-bottom: 20px;
+
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 14px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $text-muted;
+  }
+
+  .step-no {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 12px;
+    color: $bg-deep;
+    background: $cyan;
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+// === TARGET TILES ===
+.target-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.target-tile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  text-align: left;
+  color: $text-muted;
+  background: rgba($bg-deep, 0.5);
+  border: 1px solid $panel-edge;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+
+  mat-icon {
+    @include icon-size(20px);
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    color: $text;
+    border-color: $text-muted;
+  }
+
+  &.active {
+    color: $cyan;
+    border-color: $cyan;
+    background: rgba($cyan, 0.08);
+    box-shadow: 0 0 14px rgba($cyan, 0.25);
+  }
+}
+
+// === GAME PICKER ===
+.game-picker {
+  border: 1px solid $panel-edge;
+  border-radius: 14px;
+  padding: 12px;
+  background: rgba($bg-deep, 0.4);
+}
+
+.game-list {
+  max-height: 220px;
+  overflow-y: auto;
+  margin-top: 10px;
+}
+
+.game-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px 4px 0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: rgba($cyan, 0.05);
+  }
+
+  &.selected {
+    background: rgba($cyan, 0.08);
+
+    .game-title {
+      color: $text;
+    }
+  }
+
+  .game-title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: $text-muted;
+    font-weight: 600;
+  }
+
+  .game-price {
+    color: $cyan;
+    font-weight: 700;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+}
+
+.list-empty {
+  padding: 20px;
+  text-align: center;
+  color: $text-muted;
+}
+
+.picker-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid $panel-edge;
+  font-size: 13px;
+  color: $text-muted;
+}
+
+.link-btn {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  color: $cyan;
+  cursor: pointer;
+
+  &:hover {
+    color: $magenta;
+  }
+}
+
+// === DISCOUNT ===
+.discount-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  .discount-field {
+    width: 160px;
+  }
+}
+
+.quick-discounts {
+  display: flex;
+  gap: 8px;
+  padding-top: 10px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  padding: 8px 14px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  color: $text-muted;
+  background: transparent;
+  border: 1px solid $panel-edge;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: $magenta;
+    border-color: $magenta;
+  }
+
+  &.active {
+    color: $bg-deep;
+    background: $neon-gradient;
+    border-color: transparent;
+  }
+}
+
+.inline-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: -12px 0 12px;
+  font-size: 13px;
+  color: $danger;
+
+  mat-icon {
+    @include icon-size(16px);
+  }
+}
+
+// === SUMMARY ===
+.summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  background: rgba($cyan, 0.08);
+  border: 1px solid rgba($cyan, 0.4);
+
+  > mat-icon {
+    @include icon-size(24px);
+    color: $cyan;
+    flex-shrink: 0;
+  }
+
+  .summary-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    strong {
+      color: $text;
+    }
+
+    span {
+      font-size: 13px;
+      color: $text-muted;
+    }
+  }
+
+  .summary-badge {
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-weight: 800;
+    color: $bg-deep;
+    background: $neon-gradient;
+  }
+
+  &.empty {
+    background: rgba($bg-deep, 0.4);
+    border-color: $panel-edge;
+
+    > mat-icon {
+      color: $text-muted;
+    }
+  }
+}
+
+// === STATES ===
+.state-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 48px 16px;
+  color: $text-muted;
+  font-weight: 600;
+
+  ::ng-deep circle {
+    stroke: $cyan;
+  }
+}
+
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  color: $danger;
+  background: rgba($danger, 0.1);
+  border: 1px solid rgba($danger, 0.45);
+
+  mat-icon {
+    @include icon-size(20px);
+  }
+}
+
+.promo-dialog > .error-banner {
+  margin: 8px 28px 28px;
+}
+
+// === ACTIONS ===
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 28px 24px;
+  border-top: 1px solid $panel-edge;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 46px;
+  padding: 0 22px;
+  border-radius: 12px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+
+  mat-icon {
+    @include icon-size(20px);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+.btn-ghost {
+  color: $text-muted;
+  background: transparent;
+  border: 1px solid $panel-edge;
+
+  &:hover:not(:disabled) {
+    color: $text;
+    border-color: $text-muted;
+  }
+}
+
+.btn-neon {
+  min-width: 190px;
+  border: none;
+  color: $bg-deep;
+  background: $neon-gradient;
+  box-shadow: 0 0 18px rgba($cyan, 0.35);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 0 28px rgba($magenta, 0.55);
+  }
+
+  ::ng-deep circle {
+    stroke: $bg-deep;
+  }
+}
+
+// Material fields and checkboxes on the dark dialog (scoped to this component)
+:host ::ng-deep {
+  .mat-mdc-form-field {
+    --mat-form-field-outlined-outline-color: #{$panel-edge};
+    --mat-form-field-outlined-hover-outline-color: #{$text-muted};
+    --mat-form-field-outlined-focus-outline-color: #{$cyan};
+    --mat-form-field-outlined-label-text-color: #{$text-muted};
+    --mat-form-field-outlined-hover-label-text-color: #{$text};
+    --mat-form-field-outlined-focus-label-text-color: #{$cyan};
+    --mat-form-field-outlined-input-text-color: #{$text};
+    --mat-form-field-outlined-input-text-placeholder-color: #5c5f86;
+    --mat-form-field-outlined-caret-color: #{$cyan};
+    --mat-form-field-outlined-error-outline-color: #{$danger};
+    --mat-form-field-outlined-error-label-text-color: #{$danger};
+    --mat-form-field-outlined-error-focus-outline-color: #{$danger};
+    --mat-form-field-outlined-error-hover-outline-color: #{$danger};
+    --mat-form-field-error-text-color: #{$danger};
+    --mat-form-field-subscript-text-color: #{$text-muted};
+    --mat-form-field-trailing-icon-color: #{$text-muted};
+    --mat-select-enabled-trigger-text-color: #{$text};
+    --mat-select-enabled-arrow-color: #{$text-muted};
+    --mat-select-focused-arrow-color: #{$cyan};
+
+    .mat-mdc-text-field-wrapper {
+      background: rgba($bg-deep, 0.6);
+      border-radius: 12px;
+    }
+
+    .mat-mdc-form-field-text-suffix,
+    .mat-mdc-form-field-icon-suffix .mat-icon {
+      color: $text-muted;
+    }
+
+    // Native date picker icon readable on dark
+    input[type='date'] {
+      color-scheme: dark;
+    }
+  }
+
+  .mat-mdc-checkbox {
+    --mat-checkbox-unselected-icon-color: #{$text-muted};
+    --mat-checkbox-unselected-hover-icon-color: #{$text};
+    --mat-checkbox-unselected-focus-icon-color: #{$text};
+    --mat-checkbox-selected-icon-color: #{$cyan};
+    --mat-checkbox-selected-hover-icon-color: #{$cyan};
+    --mat-checkbox-selected-focus-icon-color: #{$cyan};
+    --mat-checkbox-selected-checkmark-color: #{$bg-deep};
+  }
+}
+
+// === RESPONSIVE ===
+@media (max-width: 600px) {
+  .dialog-header,
+  .dialog-body,
+  .dialog-actions {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .target-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .field-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .dialog-actions {
+    flex-direction: column-reverse;
+
+    .btn {
+      width: 100%;
+    }
+  }
+}

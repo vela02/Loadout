@@ -17,7 +17,7 @@ import {largePaging} from '../../../../../core/models/paging/paging-utils';
   selector: 'app-products-add',
   standalone: false,
   templateUrl: './products-add.component.html',
-  styleUrl: './products-add.component.scss',
+  styleUrls: ['./products-add.component.scss'],
   providers: [ProductFormService]
 })
 export class ProductsAddComponent
@@ -48,12 +48,22 @@ export class ProductsAddComponent
 
     this.startLoading();
 
-    const command: CreateProductCommand = {
-      name: this.form.value.name,
-      description: this.form.value.description,
-      price: this.form.value.price,
-      categoryId: this.form.value.categoryId
-    };
+   const command: any = {
+  title: this.form.value.name,
+  description: this.form.value.description,
+  price: this.form.value.price,
+  categoryId: this.form.value.categoryId,
+
+  //  polja koja backend očekuje:
+  genre: "Action",
+  imageUrl: "https://via.placeholder.com/150",
+  trailerUrl: "",
+  releaseDate: new Date().toISOString(), // današnji datum
+  developer: "Nepoznat",
+  publisher: "Nepoznat",
+  systemRequirements: "Nema zahtjeva"
+};
+    
 
     this.api.create(command).subscribe({
       next: (productId) => {

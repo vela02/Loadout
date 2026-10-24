@@ -1,0 +1,234 @@
+// === VARIJABLE (iste kao landing page) ===
+$bg-deep: #0b0c1a;
+$panel: #171a36;
+$panel-edge: #2a2e5c;
+$cyan: #22d3ee;
+$magenta: #e040fb;
+$violet: #7c3aed;
+$text: #e8e9ff;
+$text-muted: #8d90b8;
+$danger: #ff6b8a;
+$neon-gradient: linear-gradient(90deg, $cyan 0%, $magenta 100%);
+
+@mixin icon-size($size) {
+  font-size: $size;
+  width: $size;
+  height: $size;
+}
+
+:host {
+  display: block;
+  padding: 24px;
+}
+
+.loadout-shell {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px;
+  border-radius: 20px;
+  color: $text;
+  line-height: 1.5;
+  background:
+    radial-gradient(circle at 0% 0%, rgba($cyan, 0.14), transparent 40%),
+    radial-gradient(circle at 100% 100%, rgba($magenta, 0.14), transparent 40%),
+    $bg-deep;
+  box-shadow: 0 20px 60px rgba(11, 12, 26, 0.35);
+}
+
+// === HEADER ===
+.loadout-header {
+  margin-bottom: 28px;
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: $cyan;
+
+    mat-icon {
+      @include icon-size(18px);
+    }
+  }
+
+  h1 {
+    margin: 6px 0 0;
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.25;
+    background: linear-gradient(90deg, $text, $magenta);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+// === LAYOUT ===
+.panel {
+  position: relative;
+  padding: 28px;
+  border-radius: 16px;
+  background: $panel;
+  border: 1px solid $panel-edge;
+
+  // Neon accent line on top
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 28px;
+    right: 28px;
+    height: 2px;
+    border-radius: 2px;
+    background: $neon-gradient;
+    box-shadow: 0 0 12px rgba($cyan, 0.6);
+  }
+}
+
+.game-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+// === BUTTONS ===
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+
+  mat-icon {
+    @include icon-size(20px);
+  }
+}
+
+.btn-ghost {
+  background: transparent;
+  color: $text-muted;
+  border: 1px solid $panel-edge;
+
+  &:hover {
+    color: $text;
+    border-color: $text-muted;
+  }
+}
+
+.btn-neon {
+  min-width: 150px;
+  border: none;
+  color: $bg-deep;
+  background: $neon-gradient;
+  box-shadow: 0 0 18px rgba($cyan, 0.35);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 0 28px rgba($magenta, 0.55);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+// Material form fields on the dark panel (scoped to this component)
+:host ::ng-deep .mat-mdc-form-field {
+  --mat-form-field-outlined-outline-color: #{$panel-edge};
+  --mat-form-field-outlined-hover-outline-color: #{$text-muted};
+  --mat-form-field-outlined-focus-outline-color: #{$cyan};
+  --mat-form-field-outlined-label-text-color: #{$text-muted};
+  --mat-form-field-outlined-hover-label-text-color: #{$text};
+  --mat-form-field-outlined-focus-label-text-color: #{$cyan};
+  --mat-form-field-outlined-input-text-color: #{$text};
+  --mat-form-field-outlined-input-text-placeholder-color: #5c5f86;
+  --mat-form-field-outlined-caret-color: #{$cyan};
+  --mat-form-field-outlined-error-outline-color: #{$danger};
+  --mat-form-field-outlined-error-label-text-color: #{$danger};
+  --mat-form-field-outlined-error-focus-outline-color: #{$danger};
+  --mat-form-field-outlined-error-hover-outline-color: #{$danger};
+  --mat-form-field-error-text-color: #{$danger};
+  --mat-form-field-subscript-text-color: #{$text-muted};
+  --mat-form-field-trailing-icon-color: #{$text-muted};
+  --mat-select-enabled-trigger-text-color: #{$text};
+  --mat-select-enabled-arrow-color: #{$text-muted};
+  --mat-select-focused-arrow-color: #{$cyan};
+
+  .mat-mdc-text-field-wrapper {
+    background: rgba($bg-deep, 0.6);
+    border-radius: 12px;
+  }
+
+  .mat-mdc-form-field-text-suffix {
+    color: $text-muted;
+  }
+
+  .mat-mdc-form-field-icon-suffix .mat-icon {
+    color: $text-muted;
+  }
+
+  &.mat-focused .mat-mdc-form-field-icon-suffix .mat-icon {
+    color: $cyan;
+  }
+}
+
+// === RESPONSIVE ===
+@media (max-width: 600px) {
+  :host {
+    padding: 12px;
+  }
+
+  .loadout-shell,
+  .panel {
+    padding: 18px;
+  }
+
+  .field-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+
+    .btn {
+      width: 100%;
+    }
+  }
+}
+
+// === ACCESSIBILITY ===
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before {
+    animation: none !important;
+    transition: none !important;
+  }
+}

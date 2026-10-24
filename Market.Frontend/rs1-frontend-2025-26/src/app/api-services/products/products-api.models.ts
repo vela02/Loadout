@@ -9,7 +9,11 @@ import { BasePagedQuery } from '../../core/models/paging/base-paged-query';
  */
 export class ListProductsRequest extends BasePagedQuery {
   search?: string | null;
-  // Future filters: categoryId?, isEnabled?, priceMin?, priceMax?
+  categoryId?: number | null;
+  /** true = only active, false = only inactive, null = all */
+  isEnabled?: boolean | null;
+  minPrice?: number | null;
+  maxPrice?: number | null;
 }
 
 /**
@@ -24,6 +28,8 @@ export interface ListProductsQueryDto {
   stockQuantity: number;
   categoryName: string;
   isEnabled: boolean;
+  /** Best discount currently running for this game (null = not on sale) */
+  activeDiscountPercentage?: number | null;
 }
 
 /**
@@ -53,7 +59,7 @@ export type ListProductsResponse = PageResult<ListProductsQueryDto>;
  * Corresponds to: CreateProductCommand.cs
  */
 export interface CreateProductCommand {
-  name: string;
+  title: string;
   description?: string | null;
   price: number;
   categoryId: number;
@@ -64,7 +70,7 @@ export interface CreateProductCommand {
  * Corresponds to: UpdateProductCommand.cs
  */
 export interface UpdateProductCommand {
-  name: string;
+  title: string;
   description?: string | null;
   price: number;
   categoryId: number;

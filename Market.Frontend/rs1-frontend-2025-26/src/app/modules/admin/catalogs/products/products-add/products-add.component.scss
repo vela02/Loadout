@@ -21,130 +21,132 @@ $warning-color: #ffa726;
 $border-color: rgba(73, 118, 181, 0.15);
 $hover-bg: rgba(73, 118, 181, 0.04);
 
+// Dark admin match for product add form
+$bg-1: #070b14;
+$bg-2: #0f1728;
+$bg-3: #131d2e;
+$panel: #121b2a;
+$panel-strong: #162334;
+$primary: #7ab3ff;
+$primary-strong: #4f8cff;
+$primary-soft: rgba(122, 179, 255, 0.12);
+$success: #39d98a;
+$error: #ff6b7a;
+$text: #edf4ff;
+$text-soft: #c3d1ea;
+$text-muted: #8a9bb8;
+$border: rgba(122, 179, 255, 0.18);
+$shadow-soft: 0 12px 28px rgba(2, 6, 20, 0.42);
+$shadow-card: 0 18px 36px rgba(2, 6, 20, 0.5);
+
 // Container
 .container {
   padding: 24px;
   max-width: 900px;
   margin: 0 auto;
-  background: linear-gradient(135deg, $bg-gradient-start 0%, $bg-gradient-end 100%);
+  background:
+    radial-gradient(circle at top left, rgba(79, 140, 255, 0.18), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(122, 179, 255, 0.10), transparent 30%),
+    linear-gradient(180deg, $bg-1 0%, $bg-2 40%, $bg-3 100%);
+  color: $text;
   min-height: 100vh;
 }
 
 // Header Card
 .header-card {
-  background: white;
-  border-radius: 16px;
-  padding: 24px 32px;
-  margin-bottom: 24px;
-  box-shadow: 0 2px 8px rgba(73, 118, 181, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06);
-  border: 1px solid $border-color;
-  transition: all 0.3s ease;
-
-  &:hover {
-    box-shadow: 0 4px 16px rgba(73, 118, 181, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
-  }
+  background: linear-gradient(180deg, rgba(18, 27, 42, 0.98), rgba(15, 23, 35, 0.96));
+  border: 1px solid $border;
+  border-radius: 18px;
+  box-shadow: $shadow-soft;
+  margin-bottom: 20px;
+  overflow: hidden;
+  padding: 20px 22px;
 
   h1 {
+    position: relative;
     margin: 0;
-    font-size: 28px;
-    font-weight: 600;
-    color: $text-primary;
-    letter-spacing: -0.5px;
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
+    font-size: clamp(1.8rem, 2vw, 2.4rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: $text;
+    text-shadow: 0 0 12px rgba(122, 179, 255, 0.2);
 
     &::before {
       content: '';
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, $primary-color 0%, $primary-light 100%);
+      width: 42px;
+      height: 42px;
       border-radius: 12px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 12px rgba(73, 118, 181, 0.25);
-      flex-shrink: 0;
+      background: linear-gradient(135deg, $primary 0%, $primary-strong 100%);
+      box-shadow: 0 8px 22px rgba(79, 140, 255, 0.35);
+      display: inline-block;
     }
-
-    position: relative;
 
     &::after {
       content: 'add_shopping_cart';
-      font-family: 'Material Icons';
-      font-size: 28px;
-      color: white;
       position: absolute;
       left: 10px;
       top: 50%;
       transform: translateY(-50%);
+      font-family: 'Material Icons';
+      font-size: 22px;
+      line-height: 1;
+      color: #081120;
     }
   }
 }
 
 // Form Card
 .form-card {
-  background: white;
-  border-radius: 16px;
-  padding: 32px;
-  box-shadow: 0 2px 8px rgba(73, 118, 181, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06);
-  border: 1px solid $border-color;
+  background: linear-gradient(180deg, rgba(18, 27, 42, 0.98), rgba(12, 18, 29, 0.96));
+  border: 1px solid $border;
+  border-radius: 18px;
+  box-shadow: $shadow-card;
+  padding: 28px 26px;
   position: relative;
 
   form {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 22px;
 
     // Error Banner
     .error-banner {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 16px 20px;
-      background: #ffebee;
-      border: 1px solid #ef9a9a;
+      gap: 10px;
+      padding: 14px 16px;
+      background: rgba(255, 107, 122, 0.08);
+      border: 1px solid rgba(255, 107, 122, 0.25);
       border-radius: 12px;
-      color: #c62828;
-      font-weight: 500;
-      animation: slideDown 0.3s ease-out;
+      color: #ffb7bf;
+      font-weight: 700;
 
       mat-icon {
-        font-size: 24px;
-        width: 24px;
-        height: 24px;
-        color: $error-color;
+        color: $error;
       }
     }
 
     // Loading Overlay
     .loading-overlay {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 16px;
+      inset: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 20px;
+      gap: 16px;
+      background: rgba(7, 11, 20, 0.7);
+      border-radius: 18px;
       z-index: 10;
       backdrop-filter: blur(4px);
 
-      mat-spinner {
-        ::ng-deep circle {
-          stroke: $primary-color;
-        }
-      }
-
       p {
-        color: $text-secondary;
-        font-size: 16px;
-        font-weight: 500;
         margin: 0;
+        color: $text-soft;
+        font-weight: 600;
       }
     }
 
@@ -168,37 +170,37 @@ $hover-bg: rgba(73, 118, 181, 0.04);
       }
     }
 
+    .currency-prefix {
+      color: $primary;
+      font-weight: 700;
+      margin-left: 4px;
+    }
+
     mat-form-field {
       &.mat-mdc-form-field-appearance-outline {
         ::ng-deep {
           .mat-mdc-text-field-wrapper {
-            background-color: $primary-lighter;
+            background: rgba(21, 31, 46, 0.96);
             border-radius: 12px;
-            transition: all 0.3s ease;
+            border: 1px solid $border;
           }
 
           .mdc-notched-outline__leading,
           .mdc-notched-outline__notch,
           .mdc-notched-outline__trailing {
-            border-color: $border-color !important;
-            transition: border-color 0.3s ease;
+            border-color: rgba(122, 179, 255, 0.2) !important;
           }
 
           &.mat-focused {
-            .mat-mdc-text-field-wrapper {
-              background-color: white;
-              box-shadow: 0 4px 12px rgba(73, 118, 181, 0.12);
-            }
-
             .mdc-notched-outline__leading,
             .mdc-notched-outline__notch,
             .mdc-notched-outline__trailing {
-              border-color: $primary-color !important;
+              border-color: $primary !important;
               border-width: 2px !important;
             }
 
             .mat-mdc-floating-label {
-              color: $primary-color !important;
+              color: $primary !important;
             }
           }
 
@@ -206,44 +208,31 @@ $hover-bg: rgba(73, 118, 181, 0.04);
             .mdc-notched-outline__leading,
             .mdc-notched-outline__notch,
             .mdc-notched-outline__trailing {
-              border-color: $error-color !important;
-            }
-
-            .mat-mdc-floating-label {
-              color: $error-color !important;
+              border-color: $error !important;
             }
           }
 
           .mat-mdc-floating-label {
-            color: $text-secondary;
-            font-weight: 500;
+            color: $text-soft;
+            font-weight: 600;
           }
 
           input,
-          textarea {
-            color: $text-primary;
-            font-size: 15px;
-
-            &::placeholder {
-              color: $text-disabled;
-            }
-          }
-
-          .mat-mdc-select {
-            color: $text-primary;
+          textarea,
+          .mat-mdc-select-value {
+            color: $text;
             font-size: 15px;
           }
 
           .mat-mdc-form-field-error {
-            color: $error-color;
+            color: $error;
             font-size: 12px;
-            font-weight: 500;
-            margin-top: 4px;
+            font-weight: 600;
           }
 
-          .mat-mdc-form-field-icon-prefix,
-          .mat-mdc-form-field-icon-suffix {
-            color: $primary-color;
+          .mat-mdc-form-field-icon-suffix,
+          .mat-mdc-form-field-icon-prefix {
+            color: $primary;
           }
         }
       }
@@ -254,76 +243,44 @@ $hover-bg: rgba(73, 118, 181, 0.04);
       display: flex;
       justify-content: flex-end;
       gap: 12px;
-      padding-top: 16px;
-      border-top: 1px solid $border-color;
+      padding-top: 18px;
+      border-top: 1px solid $border;
 
       button {
         min-width: 140px;
         height: 44px;
-        font-weight: 600;
-        font-size: 14px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        border-radius: 10px;
-        transition: all 0.3s ease;
+        border-radius: 12px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
 
         mat-icon {
           margin-right: 8px;
-          font-size: 20px;
-          width: 20px;
-          height: 20px;
         }
 
         // Cancel Button
         &[mat-stroked-button] {
-          border: 2px solid $border-color;
-          color: $text-secondary;
-          background-color: transparent;
-
-          mat-icon {
-            color: $text-secondary;
-          }
+          border-color: $border;
+          color: $text-soft;
+          background: transparent;
 
           &:hover:not([disabled]) {
-            background-color: $hover-bg;
-            border-color: $text-secondary;
-            color: $text-primary;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
-            mat-icon {
-              color: $text-primary;
-            }
-          }
-
-          &[disabled] {
-            opacity: 0.5;
-            cursor: not-allowed;
+            background: rgba(122, 179, 255, 0.06);
+            color: $text;
           }
         }
 
         // Submit Button
         &[mat-raised-button] {
-          background: linear-gradient(135deg, $primary-color 0%, $primary-light 100%);
-          color: white;
-          box-shadow: 0 4px 12px rgba($primary-color, 0.3);
-          border: none;
-
-          mat-icon {
-            color: white;
-          }
+          background: linear-gradient(135deg, $primary 0%, $primary-strong 100%);
+          color: #07111a;
+          box-shadow: 0 10px 22px rgba(79, 140, 255, 0.25);
 
           &:hover:not([disabled]) {
-            background: linear-gradient(135deg, $primary-dark 0%, $primary-color 100%);
-            box-shadow: 0 6px 16px rgba($primary-color, 0.4);
-            transform: translateY(-2px);
+            transform: translateY(-1px);
+            box-shadow: 0 14px 28px rgba(79, 140, 255, 0.32);
           }
 
           &[disabled] {
-            background: linear-gradient(135deg, lighten($border-color, 5%) 0%, $border-color 100%);
-            color: $text-disabled;
-            box-shadow: none;
-            cursor: not-allowed;
             opacity: 0.6;
           }
         }
@@ -359,27 +316,13 @@ $hover-bg: rgba(73, 118, 181, 0.04);
   }
 
   .header-card {
-    padding: 20px;
-    border-radius: 12px;
-
-    h1 {
-      font-size: 24px;
-
-      &::before {
-        width: 40px;
-        height: 40px;
-      }
-
-      &::after {
-        font-size: 24px;
-        left: 8px;
-      }
-    }
+    padding: 18px 18px;
+    border-radius: 14px;
   }
 
   .form-card {
-    padding: 24px 20px;
-    border-radius: 12px;
+    padding: 22px 18px;
+    border-radius: 14px;
   }
 }
 
@@ -402,41 +345,5 @@ $hover-bg: rgba(73, 118, 181, 0.04);
 
   .form-card {
     padding: 20px 16px;
-  }
-}
-
-// Select Panel Styling
-::ng-deep .mat-mdc-select-panel {
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(73, 118, 181, 0.15);
-  border: 1px solid $border-color;
-  margin-top: 8px;
-
-  .mat-mdc-option {
-    padding: 12px 16px;
-    transition: all 0.2s ease;
-
-    &:hover {
-      background-color: $hover-bg;
-    }
-
-    &.mat-mdc-option-active {
-      background-color: $primary-lighter;
-      color: $primary-color;
-      font-weight: 500;
-    }
-
-    &.mdc-list-item--selected {
-      background-color: $primary-lighter;
-      color: $primary-color;
-      font-weight: 600;
-
-      &::after {
-        content: 'check';
-        font-family: 'Material Icons';
-        font-size: 20px;
-        margin-left: auto;
-      }
-    }
   }
 }

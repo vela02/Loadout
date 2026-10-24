@@ -13,6 +13,7 @@ import {
   ListProductCategoriesQueryDto
 } from '../../../../../api-services/product-categories/product-categories-api.model';
 import {largePaging} from '../../../../../core/models/paging/paging-utils';
+import {TranslateService} from '@ngx-translate/core';
 
 
 @Component({
@@ -32,6 +33,7 @@ export class ProductsEditComponent
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private toaster = inject(ToasterService);
+  private translate = inject(TranslateService);
 
   productId!: number;
   categories: ListProductCategoriesQueryDto[] = [];
@@ -72,7 +74,7 @@ export class ProductsEditComponent
     this.startLoading();
 
     const command: UpdateProductCommand = {
-      name: this.form.value.name,
+      title: this.form.value.name,
       description: this.form.value.description,
       price: this.form.value.price,
       categoryId: this.form.value.categoryId
@@ -89,6 +91,10 @@ export class ProductsEditComponent
         console.error('Update product error:', err);
       }
     });
+  }
+
+  getCurrencyPrefix(): string {
+    return this.translate.currentLang === 'bs' ? 'KM' : '$';
   }
 
   onCancel(): void {

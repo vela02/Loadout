@@ -50,6 +50,21 @@ html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 
+// ===========================
+// LOADOUT DIALOG (dark dialog surface, e.g. "new promotion")
+// ===========================
+
+.loadout-dialog {
+  --mat-dialog-container-color: #171a36;
+  --mat-dialog-container-shape: 20px;
+
+  .mat-mdc-dialog-surface {
+    border: 1px solid #2a2e5c;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(124, 58, 237, 0.2);
+    overflow: hidden;
+  }
+}
+
 // Add this to your global styles.scss
 
 // ===========================
@@ -105,5 +120,34 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
   .mat-mdc-button {
     color: white !important;
+  }
+}
+
+// Dark dropdown panel for mat-select (use: panelClass="loadout-select-panel")
+.loadout-select-panel.mat-mdc-select-panel {
+  --mat-select-panel-background-color: #171a36;
+  --mat-option-label-text-color: #e8e9ff;
+  --mat-option-hover-state-layer-color: rgba(34, 211, 238, 0.08);
+  --mat-option-focus-state-layer-color: rgba(34, 211, 238, 0.08);
+  --mat-option-selected-state-layer-color: rgba(34, 211, 238, 0.14);
+  --mat-option-selected-state-label-text-color: #22d3ee;
+  background: #171a36 !important;
+  border: 1px solid #2a2e5c;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 24px rgba(2, 6, 20, 0.5) !important;
+
+  .mat-mdc-option,
+  .mat-mdc-option .mdc-list-item__primary-text {
+    color: #e8e9ff !important;
+  }
+
+  .mat-mdc-option.mdc-list-item--selected,
+  .mat-mdc-option.mdc-list-item--selected .mdc-list-item__primary-text {
+    color: #22d3ee !important;
+  }
+
+  .mat-pseudo-checkbox-checked::after,
+  .mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-checked::after {
+    color: #22d3ee !important;
   }
 }
