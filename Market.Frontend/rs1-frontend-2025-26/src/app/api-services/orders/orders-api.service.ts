@@ -18,7 +18,7 @@ import { buildHttpParams } from '../../core/models/build-http-params';
   providedIn: 'root'
 })
 export class OrdersApiService {
-  private readonly baseUrl = `${environment.apiUrl}/Orders`;
+  private readonly baseUrl = `${environment.apiUrl}/api/admin/orders`;
   private http = inject(HttpClient);
 
   /**
@@ -29,7 +29,7 @@ export class OrdersApiService {
   list(request?: ListOrdersRequest): Observable<ListOrdersResponse> {
     const params = request ? buildHttpParams(request as any) : undefined;
 
-    return this.http.get<ListOrdersResponse>(this.baseUrl, {
+    return this.http.get<ListOrdersResponse>(`${this.baseUrl}/list`, {
       params,
     });
   }
@@ -79,8 +79,8 @@ export class OrdersApiService {
    * Validates status transitions on backend.
    */
   changeStatus(id: number, newStatus: OrderStatusType): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}/${id}/change-status`, {
-      newStatus: newStatus
+    return this.http.put<void>(`${this.baseUrl}/${id}/status`, {
+      NewStatusId: newStatus
     });
   }
 }

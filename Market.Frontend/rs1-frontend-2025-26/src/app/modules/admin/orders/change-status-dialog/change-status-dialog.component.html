@@ -1,28 +1,31 @@
 <div class="dialog-container">
   <!-- Header -->
   <div class="dialog-header">
-    <div class="header-left">
-      <mat-icon class="header-icon">swap_horiz</mat-icon>
-      <h2 mat-dialog-title>{{ 'ORDERS.CHANGE_STATUS.TITLE' | translate }}</h2>
+    <div class="header-icon">
+      <mat-icon>swap_horiz</mat-icon>
+    </div>
+    <div class="header-text">
+      <span class="eyebrow">Loadout · {{ 'ORDERS.TITLE' | translate }}</span>
+      <h2>{{ 'ORDERS.CHANGE_STATUS.TITLE' | translate }}</h2>
     </div>
   </div>
 
   <!-- Content -->
-  <div mat-dialog-content class="dialog-content">
+  <div class="dialog-content">
     <!-- Order Info -->
     <div class="order-info">
-      <div class="order-ref">
+      <span class="order-ref">
         <mat-icon>confirmation_number</mat-icon>
-        <span>{{ data.order.referenceNumber }}</span>
-      </div>
-      <div class="customer-name">
+        {{ data.order.referenceNumber }}
+      </span>
+      <span class="customer-name">
         <mat-icon>person</mat-icon>
-        <span>{{ data.order.user.userFirstname }} {{ data.order.user.userLastname }}</span>
-      </div>
+        {{ data.order.user.userFirstname }} {{ data.order.user.userLastname }}
+      </span>
     </div>
 
     <!-- Current Status -->
-    <div class="current-status-section">
+    <div class="status-section">
       <span class="section-label">{{ 'ORDERS.CHANGE_STATUS.CURRENT_STATUS' | translate }}</span>
       <div class="status-badge" [ngClass]="getCurrentStatusClass()">
         <mat-icon>{{ getCurrentStatusIcon() }}</mat-icon>
@@ -30,53 +33,57 @@
       </div>
     </div>
 
-    <!-- Arrow -->
     <div class="arrow-container">
       <mat-icon>arrow_downward</mat-icon>
     </div>
 
     <!-- New Status Selection -->
-    <div class="new-status-section">
+    <div class="status-section">
       <span class="section-label">{{ 'ORDERS.CHANGE_STATUS.NEW_STATUS' | translate }}</span>
 
-      <div *ngIf="availableStatuses.length === 0" class="no-transitions">
-        <mat-icon>block</mat-icon>
-        <p>{{ 'ORDERS.CHANGE_STATUS.NO_TRANSITIONS' | translate }}</p>
-      </div>
-
-      <mat-radio-group
-        [(ngModel)]="selectedStatus"
-        class="status-radio-group"
-        *ngIf="availableStatuses.length > 0">
-        <mat-radio-button
-          *ngFor="let status of availableStatuses"
-          [value]="status"
-          class="status-radio-option">
-          <div class="status-badge" [ngClass]="getStatusClass(status)">
-            <mat-icon>{{ getStatusIcon(status) }}</mat-icon>
-            <span>{{ getStatusLabel(status) | translate }}</span>
-          </div>
-        </mat-radio-button>
-      </mat-radio-group>
+      @if (availableStatuses.length === 0) {
+        <div class="no-transitions">
+          <mat-icon>block</mat-icon>
+          <p>{{ 'ORDERS.CHANGE_STATUS.NO_TRANSITIONS' | translate }}</p>
+        </div>
+      } @else {
+        <div class="status-options" role="radiogroup">
+          @for (status of availableStatuses; track status) {
+            <button
+              type="button"
+              role="radio"
+              class="status-option"
+              [class.selected]="selectedStatus === status"
+              [attr.aria-checked]="selectedStatus === status"
+              (click)="selectedStatus = status"
+            >
+              <span class="radio-dot"></span>
+              <div class="status-badge" [ngClass]="getStatusClass(status)">
+                <mat-icon>{{ getStatusIcon(status) }}</mat-icon>
+                <span>{{ getStatusLabel(status) | translate }}</span>
+              </div>
+            </button>
+          }
+        </div>
+      }
     </div>
 
     <!-- Warning Message -->
-    <div class="warning-message" *ngIf="selectedStatus === OrderStatusType.Cancelled">
-      <mat-icon>warning</mat-icon>
-      <p>{{ 'ORDERS.CHANGE_STATUS.CANCEL_WARNING' | translate }}</p>
-    </div>
+    @if (selectedStatus === OrderStatusType.Cancelled) {
+      <div class="warning-message">
+        <mat-icon>warning</mat-icon>
+        <p>{{ 'ORDERS.CHANGE_STATUS.CANCEL_WARNING' | translate }}</p>
+      </div>
+    }
   </div>
 
   <!-- Actions -->
-  <div mat-dialog-actions class="dialog-actions">
-    <button mat-button (click)="onCancel()">
+  <div class="dialog-actions">
+    <button type="button" class="btn btn-ghost" (click)="onCancel()">
       {{ 'COMMON.CANCEL' | translate }}
     </button>
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="onConfirm()"
-      [disabled]="!canConfirm()">
+    <button type="button" class="btn btn-neon" (click)="onConfirm()" [disabled]="!canConfirm()">
+      <mat-icon>check</mat-icon>
       {{ 'COMMON.CONFIRM' | translate }}
     </button>
   </div>
