@@ -1,108 +1,147 @@
-<!-- src/app/pages/landing/landing.component.html -->
 <div class="landing-page">
   <!-- Hero Section -->
   <section class="hero-section">
+    <!-- Language Selector -->
+    <div class="top-bar">
+      <button type="button" class="lang-button" [matMenuTriggerFor]="langMenu">
+        <span class="flag-icon">{{ getCurrentLanguage()?.flag }}</span>
+        <span class="lang-code">{{ currentLang }}</span>
+        <mat-icon>expand_more</mat-icon>
+      </button>
+
+      <mat-menu #langMenu="matMenu" xPosition="before">
+        <button
+          mat-menu-item
+          *ngFor="let lang of languages"
+          (click)="switchLanguage(lang.code)"
+        >
+          <span class="flag-icon">{{ lang.flag }}</span>
+          <span>{{ lang.name }}</span>
+          <mat-icon *ngIf="currentLang === lang.code">check</mat-icon>
+        </button>
+      </mat-menu>
+    </div>
+
     <div class="hero-content">
       <div class="hero-text">
         <div class="logo-container">
-          <mat-icon class="logo-icon">storefront</mat-icon>
-          <h1 class="brand-name">FIT Market</h1>
+          <mat-icon class="logo-icon">sports_esports</mat-icon>
+          <h1 class="brand-name">Loadout</h1>
         </div>
-        <h2 class="hero-title">Moderna platforma za upravljanje marketom</h2>
-        <p class="hero-description">
-          Pojednostavite vaše poslovanje sa našim intuitivnim sistemom za upravljanje proizvodima,
-          kategorijama i zalihama. Sve što vam treba na jednom mjestu.
-        </p>
+        <h2 class="hero-title">
+          {{ 'HOME.HERO.TITLE_START' | translate }}
+          <span class="highlight">{{ 'HOME.HERO.TITLE_HIGHLIGHT' | translate }}</span>
+          {{ 'HOME.HERO.TITLE_END' | translate }}
+        </h2>
+        <p class="hero-description">{{ 'HOME.HERO.DESCRIPTION' | translate }}</p>
         <div class="hero-actions">
-          <button mat-raised-button color="primary" class="cta-button" routerLink="/auth/login">
+          <button type="button" class="btn btn-neon" routerLink="/auth/login">
             <mat-icon>rocket_launch</mat-icon>
-            Započni sada
+            {{ 'HOME.HERO.GET_STARTED' | translate }}
           </button>
-          <button mat-stroked-button class="secondary-button">
-            <mat-icon>play_circle</mat-icon>
-            Pogledaj demo
+          <button type="button" class="btn btn-outline" (click)="scrollTo('features')">
+            <mat-icon>explore</mat-icon>
+            {{ 'HOME.HERO.LEARN_MORE' | translate }}
           </button>
         </div>
       </div>
-      <div class="hero-image">
-        <div class="floating-card card-1">
-          <mat-icon>inventory_2</mat-icon>
-          <span>1,250+ Proizvoda</span>
+
+      <div class="hero-visual">
+        <div class="game-tile tile-1">
+          <div class="tile-cover cover-action">
+            <mat-icon>local_fire_department</mat-icon>
+          </div>
+          <div class="tile-info">
+            <span class="tile-genre">{{ 'HOME.GENRES.ACTION' | translate }}</span>
+            <span class="tile-price">59.99 KM</span>
+          </div>
         </div>
-        <div class="floating-card card-2">
-          <mat-icon>trending_up</mat-icon>
-          <span>95% Zadovoljstvo</span>
+        <div class="game-tile tile-2">
+          <div class="tile-cover cover-rpg">
+            <mat-icon>castle</mat-icon>
+          </div>
+          <div class="tile-info">
+            <span class="tile-genre">{{ 'HOME.GENRES.RPG' | translate }}</span>
+            <span class="tile-price">89.99 KM</span>
+          </div>
         </div>
-        <div class="floating-card card-3">
-          <mat-icon>speed</mat-icon>
-          <span>Brzo & Efikasno</span>
+        <div class="game-tile tile-3">
+          <div class="tile-cover cover-racing">
+            <mat-icon>sports_motorsports</mat-icon>
+          </div>
+          <div class="tile-info">
+            <span class="tile-genre">{{ 'HOME.GENRES.RACING' | translate }}</span>
+            <span class="tile-price">39.99 KM</span>
+          </div>
+        </div>
+
+        <div class="floating-badge badge-sale">
+          <mat-icon>local_offer</mat-icon>
+          <span>-40%</span>
+        </div>
+        <div class="floating-badge badge-instant">
+          <mat-icon>bolt</mat-icon>
+          <span>{{ 'HOME.HERO.INSTANT_KEY' | translate }}</span>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Features Section -->
-  <section class="features-section">
+  <section class="features-section" id="features">
     <div class="section-header">
-      <h2 class="section-title">Zašto odabrati FIT Market?</h2>
-      <p class="section-subtitle">
-        Sve funkcionalnosti koje su vam potrebne za uspješno vođenje biznisa
-      </p>
+      <span class="eyebrow">{{ 'HOME.FEATURES.EYEBROW' | translate }}</span>
+      <h2 class="section-title">{{ 'HOME.FEATURES.TITLE' | translate }}</h2>
+      <p class="section-subtitle">{{ 'HOME.FEATURES.SUBTITLE' | translate }}</p>
     </div>
 
     <div class="features-grid">
-      <div class="feature-card mat-elevation-z2">
+      <div class="feature-card">
         <div class="feature-icon">
-          <mat-icon>category</mat-icon>
+          <mat-icon>sports_esports</mat-icon>
         </div>
-        <h3>Upravljanje kategorijama</h3>
-        <p>
-          Organizujte proizvode u logične kategorije i podkategorije. Brza pretraga i filtriranje.
-        </p>
+        <h3>{{ 'HOME.FEATURES.LIBRARY_TITLE' | translate }}</h3>
+        <p>{{ 'HOME.FEATURES.LIBRARY_TEXT' | translate }}</p>
       </div>
 
-      <div class="feature-card mat-elevation-z2">
+      <div class="feature-card">
         <div class="feature-icon">
-          <mat-icon>inventory</mat-icon>
+          <mat-icon>bolt</mat-icon>
         </div>
-        <h3>Kontrola zaliha</h3>
-        <p>Praćenje stanja zaliha u realnom vremenu. Automatska obavještenja za niske zalihe.</p>
+        <h3>{{ 'HOME.FEATURES.DELIVERY_TITLE' | translate }}</h3>
+        <p>{{ 'HOME.FEATURES.DELIVERY_TEXT' | translate }}</p>
       </div>
 
-      <div class="feature-card mat-elevation-z2">
+      <div class="feature-card">
         <div class="feature-icon">
-          <mat-icon>analytics</mat-icon>
+          <mat-icon>local_offer</mat-icon>
         </div>
-        <h3>Analitika i izvještaji</h3>
-        <p>
-          Detaljni izvještaji o prodaji, trendovima i performansama. Donosite informisane odluke.
-        </p>
+        <h3>{{ 'HOME.FEATURES.DEALS_TITLE' | translate }}</h3>
+        <p>{{ 'HOME.FEATURES.DEALS_TEXT' | translate }}</p>
       </div>
 
-      <div class="feature-card mat-elevation-z2">
+      <div class="feature-card">
         <div class="feature-icon">
-          <mat-icon>speed</mat-icon>
+          <mat-icon>devices</mat-icon>
         </div>
-        <h3>Brz i responsivan</h3>
-        <p>
-          Optimizovana platforma koja radi brzo na svim uređajima. Pristupite bilo gdje, bilo kada.
-        </p>
+        <h3>{{ 'HOME.FEATURES.PLATFORMS_TITLE' | translate }}</h3>
+        <p>{{ 'HOME.FEATURES.PLATFORMS_TEXT' | translate }}</p>
       </div>
 
-      <div class="feature-card mat-elevation-z2">
+      <div class="feature-card">
         <div class="feature-icon">
-          <mat-icon>security</mat-icon>
+          <mat-icon>verified_user</mat-icon>
         </div>
-        <h3>Sigurnost podataka</h3>
-        <p>Vaši podaci su zaštićeni najnovijim sigurnosnim protokolima. Redovne backup kopije.</p>
+        <h3>{{ 'HOME.FEATURES.PAYMENTS_TITLE' | translate }}</h3>
+        <p>{{ 'HOME.FEATURES.PAYMENTS_TEXT' | translate }}</p>
       </div>
 
-      <div class="feature-card mat-elevation-z2">
+      <div class="feature-card">
         <div class="feature-icon">
           <mat-icon>support_agent</mat-icon>
         </div>
-        <h3>24/7 podrška</h3>
-        <p>Naš tim je uvijek tu da vam pomogne. Brzi odgovori i profesionalna podrška.</p>
+        <h3>{{ 'HOME.FEATURES.SUPPORT_TITLE' | translate }}</h3>
+        <p>{{ 'HOME.FEATURES.SUPPORT_TEXT' | translate }}</p>
       </div>
     </div>
   </section>
@@ -111,27 +150,27 @@
   <section class="stats-section">
     <div class="stats-grid">
       <div class="stat-card">
+        <mat-icon class="stat-icon">videogame_asset</mat-icon>
+        <div class="stat-number">2,000+</div>
+        <div class="stat-label">{{ 'HOME.STATS.GAMES' | translate }}</div>
+      </div>
+
+      <div class="stat-card">
         <mat-icon class="stat-icon">groups</mat-icon>
-        <div class="stat-number">500+</div>
-        <div class="stat-label">Aktivnih korisnika</div>
+        <div class="stat-number">50,000+</div>
+        <div class="stat-label">{{ 'HOME.STATS.PLAYERS' | translate }}</div>
       </div>
 
       <div class="stat-card">
-        <mat-icon class="stat-icon">shopping_cart</mat-icon>
-        <div class="stat-number">10,000+</div>
-        <div class="stat-label">Proizvoda u sistemu</div>
-      </div>
-
-      <div class="stat-card">
-        <mat-icon class="stat-icon">schedule</mat-icon>
-        <div class="stat-number">99.9%</div>
-        <div class="stat-label">Uptime garancija</div>
+        <mat-icon class="stat-icon">bolt</mat-icon>
+        <div class="stat-number">{{ 'HOME.STATS.INSTANT' | translate }}</div>
+        <div class="stat-label">{{ 'HOME.STATS.DELIVERY' | translate }}</div>
       </div>
 
       <div class="stat-card">
         <mat-icon class="stat-icon">star</mat-icon>
         <div class="stat-number">4.9/5</div>
-        <div class="stat-label">Prosječna ocjena</div>
+        <div class="stat-label">{{ 'HOME.STATS.RATING' | translate }}</div>
       </div>
     </div>
   </section>
@@ -139,11 +178,11 @@
   <!-- CTA Section -->
   <section class="cta-section">
     <div class="cta-content">
-      <h2>Spremni da počnete?</h2>
-      <p>Pridružite se stotinama zadovoljnih korisnika koji su već unaprijedili svoje poslovanje</p>
-      <button mat-raised-button color="primary" class="cta-large-button" routerLink="/auth/login">
+      <h2>{{ 'HOME.CTA.TITLE' | translate }}</h2>
+      <p>{{ 'HOME.CTA.TEXT' | translate }}</p>
+      <button type="button" class="btn btn-neon btn-large" routerLink="/auth/login">
         <mat-icon>login</mat-icon>
-        Prijavite se sada
+        {{ 'HOME.CTA.BUTTON' | translate }}
       </button>
     </div>
   </section>
