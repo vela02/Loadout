@@ -1,0 +1,25 @@
+// Register-only additions; the rest of the look comes from ../login/login.component.scss
+
+$danger: #ff6b8a;
+
+// Password mismatch is a form-level error, so it can't use <mat-error>
+.field-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: -4px 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: $danger;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+// No "remember me" row above the button here, so give it some space
+.register-submit {
+  margin-top: 12px;
+}
