@@ -3,11 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AdminLayoutComponent } from './admin-layout/admin-layout.component';
 import { ProductsComponent } from './catalogs/products/products.component';
-import { ProductsAddComponent } from './catalogs/products/products-add/products-add.component';
+//import { ProductsAddComponent } from './catalogs/products/products-add/products-add.component';
 import { ProductsEditComponent } from './catalogs/products/products-edit/products-edit.component';
 import { ProductCategoriesComponent } from './catalogs/product-categories/product-categories.component';
 import {AdminOrdersComponent} from './orders/admin-orders.component';
 import {AdminSettingsComponent} from './admin-settings/admin-settings.component';
+import { CustomProductsAddComponent } from '../custom-ui/products/products-add/custom-products-add.component';
+import { PromotionsComponent } from './catalogs/promotions/promotions.component';
 
 const routes: Routes = [
   {
@@ -21,11 +23,17 @@ const routes: Routes = [
       },
       {
         path: 'products/add',
-        component: ProductsAddComponent,
+        component: CustomProductsAddComponent,
       },
       {
         path: 'products/:id/edit',
         component: ProductsEditComponent,
+      },
+
+      // PROMOTIONS
+      {
+        path: 'promotions',
+        component: PromotionsComponent,
       },
 
       // PRODUCT CATEGORIES

@@ -15,11 +15,16 @@ import {SharedModule} from '../shared/shared-module';
 import { OrderDetailsDialogComponent } from './orders/admin-orders-details-dialog/order-details-dialog.component';
 import { ChangeStatusDialogComponent } from './orders/change-status-dialog/change-status-dialog.component';
 
+import { CustomProductsAddComponent } from '../custom-ui/products/products-add/custom-products-add.component';
+import { PromotionsComponent } from './catalogs/promotions/promotions.component';
+import { PromotionCreateDialogComponent } from './catalogs/promotions/promotion-create-dialog/promotion-create-dialog.component';
+
 
 @NgModule({
   declarations: [
     ProductsComponent,
     ProductsAddComponent,
+    CustomProductsAddComponent,
     ProductsEditComponent,
     AdminLayoutComponent,
     ProductCategoriesComponent,
@@ -28,6 +33,8 @@ import { ChangeStatusDialogComponent } from './orders/change-status-dialog/chang
     AdminSettingsComponent,
     OrderDetailsDialogComponent,
     ChangeStatusDialogComponent,
+    PromotionsComponent,
+    PromotionCreateDialogComponent,
   ],
   imports: [
     AdminRoutingModule,
