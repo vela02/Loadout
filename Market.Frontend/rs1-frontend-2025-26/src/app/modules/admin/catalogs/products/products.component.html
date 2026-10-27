@@ -1,85 +1,199 @@
-<div class="container">
-  <!-- Header kartica -->
-  <div class="header-card mat-elevation-z2">
-    <div class="header-card-content">
-      <!-- Lijevo: naslov -->
+<div class="loadout-shell">
+  <!-- Header -->
+  <header class="loadout-header">
+    <div class="header-text">
+      <span class="eyebrow">
+        <mat-icon>sports_esports</mat-icon>
+        Loadout · {{ 'PRODUCTS.SUBTITLE' | translate }}
+      </span>
       <h1>{{ 'PRODUCTS.TITLE' | translate }}</h1>
-
-      <!-- Desno: search + novi proizvod -->
-      <div class="actions-container">
-        <mat-form-field class="search-field" appearance="fill">
-          <mat-label>{{ 'PRODUCTS.SEARCH_PLACEHOLDER' | translate }}</mat-label>
-          <input
-            matInput
-            [placeholder]="'PRODUCTS.SEARCH_INPUT_PLACEHOLDER' | translate"
-            (keyup.enter)="request.paging.page = 1; loadPagedData()"
-            [(ngModel)]="request.search"
-          />
-          <mat-icon matSuffix>search</mat-icon>
-        </mat-form-field>
-
-        <button mat-raised-button color="primary" (click)="onCreate()">
-          <mat-icon>add</mat-icon>
-          {{ 'PRODUCTS.NEW_PRODUCT' | translate }}
-        </button>
-      </div>
     </div>
-  </div>
+
+    <!-- New product / promotion -->
+    <div class="actions-container">
+      <button type="button" class="btn btn-outline" (click)="onCreatePromotion()">
+        <mat-icon>local_offer</mat-icon>
+        {{ 'PROMOTIONS.BUTTON' | translate }}
+      </button>
+
+      <button type="button" class="btn btn-neon" (click)="onCreate()">
+        <mat-icon>add</mat-icon>
+        {{ 'PRODUCTS.NEW_PRODUCT' | translate }}
+      </button>
+    </div>
+  </header>
+
+  <!-- Filters (5 parameters, backend filtering) -->
+  <form class="filter-panel" [formGroup]="filterForm" (ngSubmit)="applyFilters()">
+    <div class="filter-head">
+      <span class="filter-title">
+        <mat-icon>tune</mat-icon>
+        {{ 'PRODUCTS.FILTERS.TITLE' | translate }}
+        @if (activeFilterCount) {
+          <span class="filter-count">{{ 'PRODUCTS.FILTERS.ACTIVE_COUNT' | translate: { count: activeFilterCount } }}</span>
+        }
+      </span>
+    </div>
+
+    <div class="filter-grid">
+      <!-- 1) Search -->
+      <mat-form-field class="search-field filter-search" appearance="outline">
+        <mat-label>{{ 'PRODUCTS.SEARCH_PLACEHOLDER' | translate }}</mat-label>
+        <input
+          matInput
+          formControlName="search"
+          maxlength="100"
+          [placeholder]="'PRODUCTS.SEARCH_INPUT_PLACEHOLDER' | translate"
+        />
+        <mat-icon matSuffix>search</mat-icon>
+        @if (filterForm.controls.search.hasError('maxlength')) {
+          <mat-error>{{ 'PRODUCTS.FILTERS.SEARCH_TOO_LONG' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- 2) Category -->
+      <mat-form-field class="search-field" appearance="outline">
+        <mat-label>{{ 'PRODUCTS.FILTERS.CATEGORY' | translate }}</mat-label>
+        <mat-select formControlName="categoryId" panelClass="loadout-select-panel" (selectionChange)="applyFilters()">
+          <mat-option [value]="null">{{ 'PRODUCTS.FILTERS.ALL_CATEGORIES' | translate }}</mat-option>
+          @for (category of categories; track category.id) {
+            <mat-option [value]="category.id">{{ category.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <!-- 3) Status -->
+      <mat-form-field class="search-field" appearance="outline">
+        <mat-label>{{ 'PRODUCTS.FILTERS.STATUS' | translate }}</mat-label>
+        <mat-select formControlName="status" panelClass="loadout-select-panel" (selectionChange)="applyFilters()">
+          <mat-option value="all">{{ 'PRODUCTS.FILTERS.STATUS_ALL' | translate }}</mat-option>
+          <mat-option value="active">{{ 'PRODUCTS.FILTERS.STATUS_ACTIVE' | translate }}</mat-option>
+          <mat-option value="inactive">{{ 'PRODUCTS.FILTERS.STATUS_INACTIVE' | translate }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- 4) Min price -->
+      <mat-form-field class="search-field" appearance="outline">
+        <mat-label>{{ 'PRODUCTS.FILTERS.MIN_PRICE' | translate }}</mat-label>
+        <input matInput type="number" min="0" step="0.01" formControlName="minPrice" />
+        @if (priceError('minPrice'); as err) {
+          <mat-error>{{ err | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- 5) Max price -->
+      <mat-form-field class="search-field" appearance="outline">
+        <mat-label>{{ 'PRODUCTS.FILTERS.MAX_PRICE' | translate }}</mat-label>
+        <input matInput type="number" min="0" step="0.01" formControlName="maxPrice" />
+        @if (priceError('maxPrice'); as err) {
+          <mat-error>{{ err | translate }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="filter-actions">
+      <button type="button" class="btn btn-ghost btn-sm" (click)="resetFilters()">
+        <mat-icon>restart_alt</mat-icon>
+        {{ 'PRODUCTS.FILTERS.RESET' | translate }}
+      </button>
+      <button type="submit" class="btn btn-neon btn-sm">
+        <mat-icon>filter_alt</mat-icon>
+        {{ 'PRODUCTS.FILTERS.APPLY' | translate }}
+      </button>
+    </div>
+  </form>
 
   <!-- Loading / error -->
-  <div *ngIf="isLoading" class="loading">
-    {{ 'PRODUCTS.LOADING' | translate }}
+  <div *ngIf="isLoading" class="state-box">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span>{{ 'PRODUCTS.LOADING' | translate }}</span>
   </div>
 
-  <div *ngIf="!isLoading && errorMessage" class="error">
-    {{ errorMessage }}
+  <div *ngIf="!isLoading && errorMessage" class="error-banner">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ errorMessage }}</span>
   </div>
 
-  <!-- Tabela -->
-  <div class="mat-elevation-z8" *ngIf="!isLoading && !errorMessage">
+  <!-- Table -->
+  <div class="table-panel" *ngIf="!isLoading && !errorMessage">
     <table mat-table [dataSource]="items">
-      <!-- Naziv -->
+      <!-- Name -->
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>{{ 'PRODUCTS.TABLE.NAME' | translate }}</th>
+        <th mat-header-cell *matHeaderCellDef class="sortable" (click)="sortBy('name')">
+          <span class="th-content">
+            {{ 'PRODUCTS.TABLE.NAME' | translate }}
+            <span class="sort-indicator" [class.active]="sortState.column === 'name'">
+              {{ sortState.column === 'name' ? (sortState.direction === 'asc' ? '↑' : '↓') : '↕' }}
+            </span>
+          </span>
+        </th>
         <td mat-cell *matCellDef="let product">
-          <span style="font-weight: 500">{{ product.name }}</span>
+          <span class="product-name">{{ product.name }}</span>
         </td>
       </ng-container>
 
-      <!-- Kategorija -->
+      <!-- Category -->
       <ng-container matColumnDef="categoryName">
-        <th mat-header-cell *matHeaderCellDef>{{ 'PRODUCTS.TABLE.CATEGORY' | translate }}</th>
+        <th mat-header-cell *matHeaderCellDef class="sortable" (click)="sortBy('categoryName')">
+          <span class="th-content">
+            {{ 'PRODUCTS.TABLE.CATEGORY' | translate }}
+            <span class="sort-indicator" [class.active]="sortState.column === 'categoryName'">
+              {{ sortState.column === 'categoryName' ? (sortState.direction === 'asc' ? '↑' : '↓') : '↕' }}
+            </span>
+          </span>
+        </th>
         <td mat-cell *matCellDef="let product">
-          {{ product.categoryName }}
+          <span class="category-chip">{{ product.categoryName }}</span>
         </td>
       </ng-container>
 
-      <!-- Cijena -->
+      <!-- Price -->
       <ng-container matColumnDef="price">
-        <th mat-header-cell *matHeaderCellDef>{{ 'PRODUCTS.TABLE.PRICE' | translate }}</th>
+        <th mat-header-cell *matHeaderCellDef class="sortable" (click)="sortBy('price')">
+          <span class="th-content">
+            {{ 'PRODUCTS.TABLE.PRICE' | translate }}
+            <span class="sort-indicator" [class.active]="sortState.column === 'price'">
+              {{ sortState.column === 'price' ? (sortState.direction === 'asc' ? '↑' : '↓') : '↕' }}
+            </span>
+          </span>
+        </th>
         <td mat-cell *matCellDef="let product">
-          <span style="font-weight: 600; color: #4976b5"
-            >{{ product.price | number : '1.2-2' }} KM</span
-          >
+          @if (product.activeDiscountPercentage) {
+            <div class="sale-price">
+              <span class="old-price">{{ product.price | number : '1.2-2' }} KM</span>
+              <span class="price">
+                {{ product.price * (1 - product.activeDiscountPercentage / 100) | number : '1.2-2' }} KM
+              </span>
+              <span class="sale-badge" [matTooltip]="'PROMOTIONS.SALE' | translate">
+                -{{ product.activeDiscountPercentage | number : '1.0-2' }}%
+              </span>
+            </div>
+          } @else {
+            <span class="price">{{ product.price | number : '1.2-2' }} KM</span>
+          }
         </td>
       </ng-container>
 
-      <!-- Stanje -->
+      <!-- Stock -->
       <ng-container matColumnDef="stockQuantity">
         <th mat-header-cell *matHeaderCellDef>{{ 'PRODUCTS.TABLE.STOCK' | translate }}</th>
         <td mat-cell *matCellDef="let product">
-          <span
-            [style.color]="product.stockQuantity > 0 ? '#66bb6a' : '#ef5350'"
-            style="font-weight: 500"
-          >
+          <span class="stock" [class.out]="product.stockQuantity <= 0">
             {{ product.stockQuantity }}
           </span>
         </td>
       </ng-container>
 
-      <!-- Aktivno -->
+      <!-- Active -->
       <ng-container matColumnDef="isEnabled">
-        <th mat-header-cell *matHeaderCellDef>{{ 'PRODUCTS.TABLE.ACTIVE' | translate }}</th>
+        <th mat-header-cell *matHeaderCellDef class="sortable" (click)="sortBy('isEnabled')">
+          <span class="th-content">
+            {{ 'PRODUCTS.TABLE.ACTIVE' | translate }}
+            <span class="sort-indicator" [class.active]="sortState.column === 'isEnabled'">
+              {{ sortState.column === 'isEnabled' ? (sortState.direction === 'asc' ? '↑' : '↓') : '↕' }}
+            </span>
+          </span>
+        </th>
         <td mat-cell *matCellDef="let product">
           <mat-icon [ngClass]="product.isEnabled ? 'icon-enabled' : 'icon-disabled'">
             {{ product.isEnabled ? 'check_circle' : 'cancel' }}
@@ -87,52 +201,39 @@
         </td>
       </ng-container>
 
-      <!-- Akcije -->
+      <!-- Actions -->
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>{{ 'PRODUCTS.TABLE.ACTIONS' | translate }}</th>
         <td mat-cell *matCellDef="let product">
-          <button
-            mat-icon-button
-            color="primary"
-            (click)="onEdit(product)"
-            [matTooltip]="'PRODUCTS.ACTIONS.EDIT_TOOLTIP' | translate"
-          >
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button
-            mat-icon-button
-            color="warn"
-            (click)="onDelete(product)"
-            [matTooltip]="'PRODUCTS.ACTIONS.DELETE_TOOLTIP' | translate"
-          >
-            <mat-icon>delete</mat-icon>
-          </button>
+          <div class="row-actions">
+            <button
+              type="button"
+              class="icon-btn edit"
+              (click)="onEdit(product)"
+              [matTooltip]="'PRODUCTS.ACTIONS.EDIT_TOOLTIP' | translate"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              type="button"
+              class="icon-btn delete"
+              (click)="onDelete(product)"
+              [matTooltip]="'PRODUCTS.ACTIONS.DELETE_TOOLTIP' | translate"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
         </td>
       </ng-container>
 
-      <tr
-        mat-header-row
-        *matHeaderRowDef="[
-          'name',
-          'categoryName',
-          'price',
-          'stockQuantity',
-          'isEnabled',
-          'actions'
-        ]"
-      ></tr>
-      <tr
-        mat-row
-        *matRowDef="
-          let row;
-          columns: ['name', 'categoryName', 'price', 'stockQuantity', 'isEnabled', 'actions']
-        "
-      ></tr>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 
       <!-- No data -->
-      <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="6">
-          <ng-container *ngIf="request.search; else noDataDefault">
+      <tr class="mat-row no-data-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+          <mat-icon>sports_esports</mat-icon>
+          <ng-container *ngIf="activeFilterCount; else noDataDefault">
             {{ 'PRODUCTS.NO_DATA_FILTER' | translate }}
           </ng-container>
           <ng-template #noDataDefault>
