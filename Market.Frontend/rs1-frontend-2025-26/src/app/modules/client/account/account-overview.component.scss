@@ -1,0 +1,370 @@
+@use '../../admin/orders/admin-orders-status-styles';
+
+// === VARIJABLE (iste kao landing page) ===
+$bg-deep: #0b0c1a;
+$panel: #171a36;
+$panel-edge: #2a2e5c;
+$cyan: #22d3ee;
+$magenta: #e040fb;
+$text: #e8e9ff;
+$text-muted: #8d90b8;
+$danger: #ff6b8a;
+$neon-gradient: linear-gradient(90deg, $cyan 0%, $magenta 100%);
+
+@mixin icon-size($size) {
+  font-size: $size;
+  width: $size;
+  height: $size;
+}
+
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  color: $text;
+}
+
+.panel {
+  padding: 24px;
+  border-radius: 18px;
+  background: $panel;
+  border: 1px solid $panel-edge;
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 18px;
+    font-size: 18px;
+    font-weight: 800;
+
+    mat-icon {
+      color: $cyan;
+    }
+  }
+}
+
+// === STATES ===
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 64px 0;
+  text-align: center;
+  color: $text-muted;
+
+  .state-icon {
+    @include icon-size(44px);
+    color: $danger;
+  }
+
+  ::ng-deep circle {
+    stroke: $cyan;
+  }
+}
+
+// === HERO ===
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  .avatar {
+    display: grid;
+    place-items: center;
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+    border-radius: 20px;
+    font-size: 32px;
+    font-weight: 900;
+    color: $bg-deep;
+    background: $neon-gradient;
+    box-shadow: 0 0 24px rgba($magenta, 0.45);
+  }
+
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: $cyan;
+  }
+
+  h1 {
+    margin: 2px 0 4px;
+    font-size: 30px;
+    font-weight: 900;
+    line-height: 1.25;
+  }
+
+  .subtitle {
+    margin: 0;
+    color: $text-muted;
+  }
+}
+
+// === STATS ===
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.stat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 20px;
+  border-radius: 16px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 100% 0%, rgba($cyan, 0.12), transparent 55%),
+    $panel;
+  border: 1px solid $panel-edge;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    border-color: rgba($cyan, 0.5);
+    transform: translateY(-2px);
+  }
+
+  mat-icon {
+    @include icon-size(26px);
+    margin-bottom: 6px;
+    color: $magenta;
+  }
+
+  .stat-value {
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1.2;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: $text-muted;
+  }
+}
+
+// === GRID ===
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 24px;
+  align-items: start;
+}
+
+// Profile details
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+
+  div {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba($panel-edge, 0.6);
+  }
+
+  dt {
+    color: $text-muted;
+    font-weight: 600;
+  }
+
+  dd {
+    margin: 0;
+    font-weight: 700;
+    text-align: right;
+    word-break: break-all;
+  }
+}
+
+.security {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba($bg-deep, 0.6);
+  border: 1px dashed $panel-edge;
+
+  strong {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    mat-icon {
+      @include icon-size(20px);
+      color: $cyan;
+    }
+  }
+
+  p {
+    margin: 4px 0 0;
+    font-size: 14px;
+    color: $text-muted;
+  }
+}
+
+// Orders
+.orders {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.order {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba($bg-deep, 0.6);
+  border: 1px solid $panel-edge;
+
+  .order-main,
+  .order-side {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .order-side {
+    align-items: flex-end;
+  }
+
+  .order-id {
+    font-weight: 800;
+  }
+
+  .order-meta {
+    font-size: 13px;
+    color: $text-muted;
+  }
+
+  .order-amount {
+    font-weight: 800;
+    color: $cyan;
+  }
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 0;
+  text-align: center;
+  color: $text-muted;
+
+  > mat-icon {
+    @include icon-size(40px);
+    color: $panel-edge;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+// === BUTTONS ===
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 12px;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+
+  mat-icon {
+    @include icon-size(20px);
+  }
+}
+
+.btn-ghost {
+  color: $text;
+  background: transparent;
+  border: 1px solid $panel-edge;
+
+  &:hover {
+    border-color: $cyan;
+    color: $cyan;
+  }
+}
+
+.btn-neon {
+  border: none;
+  color: $bg-deep;
+  background: $neon-gradient;
+  box-shadow: 0 0 18px rgba($cyan, 0.35);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 28px rgba($magenta, 0.55);
+  }
+}
+
+// === RESPONSIVE ===
+@media (max-width: 960px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+
+    h1 {
+      font-size: 24px;
+    }
+  }
+
+  .stats {
+    gap: 10px;
+  }
+
+  .stat {
+    padding: 16px;
+
+    .stat-value {
+      font-size: 20px;
+    }
+  }
+
+  .panel {
+    padding: 18px;
+  }
+
+  .order {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .order-side {
+      align-items: flex-start;
+    }
+  }
+}

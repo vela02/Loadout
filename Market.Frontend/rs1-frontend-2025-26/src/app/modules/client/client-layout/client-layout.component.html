@@ -1,0 +1,58 @@
+<div class="client-shell">
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a routerLink="/" class="brand">
+        <span class="brand-mark"><mat-icon>sports_esports</mat-icon></span>
+        <span class="brand-name">LOADOUT</span>
+      </a>
+
+      <nav class="nav">
+        <a routerLink="account" routerLinkActive="active" class="nav-link">
+          <mat-icon>dashboard</mat-icon>
+          <span>{{ 'CLIENT.NAV.OVERVIEW' | translate }}</span>
+        </a>
+        <a routerLink="change-password" routerLinkActive="active" class="nav-link">
+          <mat-icon>lock_reset</mat-icon>
+          <span>{{ 'CLIENT.NAV.CHANGE_PASSWORD' | translate }}</span>
+        </a>
+        <a routerLink="/" class="nav-link">
+          <mat-icon>storefront</mat-icon>
+          <span>{{ 'CLIENT.NAV.STORE' | translate }}</span>
+        </a>
+      </nav>
+
+      <div class="actions">
+        <button type="button" class="lang-btn" [matMenuTriggerFor]="langMenu">
+          <span class="flag">{{ getCurrentLanguage()?.flag }}</span>
+          <span class="lang-code">{{ currentLang | uppercase }}</span>
+          <mat-icon>expand_more</mat-icon>
+        </button>
+        <mat-menu #langMenu="matMenu">
+          @for (lang of languages; track lang.code) {
+            <button mat-menu-item (click)="switchLanguage(lang.code)">
+              <span class="flag">{{ lang.flag }}</span>
+              <span>{{ lang.name }}</span>
+            </button>
+          }
+        </mat-menu>
+
+        @if (currentUser.currentUser()?.email; as email) {
+          <span class="user-chip" [title]="email">
+            <mat-icon>person</mat-icon>
+            <span class="user-email">{{ email }}</span>
+          </span>
+        }
+
+        <a routerLink="/auth/logout" class="logout-btn" [title]="'CLIENT.NAV.LOGOUT' | translate">
+          <mat-icon>logout</mat-icon>
+          <span class="logout-text">{{ 'CLIENT.NAV.LOGOUT' | translate }}</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

@@ -1,0 +1,132 @@
+<!-- Loading -->
+@if (isLoading) {
+  <div class="state">
+    <mat-spinner diameter="44"></mat-spinner>
+  </div>
+}
+
+<!-- Error -->
+@if (!isLoading && hasError) {
+  <div class="state panel">
+    <mat-icon class="state-icon">error_outline</mat-icon>
+    <p>{{ 'CLIENT.ACCOUNT.ERROR_LOAD' | translate }}</p>
+    <button type="button" class="btn btn-ghost" (click)="loadProfile()">
+      <mat-icon>refresh</mat-icon>
+      {{ 'COMMON.RETRY' | translate }}
+    </button>
+  </div>
+}
+
+@if (!isLoading && profile; as p) {
+  <!-- Header -->
+  <section class="hero">
+    <div class="avatar">{{ initial }}</div>
+    <div>
+      <span class="eyebrow">{{ 'CLIENT.ACCOUNT.EYEBROW' | translate }}</span>
+      <h1>{{ 'CLIENT.ACCOUNT.WELCOME' | translate: { name: p.username } }}</h1>
+      <p class="subtitle">{{ 'CLIENT.ACCOUNT.SUBTITLE' | translate }}</p>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats">
+    <div class="stat">
+      <mat-icon>receipt_long</mat-icon>
+      <span class="stat-value">{{ p.ordersCount }}</span>
+      <span class="stat-label">{{ 'CLIENT.ACCOUNT.STATS.ORDERS' | translate }}</span>
+    </div>
+    <div class="stat">
+      <mat-icon>payments</mat-icon>
+      <span class="stat-value">{{ p.totalSpent | number: '1.2-2' }} KM</span>
+      <span class="stat-label">{{ 'CLIENT.ACCOUNT.STATS.SPENT' | translate }}</span>
+    </div>
+    <div class="stat">
+      <mat-icon>sports_esports</mat-icon>
+      <span class="stat-value">{{ p.ownedGamesCount }}</span>
+      <span class="stat-label">{{ 'CLIENT.ACCOUNT.STATS.GAMES' | translate }}</span>
+    </div>
+    <div class="stat">
+      <mat-icon>favorite</mat-icon>
+      <span class="stat-value">{{ p.wishlistCount }}</span>
+      <span class="stat-label">{{ 'CLIENT.ACCOUNT.STATS.WISHLIST' | translate }}</span>
+    </div>
+  </section>
+
+  <div class="grid">
+    <!-- Profile -->
+    <section class="panel">
+      <h2><mat-icon>badge</mat-icon>{{ 'CLIENT.ACCOUNT.PROFILE' | translate }}</h2>
+      <dl class="details">
+        <div>
+          <dt>{{ 'CLIENT.ACCOUNT.USERNAME' | translate }}</dt>
+          <dd>{{ p.username }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'CLIENT.ACCOUNT.EMAIL' | translate }}</dt>
+          <dd>{{ p.email }}</dd>
+        </div>
+        @if (p.role) {
+          <div>
+            <dt>{{ 'CLIENT.ACCOUNT.ROLE' | translate }}</dt>
+            <dd>{{ p.role }}</dd>
+          </div>
+        }
+        <div>
+          <dt>{{ 'CLIENT.ACCOUNT.MEMBER_SINCE' | translate }}</dt>
+          <dd>{{ p.createdAt | date: 'dd.MM.yyyy' }}</dd>
+        </div>
+        <div>
+          <dt>{{ 'CLIENT.ACCOUNT.LAST_LOGIN' | translate }}</dt>
+          <dd>{{ p.lastLogin ? (p.lastLogin | date: 'dd.MM.yyyy HH:mm') : ('CLIENT.ACCOUNT.NEVER' | translate) }}</dd>
+        </div>
+      </dl>
+
+      <div class="security">
+        <div>
+          <strong><mat-icon>shield</mat-icon>{{ 'CLIENT.ACCOUNT.SECURITY' | translate }}</strong>
+          <p>{{ 'CLIENT.ACCOUNT.SECURITY_TEXT' | translate }}</p>
+        </div>
+        <a routerLink="../change-password" class="btn btn-ghost">
+          <mat-icon>lock_reset</mat-icon>
+          {{ 'CLIENT.NAV.CHANGE_PASSWORD' | translate }}
+        </a>
+      </div>
+    </section>
+
+    <!-- Recent orders -->
+    <section class="panel">
+      <h2><mat-icon>history</mat-icon>{{ 'CLIENT.ACCOUNT.RECENT_ORDERS' | translate }}</h2>
+
+      @if (p.recentOrders.length) {
+        <ul class="orders">
+          @for (order of p.recentOrders; track order.id) {
+            <li class="order">
+              <div class="order-main">
+                <span class="order-id">{{ 'CLIENT.ACCOUNT.ORDER' | translate: { id: order.id } }}</span>
+                <span class="order-meta">
+                  {{ order.date | date: 'dd.MM.yyyy' }} · {{ 'CLIENT.ACCOUNT.ITEMS' | translate: { count: order.itemsCount } }}
+                </span>
+              </div>
+              <div class="order-side">
+                <span class="order-amount">{{ order.totalAmount | number: '1.2-2' }} KM</span>
+                <span class="status-badge" [ngClass]="statusClass(order.statusId)">
+                  <mat-icon>{{ statusIcon(order.statusId) }}</mat-icon>
+                  <span>{{ statusLabel(order.statusId) | translate }}</span>
+                </span>
+              </div>
+            </li>
+          }
+        </ul>
+      } @else {
+        <div class="empty">
+          <mat-icon>shopping_bag</mat-icon>
+          <p>{{ 'CLIENT.ACCOUNT.NO_ORDERS' | translate }}</p>
+          <a routerLink="/" class="btn btn-neon">
+            <mat-icon>storefront</mat-icon>
+            {{ 'CLIENT.ACCOUNT.BROWSE' | translate }}
+          </a>
+        </div>
+      }
+    </section>
+  </div>
+}
