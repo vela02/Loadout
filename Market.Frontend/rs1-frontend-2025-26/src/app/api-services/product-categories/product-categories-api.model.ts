@@ -9,7 +9,14 @@ import { PageResult } from '../../core/models/paging/page-result';
  */
 export class ListProductCategoriesRequest extends BasePagedQuery {
   search?: string | null;
+  /** Used by the game form dropdowns */
   onlyEnabled?: boolean | null;
+  /** true = only active, false = only inactive, null = all */
+  isEnabled?: boolean | null;
+  minGames?: number | null;
+  maxGames?: number | null;
+  /** true = has a running discount, false = none, null = all */
+  onSale?: boolean | null;
 }
 
 /**
@@ -20,6 +27,8 @@ export interface ListProductCategoriesQueryDto {
   id: number;
   name: string;
   isEnabled: boolean;
+  gamesCount: number;
+  onSale: boolean;
 }
 
 /**
