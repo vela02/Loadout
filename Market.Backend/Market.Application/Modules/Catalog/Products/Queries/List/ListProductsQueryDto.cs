@@ -9,4 +9,7 @@ public sealed class ListProductsQueryDto
     public  int StockQuantity { get; set; }
     public required string CategoryName { get; set; } //<-- treba poboljsati
     public required bool IsEnabled { get; init; }
+
+    // best discount currently running for this game (null = no sale)
+    public decimal? ActiveDiscountPercentage { get; set; }
 }
