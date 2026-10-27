@@ -1,130 +1,141 @@
-<!-- src/app/pages/auth/login/login.component.html -->
 <div class="auth-container">
   <div class="auth-background">
-    <!-- Decorative elements -->
-    <div class="bg-shape shape-1"></div>
-    <div class="bg-shape shape-2"></div>
-    <div class="bg-shape shape-3"></div>
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+  </div>
+
+  <!-- Language Selector -->
+  <div class="top-bar">
+    <button type="button" class="lang-button" [matMenuTriggerFor]="langMenu">
+      <span class="flag-icon">{{ getCurrentLanguage()?.flag }}</span>
+      <span class="lang-code">{{ currentLang }}</span>
+      <mat-icon>expand_more</mat-icon>
+    </button>
+
+    <mat-menu #langMenu="matMenu" xPosition="before">
+      <button
+        mat-menu-item
+        *ngFor="let lang of languages"
+        (click)="switchLanguage(lang.code)"
+      >
+        <span class="flag-icon">{{ lang.flag }}</span>
+        <span>{{ lang.name }}</span>
+        <mat-icon *ngIf="currentLang === lang.code">check</mat-icon>
+      </button>
+    </mat-menu>
   </div>
 
   <div class="auth-content">
     <!-- Logo & Brand -->
-    <div class="auth-brand">
-      <mat-icon class="brand-icon">storefront</mat-icon>
-      <h1 class="brand-name">FIT Market</h1>
-      <p class="brand-tagline">Dobrodošli nazad</p>
-    </div>
+    <a routerLink="/" class="auth-brand">
+      <mat-icon class="brand-icon">sports_esports</mat-icon>
+      <span class="brand-name">Loadout</span>
+    </a>
 
     <!-- Login Card -->
-    <mat-card class="auth-card mat-elevation-z8">
-      <mat-card-header>
-        <mat-card-title>{{ 'AUTH.LOGIN.TITLE' | translate }}</mat-card-title>
-        <mat-card-subtitle>Unesite vaše podatke za pristup</mat-card-subtitle>
-      </mat-card-header>
+    <div class="auth-card">
+      <div class="card-header">
+        <h1>{{ 'AUTH.LOGIN.TAGLINE' | translate }}</h1>
+        <p>{{ 'AUTH.LOGIN.SUBTITLE' | translate }}</p>
+      </div>
 
-      <mat-card-content>
-        <!-- Error message -->
-        <div *ngIf="errorMessage" class="error-message" @fadeIn>
-          <mat-icon>error_outline</mat-icon>
-          <span>{{ errorMessage }}</span>
+      <!-- Error message -->
+      <div *ngIf="errorMessage" class="error-message">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ 'AUTH.LOGIN.INVALID_CREDENTIALS' | translate }}</span>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <!-- Email -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'AUTH.LOGIN.EMAIL_LABEL' | translate }}</mat-label>
+          <input
+            matInput
+            formControlName="email"
+            type="email"
+            [placeholder]="'AUTH.LOGIN.EMAIL_PLACEHOLDER' | translate"
+            autocomplete="email"
+          />
+          <mat-icon matPrefix>person</mat-icon>
+          <mat-error *ngIf="form.get('email')?.hasError('required')">
+            {{ 'AUTH.LOGIN.EMAIL_REQUIRED' | translate }}
+          </mat-error>
+          <mat-error *ngIf="form.get('email')?.hasError('email')">
+            {{ 'AUTH.LOGIN.EMAIL_INVALID' | translate }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Password -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'AUTH.LOGIN.PASSWORD_LABEL' | translate }}</mat-label>
+          <input
+            matInput
+            formControlName="password"
+            [type]="hidePassword ? 'password' : 'text'"
+            placeholder="••••••••"
+            autocomplete="current-password"
+          />
+          <mat-icon matPrefix>lock</mat-icon>
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="hidePassword = !hidePassword"
+            [attr.aria-label]="(hidePassword ? 'AUTH.LOGIN.SHOW_PASSWORD' : 'AUTH.LOGIN.HIDE_PASSWORD') | translate"
+          >
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="form.get('password')?.hasError('required')">
+            {{ 'AUTH.LOGIN.PASSWORD_REQUIRED' | translate }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Remember Me & Forgot Password -->
+        <div class="form-row">
+          <mat-checkbox formControlName="rememberMe">
+            {{ 'AUTH.LOGIN.REMEMBER_ME' | translate }}
+          </mat-checkbox>
+          <a routerLink="/auth/forgot-password" class="text-link">
+            {{ 'AUTH.LOGIN.FORGOT_PASSWORD' | translate }}
+          </a>
         </div>
 
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
-          <!-- Email -->
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>{{ 'AUTH.LOGIN.EMAIL_LABEL' | translate }}</mat-label>
-            <input
-              matInput
-              formControlName="email"
-              type="email"
-              placeholder="vasa.email@primjer.com"
-              autocomplete="email"
-            />
-            <mat-icon matPrefix>person</mat-icon>
-            <mat-error *ngIf="form.get('email')?.hasError('required')">
-              Email je obavezan
-            </mat-error>
-            <mat-error *ngIf="form.get('email')?.hasError('email')">
-              Unesite validan email
-            </mat-error>
-          </mat-form-field>
+        <!-- Submit Button -->
+        <button type="submit" class="submit-button" [disabled]="form.invalid || isLoading">
+          <ng-container *ngIf="!isLoading; else loadingTpl">
+            <mat-icon>login</mat-icon>
+            {{ 'AUTH.LOGIN.BUTTON' | translate }}
+          </ng-container>
+          <ng-template #loadingTpl>
+            <mat-progress-spinner
+              mode="indeterminate"
+              diameter="20"
+              strokeWidth="3"
+            ></mat-progress-spinner>
+            <span>{{ 'AUTH.LOGIN.LOADING' | translate }}</span>
+          </ng-template>
+        </button>
 
-          <!-- Password -->
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>{{ 'AUTH.LOGIN.PASSWORD_LABEL' | translate }}</mat-label>
-            <input
-              matInput
-              formControlName="password"
-              [type]="hidePassword ? 'password' : 'text'"
-              placeholder="••••••••"
-              autocomplete="current-password"
-            />
-            <mat-icon matPrefix>lock</mat-icon>
-            <button
-              mat-icon-button
-              matSuffix
-              type="button"
-              (click)="hidePassword = !hidePassword"
-              [attr.aria-label]="'Hide password'"
-            >
-              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-            </button>
-            <mat-error *ngIf="form.get('password')?.hasError('required')">
-              Lozinka je obavezna
-            </mat-error>
-          </mat-form-field>
+        <!-- Divider -->
+        <div class="divider">
+          <span>{{ 'AUTH.LOGIN.OR' | translate }}</span>
+        </div>
 
-          <!-- Remember Me & Forgot Password -->
-          <div class="form-row">
-            <mat-checkbox formControlName="rememberMe" color="primary">
-              {{ 'AUTH.LOGIN.REMEMBER_ME' | translate }}
-            </mat-checkbox>
-            <a href="#" class="forgot-link">Zaboravili ste lozinku?</a>
-          </div>
-
-          <!-- Submit Button -->
-          <div class="actions">
-            <button
-              mat-raised-button
-              color="primary"
-              type="submit"
-              class="submit-button"
-              [disabled]="form.invalid || isLoading"
-            >
-              <ng-container *ngIf="!isLoading; else loadingTpl">
-                <mat-icon>login</mat-icon>
-                {{ 'AUTH.LOGIN.BUTTON' | translate }}
-              </ng-container>
-              <ng-template #loadingTpl>
-                <mat-progress-spinner
-                  mode="indeterminate"
-                  diameter="20"
-                  strokeWidth="3"
-                ></mat-progress-spinner>
-                <span>Prijava u toku...</span>
-              </ng-template>
-            </button>
-          </div>
-
-          <!-- Divider -->
-          <div class="divider">
-            <span>ili</span>
-          </div>
-
-          <!-- Register Link -->
-          <div class="register-prompt">
-            <span>Nemate nalog?</span>
-            <a routerLink="/auth/register" class="register-link">Registrujte se</a>
-          </div>
-        </form>
-      </mat-card-content>
-    </mat-card>
+        <!-- Register Link -->
+        <div class="register-prompt">
+          <span>{{ 'AUTH.LOGIN.NO_ACCOUNT' | translate }}</span>
+          <a routerLink="/auth/register" class="text-link strong">
+            {{ 'AUTH.LOGIN.REGISTER' | translate }}
+          </a>
+        </div>
+      </form>
+    </div>
 
     <!-- Footer -->
     <div class="auth-footer">
       <a routerLink="/" class="back-link">
         <mat-icon>arrow_back</mat-icon>
-        Nazad na početnu
+        {{ 'AUTH.LOGIN.BACK_HOME' | translate }}
       </a>
     </div>
   </div>

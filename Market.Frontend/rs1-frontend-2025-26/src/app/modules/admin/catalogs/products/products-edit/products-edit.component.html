@@ -1,15 +1,17 @@
-<div class="container">
-  <!-- Header -->
-  <div class="header-card mat-elevation-z2">
+<div class="loadout-shell">
+  <header class="loadout-header">
+    <span class="eyebrow">
+      <mat-icon>sports_esports</mat-icon>
+      Loadout · {{ 'PRODUCTS.TITLE' | translate }}
+    </span>
     <h1>{{ 'PRODUCTS.EDIT.TITLE' | translate }}</h1>
-  </div>
+  </header>
 
-  <!-- Form Card -->
-  <div class="form-card mat-elevation-z2">
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!isLoading || form">
+  <section class="panel">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!isLoading || form" class="game-form">
       <!-- Error Message -->
       <div *ngIf="errorMessage" class="error-banner">
-        <mat-icon>error</mat-icon>
+        <mat-icon>error_outline</mat-icon>
         <span>{{ errorMessage }}</span>
       </div>
 
@@ -21,31 +23,29 @@
           formControlName="name"
           [placeholder]="'PRODUCTS.FORM.NAME_PLACEHOLDER' | translate"
         />
-        <mat-icon matSuffix>inventory_2</mat-icon>
+        <mat-icon matSuffix>sports_esports</mat-icon>
         <mat-error *ngIf="hasError('name')">
           {{ getErrorMessage('name') }}
         </mat-error>
       </mat-form-field>
 
-      <!-- Description -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>{{ 'PRODUCTS.FORM.DESCRIPTION' | translate }}</mat-label>
-        <textarea
-          matInput
-          formControlName="description"
-          [placeholder]="'PRODUCTS.FORM.DESCRIPTION_PLACEHOLDER' | translate"
-          rows="4"
-        ></textarea>
-        <mat-icon matSuffix>description</mat-icon>
-        <mat-error *ngIf="hasError('description')">
-          {{ getErrorMessage('description') }}
-        </mat-error>
-      </mat-form-field>
+      <!-- Category and Price Row -->
+      <div class="field-row">
+        <!-- Category -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'PRODUCTS.FORM.CATEGORY' | translate }}</mat-label>
+          <mat-select formControlName="categoryId" panelClass="loadout-select-panel">
+            <mat-option *ngFor="let category of categories" [value]="category.id">
+              {{ category.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="hasError('categoryId')">
+            {{ getErrorMessage('categoryId') }}
+          </mat-error>
+        </mat-form-field>
 
-      <!-- Price and Category Row -->
-      <div class="form-row">
         <!-- Price -->
-        <mat-form-field appearance="outline" class="half-width">
+        <mat-form-field appearance="outline">
           <mat-label>{{ 'PRODUCTS.FORM.PRICE' | translate }}</mat-label>
           <input
             matInput
@@ -54,41 +54,35 @@
             step="0.01"
             [placeholder]="'PRODUCTS.FORM.PRICE_PLACEHOLDER' | translate"
           />
-          <span matTextPrefix>KM&nbsp;</span>
-          <mat-icon matSuffix>payments</mat-icon>
+          <span matTextSuffix>&nbsp;{{ getCurrencyPrefix() }}</span>
           <mat-error *ngIf="hasError('price')">
             {{ getErrorMessage('price') }}
           </mat-error>
         </mat-form-field>
-
-        <!-- Category -->
-        <mat-form-field appearance="outline" class="half-width">
-          <mat-label>{{ 'PRODUCTS.FORM.CATEGORY' | translate }}</mat-label>
-          <mat-select formControlName="categoryId">
-            <mat-option *ngFor="let category of categories" [value]="category.id">
-              {{ category.name }}
-            </mat-option>
-          </mat-select>
-          <mat-icon matSuffix>category</mat-icon>
-          <mat-error *ngIf="hasError('categoryId')">
-            {{ getErrorMessage('categoryId') }}
-          </mat-error>
-        </mat-form-field>
       </div>
+
+      <!-- Description -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ 'PRODUCTS.FORM.DESCRIPTION' | translate }}</mat-label>
+        <textarea
+          matInput
+          formControlName="description"
+          [placeholder]="'PRODUCTS.FORM.DESCRIPTION_PLACEHOLDER' | translate"
+          rows="5"
+        ></textarea>
+        <mat-error *ngIf="hasError('description')">
+          {{ getErrorMessage('description') }}
+        </mat-error>
+      </mat-form-field>
 
       <!-- Actions -->
       <div class="form-actions">
-        <button type="button" mat-stroked-button (click)="onCancel()" [disabled]="isLoading">
+        <button type="button" class="btn btn-ghost" (click)="onCancel()" [disabled]="isLoading">
           <mat-icon>close</mat-icon>
           {{ 'PRODUCTS.FORM.CANCEL' | translate }}
         </button>
 
-        <button
-          type="submit"
-          mat-raised-button
-          color="primary"
-          [disabled]="form.invalid || isLoading"
-        >
+        <button type="submit" class="btn btn-neon" [disabled]="form.invalid || isLoading">
           <mat-icon>save</mat-icon>
           {{ 'PRODUCTS.FORM.UPDATE' | translate }}
         </button>
@@ -96,9 +90,9 @@
     </form>
 
     <!-- Loading State -->
-    <div *ngIf="isLoading && !form" class="loading-overlay">
-      <mat-spinner diameter="50"></mat-spinner>
+    <div *ngIf="isLoading && !form" class="loading-state">
+      <mat-spinner diameter="48"></mat-spinner>
       <p>{{ 'PRODUCTS.EDIT.LOADING' | translate }}</p>
     </div>
-  </div>
+  </section>
 </div>

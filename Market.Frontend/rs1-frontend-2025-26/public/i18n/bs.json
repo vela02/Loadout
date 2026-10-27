@@ -3,6 +3,51 @@
     "TITLE": "Dobrodošli u našu aplikaciju",
     "DESCRIPTION": "Ovo je primjer lokalizacije."
   },
+  "HOME": {
+    "HERO": {
+      "TITLE_START": "Tvoja sljedeća igra je",
+      "TITLE_HIGHLIGHT": "na jedan klik",
+      "TITLE_END": "daleko",
+      "DESCRIPTION": "Otkrij, kupi i aktiviraj najnovije naslove za PC i konzole. Brza isporuka, sigurna plaćanja i cijene koje ne bole.",
+      "GET_STARTED": "Započni sada",
+      "LEARN_MORE": "Saznaj više",
+      "INSTANT_KEY": "Instant ključ"
+    },
+    "GENRES": {
+      "ACTION": "Akcija",
+      "RPG": "RPG",
+      "RACING": "Utrke"
+    },
+    "FEATURES": {
+      "EYEBROW": "Zašto mi",
+      "TITLE": "Zašto odabrati Loadout?",
+      "SUBTITLE": "Sve što gameru treba, na jednom mjestu",
+      "LIBRARY_TITLE": "Ogromna biblioteka",
+      "LIBRARY_TEXT": "Stotine naslova iz svih žanrova, od akcije i RPG-a do strategija i indie bisera.",
+      "DELIVERY_TITLE": "Trenutna isporuka",
+      "DELIVERY_TEXT": "Ključ za aktivaciju stiže odmah nakon kupovine. Bez čekanja, bez dostave.",
+      "DEALS_TITLE": "Najbolje ponude",
+      "DEALS_TEXT": "Redovni popusti i sezonske akcije na najpopularnije naslove.",
+      "PLATFORMS_TITLE": "Sve platforme",
+      "PLATFORMS_TEXT": "PC, PlayStation, Xbox i Nintendo. Ti biraš gdje igraš.",
+      "PAYMENTS_TITLE": "Sigurna plaćanja",
+      "PAYMENTS_TEXT": "Tvoji podaci i transakcije zaštićeni su najnovijim sigurnosnim protokolima.",
+      "SUPPORT_TITLE": "Podrška 24/7",
+      "SUPPORT_TEXT": "Problem s aktivacijom? Naš tim je uvijek tu da pomogne."
+    },
+    "STATS": {
+      "GAMES": "Igara u ponudi",
+      "PLAYERS": "Zadovoljnih igrača",
+      "INSTANT": "Instant",
+      "DELIVERY": "Isporuka ključeva",
+      "RATING": "Prosječna ocjena"
+    },
+    "CTA": {
+      "TITLE": "Spreman za sljedeći level?",
+      "TEXT": "Prijavi se, složi svoj loadout i kreni u igru.",
+      "BUTTON": "Prijavi se sada"
+    }
+  },
   "AUTH": {
     "LOGIN": {
       "TITLE": "Prijava",
@@ -12,7 +57,37 @@
       "PASSWORD_PLACEHOLDER": "Unesite lozinku",
       "REMEMBER_ME": "Zapamti me",
       "BUTTON": "Prijavi se",
-      "LOADING": "Prijavljivanje..."
+      "LOADING": "Prijavljivanje...",
+      "TAGLINE": "Dobrodošao nazad, igraču",
+      "SUBTITLE": "Prijavi se i nastavi do svoje biblioteke",
+      "EMAIL_REQUIRED": "Email je obavezan",
+      "EMAIL_INVALID": "Unesite validan email",
+      "PASSWORD_REQUIRED": "Lozinka je obavezna",
+      "SHOW_PASSWORD": "Prikaži lozinku",
+      "HIDE_PASSWORD": "Sakrij lozinku",
+      "FORGOT_PASSWORD": "Zaboravili ste lozinku?",
+      "OR": "ili",
+      "NO_ACCOUNT": "Nemate nalog?",
+      "REGISTER": "Registrujte se",
+      "BACK_HOME": "Nazad na početnu",
+      "INVALID_CREDENTIALS": "Pogrešan email ili lozinka. Pokušajte ponovo."
+    },
+    "REGISTER": {
+      "TAGLINE": "Pridruži se Loadoutu",
+      "SUBTITLE": "Napravi nalog i počni graditi svoju biblioteku",
+      "USERNAME_LABEL": "Korisničko ime",
+      "USERNAME_PLACEHOLDER": "Odaberi svoj gamer tag",
+      "USERNAME_REQUIRED": "Korisničko ime je obavezno",
+      "USERNAME_LENGTH": "Korisničko ime mora imati 3–50 karaktera",
+      "PASSWORD_HINT": "Najmanje 6 karaktera",
+      "CONFIRM_PASSWORD_LABEL": "Potvrdi lozinku",
+      "CONFIRM_PASSWORD_REQUIRED": "Ponovite lozinku",
+      "PASSWORD_MISMATCH": "Lozinke se ne podudaraju",
+      "BUTTON": "Napravi nalog",
+      "LOADING": "Kreiranje naloga...",
+      "HAVE_ACCOUNT": "Već imate nalog?",
+      "LOGIN_LINK": "Prijavite se",
+      "FAILED": "Registracija nije uspjela. Email ili korisničko ime je možda već zauzeto."
     },
     "LOGOUT": {
       "TITLE": "Odjava",
@@ -31,6 +106,7 @@
       "CATALOG": "KATALOG",
       "CATEGORIES": "Kategorije Proizvoda",
       "PRODUCTS": "Proizvodi",
+      "PROMOTIONS": "Promocije",
       "ORDERS_SECTION": "NARUDŽBE",
       "ORDERS": "Pregled Narudžbi",
       "SYSTEM": "SISTEM",
@@ -48,9 +124,31 @@
     "ADD_NEW": "Dodaj Kategoriju",
     "LOADING": "Učitavanje kategorija...",
     "NO_DATA": "Nema kategorija za prikaz",
-    "NO_DATA_FILTER": "Nema rezultata za pretragu",
+    "NO_DATA_FILTER": "Nema kategorija koje odgovaraju filterima",
+    "FILTERS": {
+      "TITLE": "Filteri",
+      "ACTIVE_COUNT": "{{count}} aktivno",
+      "STATUS": "Status",
+      "STATUS_ALL": "Sve",
+      "STATUS_ACTIVE": "Aktivne",
+      "STATUS_INACTIVE": "Neaktivne",
+      "MIN_GAMES": "Min. broj igara",
+      "MAX_GAMES": "Maks. broj igara",
+      "SALE": "Akcija",
+      "SALE_ALL": "Sve",
+      "SALE_YES": "Na akciji",
+      "SALE_NO": "Bez akcije",
+      "APPLY": "Primijeni",
+      "RESET": "Poništi",
+      "SEARCH_TOO_LONG": "Pretraga može imati najviše 50 znakova",
+      "GAMES_NEGATIVE": "Ne može biti negativan",
+      "GAMES_WHOLE": "Mora biti cijeli broj",
+      "GAMES_RANGE": "Min. ne može biti veći od maks."
+    },
     "TABLE": {
       "NAME": "Naziv",
+      "GAMES": "Igre",
+      "SALE": "Akcija",
       "STATUS": "Status",
       "ENABLED": "Aktivna",
       "DISABLED": "Neaktivna",
@@ -63,6 +161,8 @@
     "FORM": {
       "NAME": "Naziv Kategorije",
       "NAME_PLACEHOLDER": "Unesite naziv kategorije",
+      "EDIT_TITLE": "Uredi Kategoriju",
+      "ERROR_LOAD": "Učitavanje kategorije nije uspjelo",
       "LOADING": "Učitavanje...",
       "CANCEL": "Otkaži",
       "SAVE": "Sačuvaj",
@@ -93,7 +193,24 @@
     "ADD_NEW": "Dodaj Proizvod",
     "LOADING": "Učitavanje proizvoda...",
     "NO_DATA": "Nema proizvoda za prikaz",
-    "NO_DATA_FILTER": "Nema rezultata za pretragu",
+    "NO_DATA_FILTER": "Nema igara koje odgovaraju filterima",
+    "FILTERS": {
+      "TITLE": "Filteri",
+      "ACTIVE_COUNT": "aktivnih: {{count}}",
+      "CATEGORY": "Kategorija",
+      "ALL_CATEGORIES": "Sve kategorije",
+      "STATUS": "Status",
+      "STATUS_ALL": "Svi",
+      "STATUS_ACTIVE": "Aktivne",
+      "STATUS_INACTIVE": "Neaktivne",
+      "MIN_PRICE": "Min. cijena (KM)",
+      "MAX_PRICE": "Maks. cijena (KM)",
+      "APPLY": "Primijeni",
+      "RESET": "Poništi",
+      "PRICE_NEGATIVE": "Cijena ne može biti negativna",
+      "PRICE_RANGE": "Min. cijena ne može biti veća od maksimalne",
+      "SEARCH_TOO_LONG": "Pretraga može imati najviše 100 znakova"
+    },
     "TABLE": {
       "NAME": "Naziv",
       "CATEGORY": "Kategorija",
@@ -126,7 +243,14 @@
       "STOCK_PLACEHOLDER": "0",
       "CANCEL": "Otkaži",
       "SAVE": "Sačuvaj",
-      "UPDATE": "Ažuriraj"
+      "UPDATE": "Ažuriraj",
+      "NAME_REQUIRED": "Naziv je obavezan",
+      "NAME_MIN": "Naziv mora imati najmanje 2 karaktera",
+      "NAME_MAX": "Naziv ne smije imati više od 100 karaktera",
+      "CATEGORY_REQUIRED": "Molimo odaberite kategoriju",
+      "PRICE_REQUIRED": "Cijena je obavezna",
+      "PRICE_MIN": "Cijena mora biti veća od 0",
+      "DESCRIPTION_MAX": "Opis ne smije imati više od 500 karaktera"
     },
     "DIALOGS": {
       "DELETE_TITLE": "Brisanje Proizvoda",
@@ -143,6 +267,7 @@
   },
   "ORDERS": {
     "TITLE": "Narudžbe",
+    "SUBTITLE": "Upravljanje narudžbama",
     "FILTER_STATUS": "Filtriraj po Statusu",
     "ALL_STATUSES": "Svi Statusi",
     "SEARCH_PLACEHOLDER": "Pretraži narudžbe...",
@@ -209,6 +334,69 @@
     "MESSAGES": {
       "STATUS_UPDATED": "Status narudžbe uspješno ažuriran",
       "CANNOT_CHANGE_STATUS": "Status ove narudžbe ne može se promijeniti"
+    }
+  },
+  "PROMOTIONS": {
+    "TITLE": "Promocije",
+    "SUBTITLE": "Popusti i akcije",
+    "NEW": "Nova promocija",
+    "BUTTON": "Promocija",
+    "SALE": "Na popustu",
+    "LOADING": "Učitavanje promocija...",
+    "NO_DATA": "Još nema promocija. Kreirajte jednu da stavite igre na popust.",
+    "DELETE_TOOLTIP": "Obriši promociju",
+    "TABLE": {
+      "NAME": "Promocija",
+      "TARGET": "Primjenjuje se na",
+      "DISCOUNT": "Popust",
+      "PERIOD": "Period",
+      "GAMES": "Igre",
+      "STATUS": "Status",
+      "ACTIONS": "Akcije"
+    },
+    "STATUS": {
+      "ACTIVE": "Aktivna",
+      "SCHEDULED": "Zakazana",
+      "EXPIRED": "Istekla"
+    },
+    "TARGETS": {
+      "Games": "Pojedinačne igre",
+      "Category": "Kategorija",
+      "Genre": "Žanr",
+      "Publisher": "Izdavač",
+      "Developer": "Developer",
+      "Tag": "Tag"
+    },
+    "FORM": {
+      "TITLE": "Nova promocija",
+      "TARGET_LABEL": "Na šta se primjenjuje?",
+      "DETAILS_LABEL": "Detalji popusta",
+      "SEARCH_GAMES": "Pretraži igre",
+      "SELECTED": "Odabrano: {{count}}",
+      "CLEAR": "Poništi",
+      "NO_OPTIONS": "Još nema ničega za odabir",
+      "NAME": "Naziv promocije",
+      "NAME_PLACEHOLDER": "npr. Ljetna akcija",
+      "NAME_REQUIRED": "Naziv promocije je obavezan",
+      "DISCOUNT": "Popust",
+      "DISCOUNT_RANGE": "Popust mora biti između 1 i 100%",
+      "START": "Početak",
+      "END": "Kraj",
+      "DATES_INVALID": "Datum završetka ne može biti prije datuma početka",
+      "DESCRIPTION": "Opis (opciono)",
+      "MATCHES": "Primjenjuje se na {{count}} igara",
+      "NO_MATCHES": "Još nije odabrana nijedna igra",
+      "EXAMPLE": "npr. {{title}}: {{oldPrice}} KM → {{newPrice}} KM",
+      "CREATE": "Kreiraj promociju",
+      "CANCEL": "Otkaži"
+    },
+    "DIALOGS": {
+      "DELETE_MESSAGE": "Obrisati promociju \"{{name}}\"? Popusti na njenim igrama će biti uklonjeni.",
+      "SUCCESS_CREATE": "Promocija je kreirana",
+      "SUCCESS_DELETE": "Promocija je obrisana",
+      "ERROR_LOAD": "Učitavanje promocija nije uspjelo",
+      "ERROR_CREATE": "Kreiranje promocije nije uspjelo",
+      "ERROR_DELETE": "Brisanje promocije nije uspjelo"
     }
   },
   "COMMON": {
@@ -333,7 +521,11 @@
     "SHOWING": "Prikazano",
     "TO": "do",
     "RESULTS": "rezultata",
-    "NO_ITEMS": "Nema stavki za prikaz"
+    "NO_ITEMS": "Nema stavki za prikaz",
+    "TOTAL": "Ukupno",
+    "RECORDS": "zapisa",
+    "PREVIOUS": "Prethodna",
+    "NEXT": "Sljedeća"
   },
   "VALIDATION": {
     "REQUIRED": "Ovo polje je obavezno",
@@ -368,5 +560,54 @@
     "CONFLICT": "Ova akcija je u konfliktu sa postojećim podacima.",
     "VALIDATION": "Provjerite formu za greške.",
     "UNKNOWN": "Nepoznata greška."
+  },
+  "CLIENT": {
+    "NAV": {
+      "OVERVIEW": "Pregled",
+      "CHANGE_PASSWORD": "Promjena lozinke",
+      "STORE": "Prodavnica",
+      "LOGOUT": "Odjava"
+    },
+    "ACCOUNT": {
+      "EYEBROW": "Moj račun",
+      "WELCOME": "Dobrodošao nazad, {{name}}",
+      "SUBTITLE": "Tvoj profil, kupovine i aktivnost na jednom mjestu.",
+      "PROFILE": "Profil",
+      "USERNAME": "Korisničko ime",
+      "EMAIL": "Email",
+      "ROLE": "Uloga",
+      "MEMBER_SINCE": "Član od",
+      "LAST_LOGIN": "Posljednja prijava",
+      "NEVER": "—",
+      "STATS": {
+        "ORDERS": "Narudžbe",
+        "SPENT": "Ukupno potrošeno",
+        "GAMES": "Moje igre",
+        "WISHLIST": "Lista želja"
+      },
+      "RECENT_ORDERS": "Posljednje narudžbe",
+      "ORDER": "Narudžba #{{id}}",
+      "ITEMS": "Stavki: {{count}}",
+      "NO_ORDERS": "Još nemaš nijednu narudžbu.",
+      "BROWSE": "Pregledaj igre",
+      "SECURITY": "Sigurnost",
+      "SECURITY_TEXT": "Redovno mijenjaj lozinku da bi tvoj račun ostao siguran.",
+      "ERROR_LOAD": "Učitavanje podataka o računu nije uspjelo."
+    },
+    "PASSWORD": {
+      "EYEBROW": "Sigurnost",
+      "TITLE": "Promjena lozinke",
+      "SUBTITLE": "Nakon promjene, svi ostali uređaji bit će odjavljeni.",
+      "CURRENT": "Trenutna lozinka",
+      "NEW": "Nova lozinka",
+      "CONFIRM": "Potvrdi novu lozinku",
+      "REQUIRED": "Ovo polje je obavezno",
+      "MIN_LENGTH": "Lozinka mora imati najmanje 6 znakova",
+      "SAME_AS_OLD": "Nova lozinka mora biti različita od trenutne",
+      "MISMATCH": "Lozinke se ne podudaraju",
+      "SUBMIT": "Promijeni lozinku",
+      "SUCCESS": "Lozinka promijenjena. Ostale sesije su odjavljene.",
+      "FAILED": "Promjena nije uspjela. Provjeri trenutnu lozinku i pokušaj ponovo."
+    }
   }
 }

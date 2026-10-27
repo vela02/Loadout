@@ -16,6 +16,64 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Modules\Catalog\Discounts\Commands\Create\CreateDiscountCommand.cs" />
+    <Compile Include="Modules\Catalog\Discounts\Commands\Create\CreateDiscountCommandHandler.cs" />
+    <Compile Include="Modules\Catalog\Discounts\Commands\Create\CreateDiscountCommandValidator.cs" />
+    <Compile Include="Modules\Catalog\Discounts\Commands\Delete\DeleteDiscountCommand.cs" />
+    <Compile Include="Modules\Catalog\Discounts\Commands\Delete\DeleteDiscountCommandHandler.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Commands\Create\CreateProductCategoryCommand.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Commands\Create\CreateProductCategoryCommandHandler.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Commands\Create\CreateProductCategoryCommandValidator.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Commands\Delete\DeleteProductCategoryCommand.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Commands\Delete\DeleteProductCategoryCommandHandler.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Commands\Status\Disable\DisableProductCategoryCommand.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Commands\Status\Disable\DisableProductCategoryCommandHandler.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Commands\Status\Disable\DisableProductCategoryCommandValidator.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Commands\Status\Enable\EnableProductCategoryCommand.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Commands\Status\Enable\EnableProductCategoryCommandHandler.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Commands\Status\Enable\EnableProductCategoryCommandValidator.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Commands\Update\UpdateProductCategoryCommand.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Commands\Update\UpdateProductCategoryCommandHandler.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Commands\Update\UpdateProductCategoryCommandValidator.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Queries\GetById\GetProductCategoryByIdQuery.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Queries\GetById\GetProductCategoryByIdQueryDto.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Queries\GetById\GetProductCategoryByIdQueryHandler.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Queries\GetById\GetProductCategoryByIdQueryValidator.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Queries\List\ListProductCategoriesQuery.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Queries\List\ListProductCategoriesQueryDto.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Queries\List\ListProductCategoriesQueryHandler.cs" />
+    <Compile Include="Modules\Catalog\ProductCategories\Queries\List\ListProductCategoriesQueryValidator.cs" />
+    <Compile Include="Modules\Catalog\Products\Commands\Create\CreateProductCommand.cs" />
+    <Compile Include="Modules\Catalog\Products\Commands\Create\CreateProductCommandHandler.cs" />
+    <Compile Include="Modules\Catalog\Products\Commands\Create\CreateProductCommandValidator.cs" />
+    <Compile Include="Modules\Catalog\Products\Commands\Delete\DeleteProductCommand.cs" />
+    <Compile Include="Modules\Catalog\Products\Commands\Delete\DeleteProductCommandHandler.cs" />
+    <Compile Include="Modules\Catalog\Products\Commands\Update\UpdateProductCommand.cs" />
+    <Compile Include="Modules\Catalog\Products\Commands\Update\UpdateProductCommandHandler.cs" />
+    <Compile Include="Modules\Catalog\Products\Commands\Update\UpdateProductCommandValidator.cs" />
+    <Compile Include="Modules\Catalog\Products\Queries\List\ListProductsQuery.cs" />
+    <Compile Include="Modules\Catalog\Products\Queries\List\ListProductsQueryDto.cs" />
+    <Compile Include="Modules\Catalog\Products\Queries\List\ListProductsQueryHandler.cs" />
+    <Compile Include="Modules\Catalog\Products\Queries\List\ListProductsQueryValidator.cs" />
+    <Compile Include="Modules\Catalog\Promotions\Commands\Create\CreatePromotionCommand.cs" />
+    <Compile Include="Modules\Catalog\Promotions\Commands\Create\CreatePromotionCommandHandler.cs" />
+    <Compile Include="Modules\Catalog\Promotions\Commands\Create\CreatePromotionCommandValidator.cs" />
+    <Compile Include="Modules\Catalog\Promotions\Commands\Delete\DeletePromotionCommand.cs" />
+    <Compile Include="Modules\Catalog\Promotions\Commands\Delete\DeletePromotionCommandHandler.cs" />
+    <Compile Include="Modules\Catalog\Promotions\Queries\GetOptions\GetPromotionOptionsQuery.cs" />
+    <Compile Include="Modules\Catalog\Promotions\Queries\GetOptions\GetPromotionOptionsQueryDto.cs" />
+    <Compile Include="Modules\Catalog\Promotions\Queries\GetOptions\GetPromotionOptionsQueryHandler.cs" />
+    <Compile Include="Modules\Catalog\Promotions\Queries\List\ListPromotionsQuery.cs" />
+    <Compile Include="Modules\Catalog\Promotions\Queries\List\ListPromotionsQueryDto.cs" />
+    <Compile Include="Modules\Catalog\Promotions\Queries\List\ListPromotionsQueryHandler.cs" />
+    <Compile Include="Modules\Sales\Orders\Commands\Status\ChangeOrderStatusCommand.cs" />
+    <Compile Include="Modules\Sales\Orders\Commands\Status\ChangeOrderStatusCommandHandler.cs" />
+    <Compile Include="Modules\Sales\Orders\Queries\List\ListOrdersQuery.cs" />
+    <Compile Include="Modules\Sales\Orders\Queries\List\ListOrdersQueryDto.cs" />
+    <Compile Include="Modules\Sales\Orders\Queries\List\ListOrdersQueryHandler.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="12.0.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
     <PackageReference Include="MediatR" Version="12.5.0" />

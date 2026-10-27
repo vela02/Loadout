@@ -1,221 +1,208 @@
-<div class="container">
-  <!-- Header Card -->
-  <div class="header-card">
-    <div class="header-card-content">
-      <!-- Left: Title with Icon -->
-      <div class="title-section">
-        <div class="title-icon">
-          <mat-icon>shopping_cart</mat-icon>
-        </div>
-        <h1>{{ 'ORDERS.TITLE' | translate }}</h1>
-      </div>
+<div class="loadout-shell">
+  <!-- Header -->
+  <header class="loadout-header">
+    <div class="header-text">
+      <span class="eyebrow">
+        <mat-icon>sports_esports</mat-icon>
+        Loadout · {{ 'ORDERS.SUBTITLE' | translate }}
+      </span>
+      <h1>{{ 'ORDERS.TITLE' | translate }}</h1>
+    </div>
 
-      <!-- Right: Filters and Actions -->
-      <div class="actions-container">
-        <!-- Status Filter -->
-        <mat-form-field class="filter-field" appearance="fill">
-          <mat-label>{{ 'ORDERS.FILTER_STATUS' | translate }}</mat-label>
-          <mat-select [(ngModel)]="statusFilter" (selectionChange)="onStatusFilterChange($event.value)">
-            <mat-option [value]="null">{{ 'ORDERS.ALL_STATUSES' | translate }}</mat-option>
-            <mat-option *ngFor="let option of statusOptions" [value]="option.value">
+    <!-- Filters -->
+    <div class="actions-container">
+      <!-- Status Filter -->
+      <mat-form-field class="filter-field" appearance="outline" subscriptSizing="dynamic">
+        <mat-label>{{ 'ORDERS.FILTER_STATUS' | translate }}</mat-label>
+        <mat-select [(ngModel)]="statusFilter" panelClass="loadout-select-panel" (selectionChange)="onStatusFilterChange($event.value)">
+          <mat-option [value]="null">{{ 'ORDERS.ALL_STATUSES' | translate }}</mat-option>
+          @for (option of statusOptions; track option.value) {
+            <mat-option [value]="option.value">
               <div class="status-option">
                 <mat-icon>{{ option.icon }}</mat-icon>
                 <span>{{ option.label | translate }}</span>
               </div>
             </mat-option>
-          </mat-select>
-          <mat-icon matSuffix>filter_list</mat-icon>
-        </mat-form-field>
+          }
+        </mat-select>
+        <mat-icon matSuffix>filter_list</mat-icon>
+      </mat-form-field>
 
-        <!-- Search -->
-        <mat-form-field class="search-field" appearance="fill">
-          <mat-label>{{ 'ORDERS.SEARCH_PLACEHOLDER' | translate }}</mat-label>
-          <input
-            matInput
-            [formControl]="searchControl"
-            [placeholder]="'ORDERS.SEARCH_INPUT_PLACEHOLDER' | translate"
-          />
-          <mat-icon matSuffix>search</mat-icon>
-          <mat-hint *ngIf="searchControl.value && searchControl.value.length < 3">
-            {{ 'ORDERS.SEARCH_MIN_LENGTH' | translate }}
-          </mat-hint>
-        </mat-form-field>
+      <!-- Search -->
+      <mat-form-field class="search-field" appearance="outline" subscriptSizing="dynamic">
+        <mat-label>{{ 'ORDERS.SEARCH_PLACEHOLDER' | translate }}</mat-label>
+        <input
+          matInput
+          [formControl]="searchControl"
+          [placeholder]="'ORDERS.SEARCH_INPUT_PLACEHOLDER' | translate"
+        />
+        <mat-icon matSuffix>search</mat-icon>
+        @if (searchControl.value && searchControl.value.length < 3) {
+          <mat-hint>{{ 'ORDERS.SEARCH_MIN_LENGTH' | translate }}</mat-hint>
+        }
+      </mat-form-field>
 
-        <!-- Clear Filters Button -->
-        <button
-          mat-stroked-button
-          (click)="clearFilters()"
-          [disabled]="!searchControl.value && !statusFilter"
-          class="clear-filters-btn">
-          <mat-icon>clear_all</mat-icon>
-          <span>{{ 'ORDERS.CLEAR_FILTERS' | translate }}</span>
-        </button>
-      </div>
+      <!-- Clear Filters -->
+      <button
+        type="button"
+        class="btn btn-ghost"
+        (click)="clearFilters()"
+        [disabled]="!searchControl.value && !statusFilter"
+      >
+        <mat-icon>clear_all</mat-icon>
+        {{ 'ORDERS.CLEAR_FILTERS' | translate }}
+      </button>
     </div>
-  </div>
+  </header>
 
   <!-- Skeleton Loader -->
-  <app-fit-table-skeleton
-    *ngIf="isLoading && !errorMessage"
-    [rows]="10"
-    [columns]="5"
-    [showActions]="true">
-  </app-fit-table-skeleton>
+  @if (isLoading && !errorMessage) {
+    <app-fit-table-skeleton [rows]="10" [columns]="5" [showActions]="true"></app-fit-table-skeleton>
+  }
 
   <!-- Error -->
-  <div *ngIf="!isLoading && errorMessage" class="error-container">
-    <mat-icon>error_outline</mat-icon>
-    <div class="error-content">
-      <p class="error-title">{{ 'ORDERS.ERROR_TITLE' | translate }}</p>
-      <p class="error-message">{{ errorMessage }}</p>
-      <button mat-stroked-button color="primary" (click)="loadPagedData()">
+  @if (!isLoading && errorMessage) {
+    <div class="error-banner">
+      <mat-icon>error_outline</mat-icon>
+      <div class="error-content">
+        <p class="error-title">{{ 'ORDERS.ERROR_TITLE' | translate }}</p>
+        <p class="error-message">{{ errorMessage }}</p>
+      </div>
+      <button type="button" class="btn btn-ghost" (click)="loadPagedData()">
         <mat-icon>refresh</mat-icon>
         {{ 'ORDERS.RETRY' | translate }}
       </button>
     </div>
-  </div>
+  }
 
-  <!-- Table Card -->
-  <div class="table-card" *ngIf="!isLoading && !errorMessage">
-    <table mat-table [dataSource]="items" class="orders-table">
+  <!-- Table -->
+  @if (!isLoading && !errorMessage) {
+    <div class="table-panel">
+      <table mat-table [dataSource]="items">
+        <!-- Reference Number -->
+        <ng-container matColumnDef="referenceNumber">
+          <th mat-header-cell *matHeaderCellDef>
+            <span class="th-content">
+              <mat-icon>confirmation_number</mat-icon>
+              {{ 'ORDERS.TABLE.ORDER_NUMBER' | translate }}
+            </span>
+          </th>
+          <td mat-cell *matCellDef="let order">
+            <span class="order-ref">{{ order.referenceNumber }}</span>
+          </td>
+        </ng-container>
 
-      <!-- Reference Number Column -->
-      <ng-container matColumnDef="referenceNumber">
-        <th mat-header-cell *matHeaderCellDef>
-          <div class="header-cell">
-            <mat-icon class="header-icon">confirmation_number</mat-icon>
-            {{ 'ORDERS.TABLE.ORDER_NUMBER' | translate }}
-          </div>
-        </th>
-        <td mat-cell *matCellDef="let order">
-          <span class="order-ref">{{ order.referenceNumber }}</span>
-        </td>
-      </ng-container>
+        <!-- Customer -->
+        <ng-container matColumnDef="customer">
+          <th mat-header-cell *matHeaderCellDef>
+            <span class="th-content">
+              <mat-icon>person</mat-icon>
+              {{ 'ORDERS.TABLE.CUSTOMER' | translate }}
+            </span>
+          </th>
+          <td mat-cell *matCellDef="let order">
+            <div class="stacked">
+              <span class="primary">{{ getCustomerName(order) }}</span>
+              <span class="secondary">{{ getCustomerAddress(order) }}</span>
+            </div>
+          </td>
+        </ng-container>
 
-      <!-- Customer Column -->
-      <ng-container matColumnDef="customer">
-        <th mat-header-cell *matHeaderCellDef>
-          <div class="header-cell">
-            <mat-icon class="header-icon">person</mat-icon>
-            {{ 'ORDERS.TABLE.CUSTOMER' | translate }}
-          </div>
-        </th>
-        <td mat-cell *matCellDef="let order">
-          <div class="customer-info">
-            <span class="customer-name">{{ getCustomerName(order) }}</span>
-            <span class="customer-address">{{ getCustomerAddress(order) }}</span>
-          </div>
-        </td>
-      </ng-container>
+        <!-- Ordered At -->
+        <ng-container matColumnDef="orderedAt">
+          <th mat-header-cell *matHeaderCellDef>
+            <span class="th-content">
+              <mat-icon>schedule</mat-icon>
+              {{ 'ORDERS.TABLE.ORDER_DATE' | translate }}
+            </span>
+          </th>
+          <td mat-cell *matCellDef="let order">
+            <div class="stacked">
+              <span class="primary">{{ order.orderedAtUtc | date : 'dd.MM.yyyy' }}</span>
+              <span class="secondary">{{ order.orderedAtUtc | date : 'HH:mm' }}</span>
+            </div>
+          </td>
+        </ng-container>
 
-      <!-- Ordered At Column -->
-      <ng-container matColumnDef="orderedAt">
-        <th mat-header-cell *matHeaderCellDef>
-          <div class="header-cell">
-            <mat-icon class="header-icon">schedule</mat-icon>
-            {{ 'ORDERS.TABLE.ORDER_DATE' | translate }}
-          </div>
-        </th>
-        <td mat-cell *matCellDef="let order">
-          <div class="date-info">
-            <span class="date">{{ order.orderedAtUtc | date:'dd.MM.yyyy' }}</span>
-            <span class="time">{{ order.orderedAtUtc | date:'HH:mm' }}</span>
-          </div>
-        </td>
-      </ng-container>
+        <!-- Total Amount -->
+        <ng-container matColumnDef="totalAmount">
+          <th mat-header-cell *matHeaderCellDef>
+            <span class="th-content">
+              <mat-icon>payments</mat-icon>
+              {{ 'ORDERS.TABLE.TOTAL_AMOUNT' | translate }}
+            </span>
+          </th>
+          <td mat-cell *matCellDef="let order">
+            <span class="amount">{{ order.totalAmount | number : '1.2-2' }} KM</span>
+          </td>
+        </ng-container>
 
-      <!-- Total Amount Column -->
-      <ng-container matColumnDef="totalAmount">
-        <th mat-header-cell *matHeaderCellDef>
-          <div class="header-cell">
-            <mat-icon class="header-icon">payments</mat-icon>
-            {{ 'ORDERS.TABLE.TOTAL_AMOUNT' | translate }}
-          </div>
-        </th>
-        <td mat-cell *matCellDef="let order">
-          <span class="amount">{{ order.totalAmount | currency:'BAM' }}</span>
-        </td>
-      </ng-container>
+        <!-- Status -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>
+            <span class="th-content">
+              <mat-icon>flag</mat-icon>
+              {{ 'ORDERS.TABLE.STATUS' | translate }}
+            </span>
+          </th>
+          <td mat-cell *matCellDef="let order">
+            <div class="status-badge" [ngClass]="getStatusClass(order.status)">
+              <mat-icon>{{ getStatusIcon(order.status) }}</mat-icon>
+              <span>{{ getStatusLabel(order.status) | translate }}</span>
+            </div>
+          </td>
+        </ng-container>
 
-      <!-- Status Column -->
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef>
-          <div class="header-cell">
-            <mat-icon class="header-icon">flag</mat-icon>
-            {{ 'ORDERS.TABLE.STATUS' | translate }}
-          </div>
-        </th>
-        <td mat-cell *matCellDef="let order">
-          <div class="status-badge" [ngClass]="getStatusClass(order.status)">
-            <mat-icon>{{ getStatusIcon(order.status) }}</mat-icon>
-            <span>{{ getStatusLabel(order.status) | translate }}</span>
-          </div>
-        </td>
-      </ng-container>
+        <!-- Actions -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>{{ 'ORDERS.TABLE.ACTIONS' | translate }}</th>
+          <td mat-cell *matCellDef="let order">
+            <div class="row-actions">
+              <button
+                type="button"
+                class="icon-btn view"
+                (click)="onViewDetails(order, $event)"
+                [matTooltip]="'ORDERS.ACTIONS.VIEW_DETAILS' | translate"
+              >
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button
+                type="button"
+                class="icon-btn status"
+                (click)="onChangeStatus(order, $event)"
+                [matTooltip]="'ORDERS.ACTIONS.CHANGE_STATUS' | translate"
+                [disabled]="!canChangeStatus(order)"
+              >
+                <mat-icon>swap_horiz</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
 
-      <!-- Actions Column -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>
-          <div class="header-cell">
-            <mat-icon class="header-icon">settings</mat-icon>
-            {{ 'ORDERS.TABLE.ACTIONS' | translate }}
-          </div>
-        </th>
-        <td mat-cell *matCellDef="let order">
-          <div class="action-buttons">
-            <button
-              mat-icon-button
-              color="primary"
-              (click)="onViewDetails(order, $event)"
-              [matTooltip]="'ORDERS.ACTIONS.VIEW_DETAILS' | translate"
-              class="action-btn view-btn">
-              <mat-icon>visibility</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              color="accent"
-              (click)="onChangeStatus(order, $event)"
-              [matTooltip]="'ORDERS.ACTIONS.CHANGE_STATUS' | translate"
-              [disabled]="!canChangeStatus(order)"
-              class="action-btn status-btn">
-              <mat-icon>swap_horiz</mat-icon>
-            </button>
-          </div>
-        </td>
-      </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          class="data-row"
+          (click)="onViewDetails(row)"
+        ></tr>
 
-      <!-- Header Row -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-
-      <!-- Data Rows -->
-      <tr
-        mat-row
-        *matRowDef="let row; columns: displayedColumns"
-        class="data-row"
-        (click)="onViewDetails(row)">
-      </tr>
-
-      <!-- No Data Row -->
-      <tr class="mat-row no-data-row" *matNoDataRow>
-        <td class="mat-cell" [attr.colspan]="displayedColumns.length">
-          <div class="no-data-content">
+        <!-- No data -->
+        <tr class="mat-row no-data-row" *matNoDataRow>
+          <td class="mat-cell" [attr.colspan]="displayedColumns.length">
             <mat-icon>shopping_cart</mat-icon>
             <p>
-              <ng-container *ngIf="searchControl.value || statusFilter; else noDataDefault">
+              @if (searchControl.value || statusFilter) {
                 {{ 'ORDERS.NO_DATA_FILTER' | translate }}
-              </ng-container>
-              <ng-template #noDataDefault>
+              } @else {
                 {{ 'ORDERS.NO_DATA' | translate }}
-              </ng-template>
+              }
             </p>
-          </div>
-        </td>
-      </tr>
-    </table>
+          </td>
+        </tr>
+      </table>
 
-    <!-- Paginator -->
-    <div class="paginator-wrapper">
       <app-fit-paginator-bar [vm]="this"></app-fit-paginator-bar>
     </div>
-  </div>
+  }
 </div>

@@ -25,6 +25,26 @@ export interface LoginCommandDto {
 }
 
 /**
+ * Command for POST /Auth/register
+ * Corresponds to: RegisterCommand.cs
+ */
+export interface RegisterCommand {
+  username: string;
+  email: string;
+  password: string;
+}
+
+/**
+ * Response for POST /Auth/register
+ * Corresponds to: RegisterCommandDto.cs
+ */
+export interface RegisterCommandDto {
+  id: number;
+  username: string;
+  token: string;
+}
+
+/**
  * Command for POST /Auth/refresh
  * Corresponds to: RefreshTokenCommand.cs
  */

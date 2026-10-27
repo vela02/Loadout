@@ -1,0 +1,211 @@
+<div class="promo-dialog">
+  <!-- Header -->
+  <header class="dialog-header">
+    <div class="header-icon">
+      <mat-icon>local_offer</mat-icon>
+    </div>
+    <div class="header-text">
+      <span class="eyebrow">Loadout · {{ 'PROMOTIONS.TITLE' | translate }}</span>
+      <h2>{{ 'PROMOTIONS.FORM.TITLE' | translate }}</h2>
+    </div>
+    <button type="button" class="close-btn" (click)="onCancel()" [attr.aria-label]="'PROMOTIONS.FORM.CANCEL' | translate">
+      <mat-icon>close</mat-icon>
+    </button>
+  </header>
+
+  @if (isLoadingOptions) {
+    <div class="state-box">
+      <mat-spinner diameter="40"></mat-spinner>
+      <span>{{ 'PROMOTIONS.LOADING' | translate }}</span>
+    </div>
+  } @else if (!options) {
+    <div class="error-banner">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ 'PROMOTIONS.DIALOGS.ERROR_LOAD' | translate }}</span>
+    </div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="dialog-body">
+        <!-- STEP 1: what does it apply to -->
+        <section class="step">
+          <h3><span class="step-no">1</span>{{ 'PROMOTIONS.FORM.TARGET_LABEL' | translate }}</h3>
+
+          <div class="target-grid">
+            @for (t of targetTypes; track t.type) {
+              <button
+                type="button"
+                class="target-tile"
+                [class.active]="targetType === t.type"
+                (click)="selectTargetType(t.type)"
+              >
+                <mat-icon>{{ t.icon }}</mat-icon>
+                <span>{{ 'PROMOTIONS.TARGETS.' + t.type | translate }}</span>
+              </button>
+            }
+          </div>
+
+          @if (targetType === 'Games') {
+            <!-- Individual games picker -->
+            <div class="game-picker">
+              <mat-form-field appearance="outline" class="full-width" subscriptSizing="dynamic">
+                <mat-label>{{ 'PROMOTIONS.FORM.SEARCH_GAMES' | translate }}</mat-label>
+                <input matInput [(ngModel)]="gameSearch" [ngModelOptions]="{ standalone: true }" />
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+
+              <div class="game-list">
+                @for (game of filteredGames; track game.id) {
+                  <label class="game-row" [class.selected]="isSelected(game.id)">
+                    <mat-checkbox [checked]="isSelected(game.id)" (change)="toggleGame(game.id)"></mat-checkbox>
+                    <span class="game-title">{{ game.title }}</span>
+                    <span class="game-price">{{ game.price | number : '1.2-2' }} KM</span>
+                  </label>
+                } @empty {
+                  <div class="list-empty">{{ 'PROMOTIONS.FORM.NO_OPTIONS' | translate }}</div>
+                }
+              </div>
+
+              <div class="picker-footer">
+                <span>{{ 'PROMOTIONS.FORM.SELECTED' | translate : { count: selectedGameIds.size } }}</span>
+                @if (selectedGameIds.size > 0) {
+                  <button type="button" class="link-btn" (click)="clearSelection()">
+                    {{ 'PROMOTIONS.FORM.CLEAR' | translate }}
+                  </button>
+                }
+              </div>
+            </div>
+          } @else if (isIdTarget) {
+            <!-- Category / tag -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>{{ 'PROMOTIONS.TARGETS.' + targetType | translate }}</mat-label>
+              <mat-select formControlName="targetId" panelClass="loadout-select-panel">
+                @for (option of idOptions; track option.id) {
+                  <mat-option [value]="option.id">{{ option.name }}</mat-option>
+                }
+              </mat-select>
+              @if (idOptions.length === 0) {
+                <mat-hint>{{ 'PROMOTIONS.FORM.NO_OPTIONS' | translate }}</mat-hint>
+              }
+            </mat-form-field>
+          } @else {
+            <!-- Genre / publisher / developer -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>{{ 'PROMOTIONS.TARGETS.' + targetType | translate }}</mat-label>
+              <mat-select formControlName="targetText" panelClass="loadout-select-panel">
+                @for (option of textOptions; track option) {
+                  <mat-option [value]="option">{{ option }}</mat-option>
+                }
+              </mat-select>
+              @if (textOptions.length === 0) {
+                <mat-hint>{{ 'PROMOTIONS.FORM.NO_OPTIONS' | translate }}</mat-hint>
+              }
+            </mat-form-field>
+          }
+        </section>
+
+        <!-- STEP 2: discount details -->
+        <section class="step">
+          <h3><span class="step-no">2</span>{{ 'PROMOTIONS.FORM.DETAILS_LABEL' | translate }}</h3>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ 'PROMOTIONS.FORM.NAME' | translate }}</mat-label>
+            <input matInput formControlName="name" [placeholder]="'PROMOTIONS.FORM.NAME_PLACEHOLDER' | translate" />
+            @if (hasError('name', 'required')) {
+              <mat-error>{{ 'PROMOTIONS.FORM.NAME_REQUIRED' | translate }}</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="discount-row">
+            <mat-form-field appearance="outline" class="discount-field">
+              <mat-label>{{ 'PROMOTIONS.FORM.DISCOUNT' | translate }}</mat-label>
+              <input matInput type="number" min="1" max="100" formControlName="discountPercentage" />
+              <span matTextSuffix>&nbsp;%</span>
+              @if (hasError('discountPercentage', 'required') || hasError('discountPercentage', 'min') || hasError('discountPercentage', 'max')) {
+                <mat-error>{{ 'PROMOTIONS.FORM.DISCOUNT_RANGE' | translate }}</mat-error>
+              }
+            </mat-form-field>
+
+            <div class="quick-discounts">
+              @for (value of quickDiscounts; track value) {
+                <button
+                  type="button"
+                  class="chip"
+                  [class.active]="discount === value"
+                  (click)="setDiscount(value)"
+                >
+                  -{{ value }}%
+                </button>
+              }
+            </div>
+          </div>
+
+          <div class="field-row">
+            <mat-form-field appearance="outline">
+              <mat-label>{{ 'PROMOTIONS.FORM.START' | translate }}</mat-label>
+              <input matInput type="date" formControlName="startDate" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>{{ 'PROMOTIONS.FORM.END' | translate }}</mat-label>
+              <input matInput type="date" formControlName="endDate" />
+            </mat-form-field>
+          </div>
+
+          @if (datesInvalid) {
+            <div class="inline-error">
+              <mat-icon>error_outline</mat-icon>
+              {{ 'PROMOTIONS.FORM.DATES_INVALID' | translate }}
+            </div>
+          }
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ 'PROMOTIONS.FORM.DESCRIPTION' | translate }}</mat-label>
+            <textarea matInput rows="2" maxlength="500" formControlName="description"></textarea>
+          </mat-form-field>
+        </section>
+
+        <!-- Summary -->
+        <div class="summary" [class.empty]="matchingGames.length === 0">
+          <mat-icon>{{ matchingGames.length ? 'bolt' : 'info_outline' }}</mat-icon>
+          <div class="summary-text">
+            <strong>
+              @if (matchingGames.length) {
+                {{ 'PROMOTIONS.FORM.MATCHES' | translate : { count: matchingGames.length } }}
+              } @else {
+                {{ 'PROMOTIONS.FORM.NO_MATCHES' | translate }}
+              }
+            </strong>
+            @if (example) {
+              <span>{{ 'PROMOTIONS.FORM.EXAMPLE' | translate : example }}</span>
+            }
+          </div>
+          @if (discount > 0) {
+            <span class="summary-badge">-{{ discount }}%</span>
+          }
+        </div>
+
+        @if (errorMessage) {
+          <div class="error-banner">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ errorMessage }}</span>
+          </div>
+        }
+      </div>
+
+      <!-- Actions -->
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-ghost" (click)="onCancel()">
+          {{ 'PROMOTIONS.FORM.CANCEL' | translate }}
+        </button>
+        <button type="submit" class="btn btn-neon" [disabled]="!canSubmit">
+          @if (isSaving) {
+            <mat-spinner diameter="18"></mat-spinner>
+          } @else {
+            <mat-icon>local_offer</mat-icon>
+          }
+          {{ 'PROMOTIONS.FORM.CREATE' | translate }}
+        </button>
+      </div>
+    </form>
+  }
+</div>

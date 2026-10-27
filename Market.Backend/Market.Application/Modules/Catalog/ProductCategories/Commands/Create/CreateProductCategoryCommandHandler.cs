@@ -1,4 +1,6 @@
-﻿namespace Market.Application.Modules.Catalog.ProductCategories.Commands.Create;
+﻿using Market.Domain.Models;
+
+namespace Market.Application.Modules.Catalog.ProductCategories.Commands.Create;
 
 public class CreateProductCategoryCommandHandler(IAppDbContext context)
     : IRequestHandler<CreateProductCategoryCommand, int>
@@ -19,11 +21,17 @@ public class CreateProductCategoryCommandHandler(IAppDbContext context)
             throw new MarketConflictException("Name already exists.");
         }
 
-        var category = new ProductCategoryEntity
+        var category = new GameCategory
         {
             Name = request.Name!.Trim(),
-            IsEnabled = true // deault IsEnabled
+            IsEnabled = true,
+            IsDeleted = false 
         };
+        //var category = new ProductCategoryEntity
+        //{
+        //    Name = request.Name!.Trim(),               //Adilovo rjesenje
+        //    IsEnabled = true // deault IsEnabled
+        //};
 
         context.ProductCategories.Add(category);
         await context.SaveChangesAsync(cancellationToken);

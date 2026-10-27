@@ -1,146 +1,198 @@
 @import '../admin-orders-status-styles.scss';
 
-$primary-color: #4976b5;
-$text-primary: #2c3e50;
-$text-secondary: #546e7a;
-$text-muted: #90a4ae;
-$border-color: rgba(73, 118, 181, 0.15);
+// === VARIJABLE (iste kao landing page) ===
+$bg-deep: #0b0c1a;
+$panel: #171a36;
+$panel-edge: #2a2e5c;
+$cyan: #22d3ee;
+$magenta: #e040fb;
+$warning: #fbbf24;
+$text: #e8e9ff;
+$text-muted: #8d90b8;
+$neon-gradient: linear-gradient(90deg, $cyan 0%, $magenta 100%);
+
+@mixin icon-size($size) {
+  font-size: $size;
+  width: $size;
+  height: $size;
+}
 
 .dialog-container {
+  position: relative;
   display: flex;
   flex-direction: column;
+  color: $text;
+  line-height: 1.5;
+  background:
+    radial-gradient(circle at 0% 0%, rgba($cyan, 0.1), transparent 45%),
+    radial-gradient(circle at 100% 100%, rgba($magenta, 0.1), transparent 45%),
+    $panel;
+
+  // Neon accent line on top
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 28px;
+    right: 28px;
+    height: 2px;
+    border-radius: 2px;
+    background: $neon-gradient;
+    box-shadow: 0 0 12px rgba($cyan, 0.6);
+  }
 }
 
 // Header
 .dialog-header {
-  padding: 20px 24px;
-  border-bottom: 1px solid $border-color;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 24px 28px 18px;
+  border-bottom: 1px solid $panel-edge;
 
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  .header-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    color: $bg-deep;
+    background: $neon-gradient;
+    box-shadow: 0 0 16px rgba($magenta, 0.4);
+  }
 
-    .header-icon {
-      color: $primary-color;
-      font-size: 28px;
-      width: 28px;
-      height: 28px;
-    }
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: $cyan;
+  }
 
-    h2 {
-      margin: 0;
-      font-size: 20px;
-      font-weight: 600;
-      color: $text-primary;
-    }
+  h2 {
+    margin: 2px 0 0;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.25;
+    color: $text;
   }
 }
 
 // Content
 .dialog-content {
-  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 18px;
+  padding: 24px 28px;
 }
 
 // Order Info
 .order-info {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 16px;
-  background: rgba(73, 118, 181, 0.05);
-  border-radius: 8px;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba($bg-deep, 0.5);
+  border: 1px solid $panel-edge;
 
   .order-ref,
   .customer-name {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
+    font-weight: 600;
 
     mat-icon {
-      color: $primary-color;
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
-    }
-
-    span {
-      font-size: 14px;
-      color: $text-primary;
-      font-weight: 500;
+      @include icon-size(18px);
+      color: $text-muted;
     }
   }
 
-  .order-ref span {
-    font-weight: 600;
-    color: $primary-color;
+  .order-ref {
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: $cyan;
+
+    mat-icon {
+      color: $cyan;
+    }
   }
 }
 
 // Status Sections
-.current-status-section,
-.new-status-section {
+.status-section {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  align-items: flex-start;
+  gap: 10px;
 
   .section-label {
-    font-size: 13px;
-    font-weight: 600;
-    color: $text-secondary;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    color: $text-muted;
   }
 }
 
-// Arrow
 .arrow-container {
   display: flex;
   justify-content: center;
-  padding: 8px 0;
+  margin: -6px 0;
 
   mat-icon {
-    color: $primary-color;
-    font-size: 32px;
-    width: 32px;
-    height: 32px;
+    @include icon-size(28px);
+    color: $magenta;
+    filter: drop-shadow(0 0 6px rgba($magenta, 0.6));
   }
 }
 
-// Status Radio Group
-.status-radio-group {
+// Selectable status tiles
+.status-options {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
+  width: 100%;
+}
 
-  .status-radio-option {
-    padding: 12px;
-    border: 2px solid $border-color;
-    border-radius: 8px;
+.status-option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font: inherit;
+  text-align: left;
+  background: rgba($bg-deep, 0.4);
+  border: 1px solid $panel-edge;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+
+  .radio-dot {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 2px solid $text-muted;
     transition: all 0.2s ease;
+  }
 
-    &:hover {
-      background-color: rgba(73, 118, 181, 0.03);
-      border-color: rgba(73, 118, 181, 0.3);
-    }
+  &:hover {
+    border-color: $text-muted;
+  }
 
-    ::ng-deep {
-      .mat-radio-label {
-        margin: 0;
-        width: 100%;
-      }
+  &.selected {
+    border-color: $cyan;
+    background: rgba($cyan, 0.06);
+    box-shadow: 0 0 14px rgba($cyan, 0.2);
 
-      .mat-radio-container {
-        margin-right: 12px;
-      }
-    }
-
-    &.mat-radio-checked {
-      background-color: rgba(73, 118, 181, 0.08);
-      border-color: $primary-color;
+    .radio-dot {
+      border-color: $cyan;
+      background: radial-gradient(circle, $cyan 0 40%, transparent 45%);
     }
   }
 }
@@ -150,14 +202,14 @@ $border-color: rgba(73, 118, 181, 0.15);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 40px 20px;
+  gap: 10px;
+  width: 100%;
+  padding: 32px 20px;
   color: $text-muted;
 
   mat-icon {
-    font-size: 48px;
-    width: 48px;
-    height: 48px;
+    @include icon-size(44px);
+    color: $panel-edge;
   }
 
   p {
@@ -171,31 +223,93 @@ $border-color: rgba(73, 118, 181, 0.15);
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  padding: 16px;
-  background: #fff3e0;
-  border: 1px solid #ffb74d;
-  border-radius: 8px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  color: $warning;
+  background: rgba($warning, 0.08);
+  border: 1px solid rgba($warning, 0.4);
 
   mat-icon {
-    color: #f57c00;
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
+    @include icon-size(22px);
     flex-shrink: 0;
   }
 
   p {
     margin: 0;
-    color: #e65100;
-    font-size: 14px;
-    line-height: 1.5;
+    font-weight: 600;
   }
 }
 
 // Dialog Actions
 .dialog-actions {
-  padding: 16px 24px;
-  border-top: 1px solid $border-color;
+  display: flex;
   justify-content: flex-end;
   gap: 12px;
+  padding: 16px 28px 24px;
+  border-top: 1px solid $panel-edge;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 20px;
+  border-radius: 12px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+
+  mat-icon {
+    @include icon-size(20px);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+.btn-ghost {
+  color: $text-muted;
+  background: transparent;
+  border: 1px solid $panel-edge;
+
+  &:hover:not(:disabled) {
+    color: $text;
+    border-color: $text-muted;
+  }
+}
+
+.btn-neon {
+  min-width: 130px;
+  border: none;
+  color: $bg-deep;
+  background: $neon-gradient;
+  box-shadow: 0 0 18px rgba($cyan, 0.35);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 0 28px rgba($magenta, 0.55);
+  }
+}
+
+@media (max-width: 600px) {
+  .dialog-header,
+  .dialog-content,
+  .dialog-actions {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .dialog-actions {
+    flex-direction: column-reverse;
+
+    .btn {
+      width: 100%;
+    }
+  }
 }

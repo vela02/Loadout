@@ -3,6 +3,51 @@
     "TITLE": "Welcome to our app",
     "DESCRIPTION": "This is an example of localization."
   },
+  "HOME": {
+    "HERO": {
+      "TITLE_START": "Your next game is",
+      "TITLE_HIGHLIGHT": "one click",
+      "TITLE_END": "away",
+      "DESCRIPTION": "Discover, buy and activate the latest titles for PC and consoles. Fast delivery, secure payments and prices that don't hurt.",
+      "GET_STARTED": "Get started",
+      "LEARN_MORE": "Learn more",
+      "INSTANT_KEY": "Instant key"
+    },
+    "GENRES": {
+      "ACTION": "Action",
+      "RPG": "RPG",
+      "RACING": "Racing"
+    },
+    "FEATURES": {
+      "EYEBROW": "Why us",
+      "TITLE": "Why choose Loadout?",
+      "SUBTITLE": "Everything a gamer needs, in one place",
+      "LIBRARY_TITLE": "Huge library",
+      "LIBRARY_TEXT": "Hundreds of titles across every genre, from action and RPGs to strategy and indie gems.",
+      "DELIVERY_TITLE": "Instant delivery",
+      "DELIVERY_TEXT": "Your activation key arrives right after purchase. No waiting, no shipping.",
+      "DEALS_TITLE": "Best deals",
+      "DEALS_TEXT": "Regular discounts and seasonal sales on the most popular titles.",
+      "PLATFORMS_TITLE": "Every platform",
+      "PLATFORMS_TEXT": "PC, PlayStation, Xbox and Nintendo. You choose where you play.",
+      "PAYMENTS_TITLE": "Secure payments",
+      "PAYMENTS_TEXT": "Your data and transactions are protected by the latest security protocols.",
+      "SUPPORT_TITLE": "24/7 support",
+      "SUPPORT_TEXT": "Trouble activating a game? Our team is always here to help."
+    },
+    "STATS": {
+      "GAMES": "Games available",
+      "PLAYERS": "Happy players",
+      "INSTANT": "Instant",
+      "DELIVERY": "Key delivery",
+      "RATING": "Average rating"
+    },
+    "CTA": {
+      "TITLE": "Ready for the next level?",
+      "TEXT": "Sign in, build your loadout and jump into the game.",
+      "BUTTON": "Sign in now"
+    }
+  },
   "AUTH": {
     "LOGIN": {
       "TITLE": "Login",
@@ -12,7 +57,37 @@
       "PASSWORD_PLACEHOLDER": "Enter password",
       "REMEMBER_ME": "Remember me",
       "BUTTON": "Login",
-      "LOADING": "Logging in..."
+      "LOADING": "Logging in...",
+      "TAGLINE": "Welcome back, player",
+      "SUBTITLE": "Sign in to continue to your library",
+      "EMAIL_REQUIRED": "Email is required",
+      "EMAIL_INVALID": "Enter a valid email",
+      "PASSWORD_REQUIRED": "Password is required",
+      "SHOW_PASSWORD": "Show password",
+      "HIDE_PASSWORD": "Hide password",
+      "FORGOT_PASSWORD": "Forgot password?",
+      "OR": "or",
+      "NO_ACCOUNT": "Don't have an account?",
+      "REGISTER": "Sign up",
+      "BACK_HOME": "Back to home",
+      "INVALID_CREDENTIALS": "Invalid email or password. Please try again."
+    },
+    "REGISTER": {
+      "TAGLINE": "Join Loadout",
+      "SUBTITLE": "Create an account and start building your library",
+      "USERNAME_LABEL": "Username",
+      "USERNAME_PLACEHOLDER": "Pick a gamer tag",
+      "USERNAME_REQUIRED": "Username is required",
+      "USERNAME_LENGTH": "Username must be 3–50 characters",
+      "PASSWORD_HINT": "At least 6 characters",
+      "CONFIRM_PASSWORD_LABEL": "Confirm password",
+      "CONFIRM_PASSWORD_REQUIRED": "Please repeat your password",
+      "PASSWORD_MISMATCH": "Passwords don't match",
+      "BUTTON": "Create account",
+      "LOADING": "Creating account...",
+      "HAVE_ACCOUNT": "Already have an account?",
+      "LOGIN_LINK": "Sign in",
+      "FAILED": "Registration failed. That email or username may already be taken."
     },
     "LOGOUT": {
       "TITLE": "Logout",
@@ -31,6 +106,7 @@
       "CATALOG": "CATALOG",
       "CATEGORIES": "Product Categories",
       "PRODUCTS": "Products",
+      "PROMOTIONS": "Promotions",
       "ORDERS_SECTION": "ORDERS",
       "ORDERS": "Orders Overview",
       "SYSTEM": "SYSTEM",
@@ -48,9 +124,31 @@
     "ADD_NEW": "Add Category",
     "LOADING": "Loading categories...",
     "NO_DATA": "No categories to display",
-    "NO_DATA_FILTER": "No results found for search",
+    "NO_DATA_FILTER": "No categories match your filters",
+    "FILTERS": {
+      "TITLE": "Filters",
+      "ACTIVE_COUNT": "{{count}} active",
+      "STATUS": "Status",
+      "STATUS_ALL": "All",
+      "STATUS_ACTIVE": "Active",
+      "STATUS_INACTIVE": "Inactive",
+      "MIN_GAMES": "Min. games",
+      "MAX_GAMES": "Max. games",
+      "SALE": "Promotion",
+      "SALE_ALL": "All",
+      "SALE_YES": "On sale",
+      "SALE_NO": "Not on sale",
+      "APPLY": "Apply",
+      "RESET": "Reset",
+      "SEARCH_TOO_LONG": "Search can be at most 50 characters",
+      "GAMES_NEGATIVE": "Cannot be negative",
+      "GAMES_WHOLE": "Must be a whole number",
+      "GAMES_RANGE": "Min. cannot be greater than max."
+    },
     "TABLE": {
       "NAME": "Name",
+      "GAMES": "Games",
+      "SALE": "On sale",
       "STATUS": "Status",
       "ENABLED": "Active",
       "DISABLED": "Inactive",
@@ -63,6 +161,8 @@
     "FORM": {
       "NAME": "Category Name",
       "NAME_PLACEHOLDER": "Enter category name",
+      "EDIT_TITLE": "Edit Category",
+      "ERROR_LOAD": "Failed to load category",
       "LOADING": "Loading...",
       "CANCEL": "Cancel",
       "SAVE": "Save",
@@ -93,7 +193,24 @@
     "ADD_NEW": "Add Product",
     "LOADING": "Loading products...",
     "NO_DATA": "No products to display",
-    "NO_DATA_FILTER": "No results found for search",
+    "NO_DATA_FILTER": "No games match your filters",
+    "FILTERS": {
+      "TITLE": "Filters",
+      "ACTIVE_COUNT": "{{count}} active",
+      "CATEGORY": "Category",
+      "ALL_CATEGORIES": "All categories",
+      "STATUS": "Status",
+      "STATUS_ALL": "All",
+      "STATUS_ACTIVE": "Active",
+      "STATUS_INACTIVE": "Inactive",
+      "MIN_PRICE": "Min price (KM)",
+      "MAX_PRICE": "Max price (KM)",
+      "APPLY": "Apply",
+      "RESET": "Reset",
+      "PRICE_NEGATIVE": "Price can't be negative",
+      "PRICE_RANGE": "Min price can't be greater than max price",
+      "SEARCH_TOO_LONG": "Search can have at most 100 characters"
+    },
     "TABLE": {
       "NAME": "Name",
       "CATEGORY": "Category",
@@ -126,7 +243,14 @@
       "STOCK_PLACEHOLDER": "0",
       "CANCEL": "Cancel",
       "SAVE": "Save",
-      "UPDATE": "Update"
+      "UPDATE": "Update",
+      "NAME_REQUIRED": "Name is required",
+      "NAME_MIN": "Name must be at least 2 characters",
+      "NAME_MAX": "Name can't be longer than 100 characters",
+      "CATEGORY_REQUIRED": "Please choose a category",
+      "PRICE_REQUIRED": "Price is required",
+      "PRICE_MIN": "Price must be greater than 0",
+      "DESCRIPTION_MAX": "Description can't be longer than 500 characters"
     },
     "DIALOGS": {
       "DELETE_TITLE": "Delete Product",
@@ -143,6 +267,7 @@
   },
   "ORDERS": {
     "TITLE": "Orders",
+    "SUBTITLE": "Order management",
     "FILTER_STATUS": "Filter by Status",
     "ALL_STATUSES": "All Statuses",
     "SEARCH_PLACEHOLDER": "Search orders...",
@@ -209,6 +334,69 @@
     "MESSAGES": {
       "STATUS_UPDATED": "Order status updated successfully",
       "CANNOT_CHANGE_STATUS": "This order status cannot be changed"
+    }
+  },
+  "PROMOTIONS": {
+    "TITLE": "Promotions",
+    "SUBTITLE": "Discounts and sales",
+    "NEW": "New promotion",
+    "BUTTON": "Promotion",
+    "SALE": "On sale",
+    "LOADING": "Loading promotions...",
+    "NO_DATA": "No promotions yet. Create one to put games on sale.",
+    "DELETE_TOOLTIP": "Delete promotion",
+    "TABLE": {
+      "NAME": "Promotion",
+      "TARGET": "Applies to",
+      "DISCOUNT": "Discount",
+      "PERIOD": "Period",
+      "GAMES": "Games",
+      "STATUS": "Status",
+      "ACTIONS": "Actions"
+    },
+    "STATUS": {
+      "ACTIVE": "Active",
+      "SCHEDULED": "Scheduled",
+      "EXPIRED": "Expired"
+    },
+    "TARGETS": {
+      "Games": "Individual games",
+      "Category": "Category",
+      "Genre": "Genre",
+      "Publisher": "Publisher",
+      "Developer": "Developer",
+      "Tag": "Tag"
+    },
+    "FORM": {
+      "TITLE": "New promotion",
+      "TARGET_LABEL": "What does it apply to?",
+      "DETAILS_LABEL": "Discount details",
+      "SEARCH_GAMES": "Search games",
+      "SELECTED": "{{count}} selected",
+      "CLEAR": "Clear",
+      "NO_OPTIONS": "Nothing to choose from yet",
+      "NAME": "Promotion name",
+      "NAME_PLACEHOLDER": "e.g. Summer Sale",
+      "NAME_REQUIRED": "Promotion name is required",
+      "DISCOUNT": "Discount",
+      "DISCOUNT_RANGE": "Discount must be between 1 and 100%",
+      "START": "Starts",
+      "END": "Ends",
+      "DATES_INVALID": "End date can't be before the start date",
+      "DESCRIPTION": "Description (optional)",
+      "MATCHES": "Applies to {{count}} games",
+      "NO_MATCHES": "No games selected yet",
+      "EXAMPLE": "e.g. {{title}}: {{oldPrice}} KM → {{newPrice}} KM",
+      "CREATE": "Create promotion",
+      "CANCEL": "Cancel"
+    },
+    "DIALOGS": {
+      "DELETE_MESSAGE": "Delete promotion \"{{name}}\"? The discounts on its games will be removed.",
+      "SUCCESS_CREATE": "Promotion created",
+      "SUCCESS_DELETE": "Promotion deleted",
+      "ERROR_LOAD": "Failed to load promotions",
+      "ERROR_CREATE": "Failed to create promotion",
+      "ERROR_DELETE": "Failed to delete promotion"
     }
   },
   "COMMON": {
@@ -333,7 +521,11 @@
     "SHOWING": "Showing",
     "TO": "to",
     "RESULTS": "results",
-    "NO_ITEMS": "No items to display"
+    "NO_ITEMS": "No items to display",
+    "TOTAL": "Total",
+    "RECORDS": "records",
+    "PREVIOUS": "Previous",
+    "NEXT": "Next"
   },
   "VALIDATION": {
     "REQUIRED": "This field is required",
@@ -368,5 +560,54 @@
     "CONFLICT": "This action conflicts with existing data.",
     "VALIDATION": "Please check the form for errors.",
     "UNKNOWN": "Unknown error occurred."
+  },
+  "CLIENT": {
+    "NAV": {
+      "OVERVIEW": "Overview",
+      "CHANGE_PASSWORD": "Change password",
+      "STORE": "Store",
+      "LOGOUT": "Log out"
+    },
+    "ACCOUNT": {
+      "EYEBROW": "My account",
+      "WELCOME": "Welcome back, {{name}}",
+      "SUBTITLE": "Your profile, purchases and activity in one place.",
+      "PROFILE": "Profile",
+      "USERNAME": "Username",
+      "EMAIL": "Email",
+      "ROLE": "Role",
+      "MEMBER_SINCE": "Member since",
+      "LAST_LOGIN": "Last login",
+      "NEVER": "—",
+      "STATS": {
+        "ORDERS": "Orders",
+        "SPENT": "Total spent",
+        "GAMES": "Owned games",
+        "WISHLIST": "Wishlist"
+      },
+      "RECENT_ORDERS": "Recent orders",
+      "ORDER": "Order #{{id}}",
+      "ITEMS": "{{count}} item(s)",
+      "NO_ORDERS": "You haven't placed any orders yet.",
+      "BROWSE": "Browse games",
+      "SECURITY": "Security",
+      "SECURITY_TEXT": "Change your password regularly to keep your account safe.",
+      "ERROR_LOAD": "Failed to load account data."
+    },
+    "PASSWORD": {
+      "EYEBROW": "Security",
+      "TITLE": "Change password",
+      "SUBTITLE": "After the change, all other devices will be logged out.",
+      "CURRENT": "Current password",
+      "NEW": "New password",
+      "CONFIRM": "Confirm new password",
+      "REQUIRED": "This field is required",
+      "MIN_LENGTH": "Password must be at least 6 characters",
+      "SAME_AS_OLD": "New password must differ from the current one",
+      "MISMATCH": "Passwords do not match",
+      "SUBMIT": "Change password",
+      "SUCCESS": "Password changed. Other sessions have been logged out.",
+      "FAILED": "Change failed. Check your current password and try again."
+    }
   }
 }

@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 import { ProductCategoriesApiService } from '../../../../../api-services/product-categories/product-categories-api.service';
 import { ToasterService } from '../../../../../core/services/toaster.service';
 import {
@@ -28,15 +29,18 @@ export class ProductCategoryUpsertComponent implements OnInit {
   private api = inject(ProductCategoriesApiService);
   private formService = inject(ProductCategoryFormService);
   private toaster = inject(ToasterService);
+  private translate = inject(TranslateService);
 
   form!: FormGroup;
   isLoading = false;
   isEditMode = false;
+
+  /** Translation key for the dialog title */
   title = '';
 
   ngOnInit(): void {
     this.isEditMode = this.data.mode === 'edit';
-    this.title = this.isEditMode ? 'Edit Category' : 'New Category';
+    this.title = this.isEditMode ? 'PRODUCT_CATEGORIES.FORM.EDIT_TITLE' : 'PRODUCT_CATEGORIES.NEW_CATEGORY';
 
     if (this.isEditMode && this.data.categoryId) {
       this.loadCategory(this.data.categoryId);
@@ -54,7 +58,7 @@ export class ProductCategoryUpsertComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        this.toaster.error('Failed to load category');
+        this.toaster.error(this.translate.instant('PRODUCT_CATEGORIES.FORM.ERROR_LOAD'));
         console.error('Load category error:', err);
         this.dialogRef.close(false);
       }
@@ -83,8 +87,7 @@ export class ProductCategoryUpsertComponent implements OnInit {
 
     this.api.create(command).subscribe({
       next: () => {
-        this.toaster.success('Category created successfully');
-        this.dialogRef.close(true); // Signal success
+        this.dialogRef.close(true); // Signal success (the page shows the success dialog)
       },
       error: (err) => {
         this.isLoading = false;
@@ -100,8 +103,7 @@ export class ProductCategoryUpsertComponent implements OnInit {
 
     this.api.update(this.data.categoryId!, command).subscribe({
       next: () => {
-        this.toaster.success('Category updated successfully');
-        this.dialogRef.close(true); // Signal success
+        this.dialogRef.close(true); // Signal success (the page shows the success dialog)
       },
       error: (err) => {
         this.isLoading = false;

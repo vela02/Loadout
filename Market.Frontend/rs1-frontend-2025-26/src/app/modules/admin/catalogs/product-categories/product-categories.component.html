@@ -1,162 +1,238 @@
-<div class="container">
-  <!-- Header Card -->
-  <div class="header-card">
-    <div class="header-card-content">
-      <!-- Left: Title with Icon -->
-      <div class="title-section">
-        <div class="title-icon">
-          <mat-icon>category</mat-icon>
-        </div>
-        <h1>{{ 'PRODUCT_CATEGORIES.TITLE' | translate }}</h1>
-      </div>
-
-      <!-- Right: Search, Filter, Button -->
-      <div class="actions-container">
-        <!-- Only Enabled Toggle -->
-        <mat-slide-toggle
-          [(ngModel)]="showOnlyEnabled"
-          (change)="onToggleEnabledFilter($event.checked)"
-          color="primary"
-          class="enabled-toggle"
-        >
-          {{ 'PRODUCT_CATEGORIES.ONLY_ENABLED' | translate }}
-        </mat-slide-toggle>
-
-        <!-- Search -->
-        <mat-form-field class="search-field" appearance="fill">
-          <mat-label>{{ 'PRODUCT_CATEGORIES.SEARCH_PLACEHOLDER' | translate }}</mat-label>
-          <input
-            matInput
-            [(ngModel)]="request.search"
-            (keyup.enter)="onSearchChange(request.search || '')"
-            [placeholder]="'PRODUCT_CATEGORIES.SEARCH_INPUT_PLACEHOLDER' | translate"
-          />
-          <mat-icon matSuffix>search</mat-icon>
-        </mat-form-field>
-
-        <!-- New Category Button -->
-        <button mat-raised-button color="primary" (click)="onCreate()" class="add-button">
-          <mat-icon>add</mat-icon>
-          <span>{{ 'PRODUCT_CATEGORIES.NEW_CATEGORY' | translate }}</span>
-        </button>
-      </div>
+<div class="loadout-shell">
+  <!-- Header -->
+  <header class="loadout-header">
+    <div class="header-text">
+      <span class="eyebrow">
+        <mat-icon>sports_esports</mat-icon>
+        Loadout · {{ 'PRODUCT_CATEGORIES.SUBTITLE' | translate }}
+      </span>
+      <h1>{{ 'PRODUCT_CATEGORIES.TITLE' | translate }}</h1>
     </div>
-  </div>
+
+    <!-- New category -->
+    <div class="actions-container">
+      <button type="button" class="btn btn-neon" (click)="onCreate()">
+        <mat-icon>add</mat-icon>
+        {{ 'PRODUCT_CATEGORIES.NEW_CATEGORY' | translate }}
+      </button>
+    </div>
+  </header>
+
+  <!-- Filters (5 parameters, backend filtering) -->
+  <form class="filter-panel" [formGroup]="filterForm" (ngSubmit)="applyFilters()">
+    <div class="filter-head">
+      <span class="filter-title">
+        <mat-icon>tune</mat-icon>
+        {{ 'PRODUCT_CATEGORIES.FILTERS.TITLE' | translate }}
+        @if (activeFilterCount) {
+          <span class="filter-count">{{ 'PRODUCT_CATEGORIES.FILTERS.ACTIVE_COUNT' | translate: { count: activeFilterCount } }}</span>
+        }
+      </span>
+    </div>
+
+    <div class="filter-grid">
+      <!-- 1) Search -->
+      <mat-form-field class="search-field filter-search" appearance="outline">
+        <mat-label>{{ 'PRODUCT_CATEGORIES.SEARCH_PLACEHOLDER' | translate }}</mat-label>
+        <input
+          matInput
+          formControlName="search"
+          maxlength="50"
+          [placeholder]="'PRODUCT_CATEGORIES.SEARCH_INPUT_PLACEHOLDER' | translate"
+        />
+        <mat-icon matSuffix>search</mat-icon>
+        @if (filterForm.controls.search.hasError('maxlength')) {
+          <mat-error>{{ 'PRODUCT_CATEGORIES.FILTERS.SEARCH_TOO_LONG' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- 2) Status -->
+      <mat-form-field class="search-field" appearance="outline">
+        <mat-label>{{ 'PRODUCT_CATEGORIES.FILTERS.STATUS' | translate }}</mat-label>
+        <mat-select formControlName="status" panelClass="loadout-select-panel" (selectionChange)="applyFilters()">
+          <mat-option value="all">{{ 'PRODUCT_CATEGORIES.FILTERS.STATUS_ALL' | translate }}</mat-option>
+          <mat-option value="yes">{{ 'PRODUCT_CATEGORIES.FILTERS.STATUS_ACTIVE' | translate }}</mat-option>
+          <mat-option value="no">{{ 'PRODUCT_CATEGORIES.FILTERS.STATUS_INACTIVE' | translate }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- 3) Min games -->
+      <mat-form-field class="search-field" appearance="outline">
+        <mat-label>{{ 'PRODUCT_CATEGORIES.FILTERS.MIN_GAMES' | translate }}</mat-label>
+        <input matInput type="number" min="0" step="1" formControlName="minGames" />
+        @if (gamesError('minGames'); as err) {
+          <mat-error>{{ err | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- 4) Max games -->
+      <mat-form-field class="search-field" appearance="outline">
+        <mat-label>{{ 'PRODUCT_CATEGORIES.FILTERS.MAX_GAMES' | translate }}</mat-label>
+        <input matInput type="number" min="0" step="1" formControlName="maxGames" />
+        @if (gamesError('maxGames'); as err) {
+          <mat-error>{{ err | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- 5) On sale -->
+      <mat-form-field class="search-field" appearance="outline">
+        <mat-label>{{ 'PRODUCT_CATEGORIES.FILTERS.SALE' | translate }}</mat-label>
+        <mat-select formControlName="onSale" panelClass="loadout-select-panel" (selectionChange)="applyFilters()">
+          <mat-option value="all">{{ 'PRODUCT_CATEGORIES.FILTERS.SALE_ALL' | translate }}</mat-option>
+          <mat-option value="yes">{{ 'PRODUCT_CATEGORIES.FILTERS.SALE_YES' | translate }}</mat-option>
+          <mat-option value="no">{{ 'PRODUCT_CATEGORIES.FILTERS.SALE_NO' | translate }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="filter-actions">
+      <button type="button" class="btn btn-ghost btn-sm" (click)="resetFilters()">
+        <mat-icon>restart_alt</mat-icon>
+        {{ 'PRODUCT_CATEGORIES.FILTERS.RESET' | translate }}
+      </button>
+      <button type="submit" class="btn btn-neon btn-sm">
+        <mat-icon>filter_alt</mat-icon>
+        {{ 'PRODUCT_CATEGORIES.FILTERS.APPLY' | translate }}
+      </button>
+    </div>
+  </form>
 
   <!-- Loading -->
-  <div *ngIf="isLoading" class="loading-container">
-    <mat-spinner diameter="48" color="primary"></mat-spinner>
-    <p>{{ 'PRODUCT_CATEGORIES.LOADING' | translate }}</p>
-  </div>
+  @if (isLoading) {
+    <div class="state-box">
+      <mat-spinner diameter="40"></mat-spinner>
+      <span>{{ 'PRODUCT_CATEGORIES.LOADING' | translate }}</span>
+    </div>
+  }
 
   <!-- Error -->
-  <div *ngIf="!isLoading && errorMessage" class="error-container">
-    <mat-icon>error_outline</mat-icon>
-    <p>{{ errorMessage }}</p>
-  </div>
+  @if (!isLoading && errorMessage) {
+    <div class="error-banner">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
 
-  <!-- Table Card -->
-  <div class="table-card" *ngIf="!isLoading && !errorMessage">
-    <table mat-table [dataSource]="items">
-      <!-- Name Column -->
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>
-          <div class="header-cell">
-            <mat-icon class="header-icon">label</mat-icon>
-            {{ 'PRODUCT_CATEGORIES.TABLE.NAME' | translate }}
-          </div>
-        </th>
-        <td mat-cell *matCellDef="let category">
-          <span class="category-name">{{ category.name }}</span>
-        </td>
-      </ng-container>
-
-      <!-- Is Enabled Column -->
-      <ng-container matColumnDef="isEnabled">
-        <th mat-header-cell *matHeaderCellDef>
-          <div class="header-cell">
-            <mat-icon class="header-icon">toggle_on</mat-icon>
-            {{ 'PRODUCT_CATEGORIES.TABLE.STATUS' | translate }}
-          </div>
-        </th>
-        <td mat-cell *matCellDef="let category">
-          <mat-slide-toggle
-            [checked]="category.isEnabled"
-            (change)="onToggleStatus(category)"
-            color="primary"
-            [disabled]="isLoading"
-            class="status-toggle"
-          >
-            <span class="status-label" [class.enabled]="category.isEnabled">
-              {{
-                category.isEnabled
-                  ? ('PRODUCT_CATEGORIES.TABLE.ENABLED' | translate)
-                  : ('PRODUCT_CATEGORIES.TABLE.DISABLED' | translate)
-              }}
+  <!-- Table -->
+  @if (!isLoading && !errorMessage) {
+    <div class="table-panel">
+      <table mat-table [dataSource]="items">
+        <!-- Name -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>
+            <span class="th-content">
+              <mat-icon>label</mat-icon>
+              {{ 'PRODUCT_CATEGORIES.TABLE.NAME' | translate }}
             </span>
-          </mat-slide-toggle>
-        </td>
-      </ng-container>
+          </th>
+          <td mat-cell *matCellDef="let category">
+            <span class="category-name" [class.inactive]="!category.isEnabled">
+              <mat-icon>category</mat-icon>
+              {{ category.name }}
+            </span>
+          </td>
+        </ng-container>
 
-      <!-- Actions Column -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>
-          <div class="header-cell">
-            <mat-icon class="header-icon">settings</mat-icon>
-            {{ 'PRODUCT_CATEGORIES.TABLE.ACTIONS' | translate }}
-          </div>
-        </th>
-        <td mat-cell *matCellDef="let category">
-          <div class="action-buttons">
-            <button
-              mat-icon-button
-              color="primary"
-              (click)="onEdit(category)"
-              [matTooltip]="'PRODUCT_CATEGORIES.ACTIONS.EDIT_TOOLTIP' | translate"
-              class="action-btn edit-btn"
+        <!-- Games count -->
+        <ng-container matColumnDef="gamesCount">
+          <th mat-header-cell *matHeaderCellDef>
+            <span class="th-content">
+              <mat-icon>sports_esports</mat-icon>
+              {{ 'PRODUCT_CATEGORIES.TABLE.GAMES' | translate }}
+            </span>
+          </th>
+          <td mat-cell *matCellDef="let category">
+            <span class="games-count" [class.empty]="!category.gamesCount">{{ category.gamesCount }}</span>
+          </td>
+        </ng-container>
+
+        <!-- On sale -->
+        <ng-container matColumnDef="onSale">
+          <th mat-header-cell *matHeaderCellDef>
+            <span class="th-content">
+              <mat-icon>local_offer</mat-icon>
+              {{ 'PRODUCT_CATEGORIES.TABLE.SALE' | translate }}
+            </span>
+          </th>
+          <td mat-cell *matCellDef="let category">
+            @if (category.onSale) {
+              <span class="sale-chip">{{ 'PRODUCT_CATEGORIES.FILTERS.SALE_YES' | translate }}</span>
+            } @else {
+              <span class="muted">—</span>
+            }
+          </td>
+        </ng-container>
+
+        <!-- Status -->
+        <ng-container matColumnDef="isEnabled">
+          <th mat-header-cell *matHeaderCellDef>
+            <span class="th-content">
+              <mat-icon>toggle_on</mat-icon>
+              {{ 'PRODUCT_CATEGORIES.TABLE.STATUS' | translate }}
+            </span>
+          </th>
+          <td mat-cell *matCellDef="let category">
+            <mat-slide-toggle
+              [checked]="category.isEnabled"
+              (change)="onToggleStatus(category)"
+              [disabled]="isLoading"
+              class="status-toggle"
             >
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              color="warn"
-              (click)="onDelete(category)"
-              [matTooltip]="'PRODUCT_CATEGORIES.ACTIONS.DELETE_TOOLTIP' | translate"
-              class="action-btn delete-btn"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </div>
-        </td>
-      </ng-container>
+              <span class="status-chip" [class.enabled]="category.isEnabled">
+                {{
+                  category.isEnabled
+                    ? ('PRODUCT_CATEGORIES.TABLE.ENABLED' | translate)
+                    : ('PRODUCT_CATEGORIES.TABLE.DISABLED' | translate)
+                }}
+              </span>
+            </mat-slide-toggle>
+          </td>
+        </ng-container>
 
-      <!-- Header Row -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <!-- Actions -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>{{ 'PRODUCT_CATEGORIES.TABLE.ACTIONS' | translate }}</th>
+          <td mat-cell *matCellDef="let category">
+            <div class="row-actions">
+              <button
+                type="button"
+                class="icon-btn edit"
+                (click)="onEdit(category)"
+                [matTooltip]="'PRODUCT_CATEGORIES.ACTIONS.EDIT_TOOLTIP' | translate"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                type="button"
+                class="icon-btn delete"
+                (click)="onDelete(category)"
+                [matTooltip]="'PRODUCT_CATEGORIES.ACTIONS.DELETE_TOOLTIP' | translate"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
 
-      <!-- Data Rows -->
-      <tr mat-row *matRowDef="let row; columns: displayedColumns" class="data-row"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 
-      <!-- No Data Row -->
-      <tr class="mat-row no-data-row" *matNoDataRow>
-        <td class="mat-cell" [attr.colspan]="displayedColumns.length">
-          <div class="no-data-content">
-            <mat-icon>inbox</mat-icon>
+        <!-- No data -->
+        <tr class="mat-row no-data-row" *matNoDataRow>
+          <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+            <mat-icon>category</mat-icon>
             <p>
-              <ng-container *ngIf="request.search; else noDataDefault">
+              @if (activeFilterCount) {
                 {{ 'PRODUCT_CATEGORIES.NO_DATA_FILTER' | translate }}
-              </ng-container>
-              <ng-template #noDataDefault>
+              } @else {
                 {{ 'PRODUCT_CATEGORIES.NO_DATA' | translate }}
-              </ng-template>
+              }
             </p>
-          </div>
-        </td>
-      </tr>
-    </table>
+          </td>
+        </tr>
+      </table>
 
-    <!-- Paginator -->
-    <div class="paginator-wrapper">
       <app-fit-paginator-bar [vm]="this"></app-fit-paginator-bar>
     </div>
-  </div>
+  }
 </div>

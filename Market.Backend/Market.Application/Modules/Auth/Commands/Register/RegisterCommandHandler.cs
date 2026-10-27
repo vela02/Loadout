@@ -14,15 +14,18 @@ public sealed class RegisterCommandHandler(
 {
     public async Task<RegisterCommandDto> Handle(RegisterCommand request, CancellationToken ct)
     {
-        
-        if (await ctx.Users.AnyAsync(x => x.Email == request.Email || x.Username == request.Username, ct))
-            throw new Exception("Korisnik s ovim podacima već postoji.");
+        // login compares emails in lowercase, so store them the same way
+        var email = request.Email.Trim().ToLowerInvariant();
+        var username = request.Username.Trim();
 
-        
+        if (await ctx.Users.AnyAsync(x => x.Email.ToLower() == email || x.Username == username, ct))
+            throw new MarketConflictException("Korisnik s ovim emailom ili korisničkim imenom već postoji.");
+
+
         var user = new User
         {
-            Username = request.Username,
-            Email = request.Email,
+            Username = username,
+            Email = email,
             CreatedAt = DateTime.Now,
             IsEnabled = true,
             IsDeleted = false,

@@ -1,6 +1,17 @@
 // ============================================
-// ORDER STATUS BADGE STYLES
+// ORDER STATUS BADGE STYLES (Loadout dark theme)
+// Shared by the orders page and both order dialogs
 // ============================================
+
+@mixin status-colors($color) {
+  color: $color;
+  background: rgba($color, 0.1);
+  border: 1px solid rgba($color, 0.4);
+
+  mat-icon {
+    color: $color;
+  }
+}
 
 // Status badge base
 .status-badge {
@@ -8,13 +19,13 @@
   align-items: center;
   gap: 6px;
   padding: 4px 12px;
-  border-radius: 16px;
-  font-size: 13px;
-  font-weight: 600;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.06em;
   white-space: nowrap;
-  
+
   mat-icon {
     font-size: 16px;
     width: 16px;
@@ -22,81 +33,38 @@
   }
 }
 
-// Status-specific colors
-
 // Draft - Gray (Order is being prepared)
 .status-draft {
-  background: rgba(158, 158, 158, 0.1);
-  color: #616161;
-  border: 1px solid rgba(158, 158, 158, 0.3);
-  
-  mat-icon {
-    color: #616161;
-  }
+  @include status-colors(#a5a8c8);
 }
 
-// Confirmed - Blue (Order confirmed, awaiting payment)
+// Confirmed - Cyan (Order confirmed, awaiting payment)
 .status-confirmed {
-  background: rgba(33, 150, 243, 0.1);
-  color: #1976d2;
-  border: 1px solid rgba(33, 150, 243, 0.3);
-  
-  mat-icon {
-    color: #1976d2;
-  }
+  @include status-colors(#22d3ee);
 }
 
-// Paid - Green (Payment received, processing)
+// Paid - Violet (Payment received, processing)
 .status-paid {
-  background: rgba(76, 175, 80, 0.1);
-  color: #388e3c;
-  border: 1px solid rgba(76, 175, 80, 0.3);
-  
-  mat-icon {
-    color: #388e3c;
-  }
+  @include status-colors(#c084fc);
 }
 
-// Completed - Dark Green (Order completed/delivered)
+// Completed - Green (Order completed/delivered)
 .status-completed {
-  background: rgba(46, 125, 50, 0.1);
-  color: #1b5e20;
-  border: 1px solid rgba(46, 125, 50, 0.3);
-  
-  mat-icon {
-    color: #1b5e20;
-  }
+  @include status-colors(#39d98a);
 }
 
 // Cancelled - Red (Order cancelled)
 .status-cancelled {
-  background: rgba(244, 67, 54, 0.1);
-  color: #c62828;
-  border: 1px solid rgba(244, 67, 54, 0.3);
-  
-  mat-icon {
-    color: #c62828;
-  }
+  @include status-colors(#ff6b8a);
 }
 
-// Unknown - Light Gray
+// Unknown - Muted
 .status-unknown {
-  background: rgba(189, 189, 189, 0.1);
-  color: #757575;
-  border: 1px solid rgba(189, 189, 189, 0.3);
-  
-  mat-icon {
-    color: #757575;
-  }
+  @include status-colors(#8d90b8);
 }
 
 // Usage example in component:
 // <div class="status-badge status-draft">
 //   <mat-icon>edit_note</mat-icon>
 //   <span>{{ 'ORDERS.STATUS.DRAFT' | translate }}</span>
-// </div>
-//
-// <div class="status-badge status-paid">
-//   <mat-icon>payment</mat-icon>
-//   <span>{{ 'ORDERS.STATUS.PAID' | translate }}</span>
 // </div>
