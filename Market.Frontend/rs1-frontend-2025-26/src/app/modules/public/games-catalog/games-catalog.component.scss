@@ -1,0 +1,246 @@
+// Boje iz Velidovog landing pagea
+$bg-deep: #0b0c1a;
+$panel: #171a36;
+$panel-edge: #2a2e5c;
+$cyan: #22d3ee;
+$magenta: #e040fb;
+$text: #e8e9ff;
+$text-muted: #8d90b8;
+$neon-gradient: linear-gradient(90deg, $cyan 0%, $magenta 100%);
+
+mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.2;
+
+  span {
+    background: $neon-gradient;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+.pill-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid $panel-edge;
+  border-radius: 999px;
+  background: rgba($panel, 0.7);
+  color: $text;
+  text-decoration: none;
+
+  &:hover {
+    border-color: $cyan;
+    box-shadow: 0 0 16px rgba($cyan, 0.3);
+    color: $text;
+  }
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border: 1px solid $panel-edge;
+  border-radius: 999px;
+  background: rgba($panel, 0.85);
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:focus-within {
+    border-color: $cyan;
+    box-shadow: 0 0 16px rgba($cyan, 0.3);
+  }
+
+  mat-icon {
+    color: $text-muted;
+  }
+
+  input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: $text;
+    font-size: 1.05rem;
+
+    &::placeholder {
+      color: $text-muted;
+    }
+  }
+}
+
+.game-card {
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 16px;
+  background: $panel;
+  border: 1px solid $panel-edge;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    transform: translateY(-6px);
+    border-color: rgba($magenta, 0.6);
+    box-shadow: 0 0 32px rgba($magenta, 0.3), 0 16px 32px rgba(0, 0, 0, 0.5);
+
+    .card-img-top {
+      transform: scale(1.05);
+    }
+  }
+
+  .img-wrap {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-img-top {
+    aspect-ratio: 16 / 9;   // sve slike iste visine, bez obzira na originalnu veličinu
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .genre {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: $cyan;
+  }
+
+  .card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 4px 0 12px;
+    color: $text;
+  }
+}
+
+.preorder-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: $neon-gradient;
+  color: $bg-deep;
+  font-weight: 700;
+}
+
+.rating {
+  color: #fbbf24;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.price {
+  font-weight: 800;
+  font-size: 1.1rem;
+  line-height: 1.3;
+  background: $neon-gradient;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- Žanr chipovi ---------- */
+.genre-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.genre-chip {
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid $panel-edge;
+  background: rgba($panel, 0.85);
+  color: $text-muted;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: $cyan;
+    color: $text;
+  }
+
+  &.active {
+    border-color: transparent;
+    background: $neon-gradient;
+    color: $bg-deep;
+    font-weight: 700;
+    box-shadow: 0 0 16px rgba($cyan, 0.35);
+  }
+}
+
+.result-count {
+  color: $text-muted;
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+}
+
+/* ---------- Skeleton (učitavanje) ---------- */
+.skeleton {
+  cursor: default;
+
+  &:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: $panel-edge;
+  }
+}
+
+.sk-img {
+  aspect-ratio: 16 / 9;
+}
+
+.sk-line {
+  height: 14px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+
+  &.short { width: 35%; }
+  &.half { width: 50%; }
+}
+
+// "Shimmer": svjetliji pojas klizi preko sive pozadine
+.shimmer {
+  background: linear-gradient(90deg, $panel-edge 25%, #3a3f78 50%, $panel-edge 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite linear;
+}
+
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+/* ---------- Prazno stanje ---------- */
+.empty-state {
+  text-align: center;
+  padding: 48px 16px;
+  color: $text-muted;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: $panel-edge;
+  }
+
+  p {
+    margin: 12px 0 16px;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}

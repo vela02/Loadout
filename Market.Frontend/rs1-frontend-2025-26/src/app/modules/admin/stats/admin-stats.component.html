@@ -1,0 +1,36 @@
+<div class="p-4">
+  <h1 class="h3 mb-4">{{ 'GAMES.STATS.TITLE' | translate }}</h1>
+
+  @if (error) {
+    <div class="alert alert-danger">{{ error | translate }}</div>
+  } @else if (!stats) {
+    <p class="text-secondary">{{ 'GAMES.DETAILS.LOADING' | translate }}</p>
+  } @else {
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-3">
+      <div class="col">
+        <div class="card stat-card h-100"><div class="card-body">
+          <div class="label">{{ 'GAMES.STATS.TOTAL_USERS' | translate }}</div>
+          <div class="value">{{ stats.totalUsers }}</div>
+        </div></div>
+      </div>
+      <div class="col">
+        <div class="card stat-card h-100"><div class="card-body">
+          <div class="label">{{ 'GAMES.STATS.TOTAL_EARNINGS' | translate }}</div>
+          <div class="value">{{ stats.totalEarnings | number: '1.2-2' }} KM</div>
+        </div></div>
+      </div>
+      <div class="col">
+        <div class="card stat-card h-100"><div class="card-body">
+          <div class="label">{{ 'GAMES.STATS.LICENSES_SOLD' | translate }}</div>
+          <div class="value">{{ stats.totalLicensesSold }}</div>
+        </div></div>
+      </div>
+      <div class="col">
+        <div class="card stat-card h-100"><div class="card-body">
+          <div class="label">{{ 'GAMES.STATS.ACTIVE_PREORDERS' | translate }}</div>
+          <div class="value">{{ stats.activePreOrders }}</div>
+        </div></div>
+      </div>
+    </div>
+  }
+</div>

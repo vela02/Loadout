@@ -1,0 +1,15 @@
+@if (news.length) {
+  <div class="card">
+    <div class="card-header fw-bold">{{ 'GAMES.NEWS.TITLE' | translate }}</div>
+    <ul class="list-group list-group-flush">
+      @for (n of news; track n.id) {
+        <li class="list-group-item">
+          <span class="badge me-2" [ngClass]="badgeClass(n.type)">{{ n.type }}</span>
+          <strong>{{ n.title }}</strong>
+          <small class="text-secondary float-end">{{ n.createdAt | date: 'dd.MM.yyyy HH:mm' }}</small>
+          <div class="small mt-1">{{ n.message }}</div>
+        </li>
+      }
+    </ul>
+  </div>
+}

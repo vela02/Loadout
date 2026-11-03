@@ -13,7 +13,6 @@ namespace Market.Shared.Dtos
         public string? Publisher { get; set; }
         public string? TrailerUrl { get; set; }
         public string? SystemRequirements { get; set; }
-        public DateOnly? ReleaseDate { get; set; }
         public List<CommentDto> Reviews { get; set; }=new List<CommentDto>();
     }
 }

@@ -1,0 +1,117 @@
+<div class="loadout-page details-page" data-bs-theme="dark">
+  <app-store-header></app-store-header>
+
+  @if (loading) {
+    <div class="container py-5 text-secondary">{{ 'GAMES.DETAILS.LOADING' | translate }}</div>
+  } @else if (error) {
+    <div class="container py-5">
+      <div class="alert alert-danger">{{ error | translate }}</div>
+      <a routerLink="/games" class="pill-link">&larr; {{ 'GAMES.DETAILS.BACK' | translate }}</a>
+    </div>
+  } @else if (game) {
+
+    <!-- ===== HERO: oštra slika igre kao banner (desno), lijevo se stapa u tamnu pozadinu ===== -->
+    <section class="hero">
+      <div class="hero-bg" [style.background-image]="'url(' + (game.imageUrl || placeholderImage) + ')'"></div>
+      <div class="hero-overlay"></div>
+
+      <div class="container hero-inner">
+        <a routerLink="/games" class="pill-link">
+          <mat-icon>arrow_back</mat-icon> {{ 'GAMES.DETAILS.BACK' | translate }}
+        </a>
+
+        <div class="hero-text">
+          <div class="chips mb-3">
+            @if (game.isPreOrder) { <span class="chip chip-preorder"><mat-icon>schedule</mat-icon> {{ 'GAMES.CATALOG.PREORDER' | translate }}</span> }
+            <span class="chip">{{ contentTypeKey | translate }}</span>
+            @if (game.genre) { <span class="chip">{{ game.genre }}</span> }
+            @if (game.categoryName && game.categoryName !== game.genre) { <span class="chip">{{ game.categoryName }}</span> }
+          </div>
+
+          <h1 class="title">{{ game.title }}</h1>
+
+          <div class="rating">
+            @for (s of stars; track s) {
+              <mat-icon [class.on]="s <= game.averageRating + 0.5">star</mat-icon>
+            }
+            <span class="ms-2">{{ game.averageRating | number: '1.1-1' }}</span>
+            <span class="text-secondary ms-2">({{ 'GAMES.DETAILS.REVIEWS_COUNT' | translate: { count: game.reviews.length } }})</span>
+          </div>
+
+          @if (game.developer || game.publisher) {
+            <p class="text-secondary mt-2 mb-0">
+              {{ game.developer }}@if (game.developer && game.publisher) { &middot; }{{ game.publisher }}
+            </p>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SADRŽAJ + PANEL ZA KUPOVINU ===== -->
+    <div class="container pb-5">
+      <div class="row g-4">
+
+        <!-- Desno (na mobitelu prvo): kupovina -->
+        <div class="col-lg-4 order-lg-2">
+          <div class="panel buy-panel">
+            <div class="price">{{ game.price | number: '1.2-2' }} <span>KM</span></div>
+
+            <button type="button" class="btn btn-neon btn-lg w-100 buy-btn" [disabled]="buying" (click)="buy()">
+              <mat-icon>{{ game.isPreOrder ? 'event_available' : 'shopping_cart' }}</mat-icon>
+              {{ (buying ? 'GAMES.DETAILS.ADDING' : (game.isPreOrder ? 'GAMES.DETAILS.PREORDER_BTN' : 'GAMES.DETAILS.BUY_NOW')) | translate }}
+            </button>
+
+            @if (game.isPreOrder) {
+              <p class="note">{{ 'GAMES.DETAILS.PREORDER_NOTE' | translate }}</p>
+            }
+
+            <ul class="facts">
+              @if (game.releaseDate) {
+                <li><span>{{ 'GAMES.DETAILS.RELEASE_DATE' | translate }}</span><strong>{{ game.releaseDate | date: 'dd.MM.yyyy' }}</strong></li>
+              }
+              @if (game.developer) { <li><span>{{ 'GAMES.DETAILS.DEVELOPER' | translate }}</span><strong>{{ game.developer }}</strong></li> }
+              @if (game.publisher) { <li><span>{{ 'GAMES.DETAILS.PUBLISHER' | translate }}</span><strong>{{ game.publisher }}</strong></li> }
+              <li><span>{{ 'GAMES.DETAILS.CONTENT_TYPE' | translate }}</span><strong>{{ contentTypeKey | translate }}</strong></li>
+            </ul>
+
+            <div class="perks">
+              <div><mat-icon>vpn_key</mat-icon> {{ 'GAMES.DETAILS.PERK_KEY' | translate }}</div>
+              <div><mat-icon>verified_user</mat-icon> {{ 'GAMES.DETAILS.PERK_SECURE' | translate }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lijevo: opis, sistemski zahtjevi, recenzije -->
+        <div class="col-lg-8 order-lg-1">
+          <div class="panel mb-4">
+            <h2 class="panel-title"><mat-icon>description</mat-icon> {{ 'GAMES.DETAILS.ABOUT' | translate }}</h2>
+            <p class="mb-0 description">{{ game.description || ('GAMES.DETAILS.NO_DESCRIPTION' | translate) }}</p>
+          </div>
+
+          <div class="panel mb-4">
+            <h2 class="panel-title"><mat-icon>memory</mat-icon> {{ 'GAMES.DETAILS.SYSTEM_REQUIREMENTS' | translate }}</h2>
+            <!-- <pre> čuva nove redove i razmake iz teksta u bazi -->
+            <pre class="sys-req">{{ game.systemRequirements || ('GAMES.DETAILS.NOT_SPECIFIED' | translate) }}</pre>
+          </div>
+
+          <div class="panel">
+            <h2 class="panel-title"><mat-icon>forum</mat-icon> {{ 'GAMES.DETAILS.REVIEWS' | translate }} ({{ game.reviews.length }})</h2>
+            @for (r of game.reviews; track r.id) {
+              <div class="review">
+                <div class="avatar">{{ (r.username || '?').charAt(0).toUpperCase() }}</div>
+                <div>
+                  <strong>{{ r.username }}</strong>
+                  <small class="text-secondary ms-2">{{ r.dateCreated | date: 'dd.MM.yyyy' }}</small>
+                  <p class="mb-0">{{ r.text }}</p>
+                </div>
+              </div>
+            } @empty {
+              <p class="text-secondary mb-0">{{ 'GAMES.DETAILS.NO_REVIEWS' | translate }}</p>
+            }
+          </div>
+        </div>
+
+      </div>
+    </div>
+  }
+</div>

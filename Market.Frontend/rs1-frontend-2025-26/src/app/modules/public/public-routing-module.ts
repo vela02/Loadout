@@ -3,8 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { PublicLayoutComponent } from './public-layout/public-layout.component';
 import { SearchProductsComponent } from './search-products/search-products.component';
+import { GamesCatalogComponent } from './games-catalog/games-catalog.component';
+import { GameDetailsComponent } from './game-details/game-details.component';
 
 const routes: Routes = [
+  // Katalog i detalji igre (moraju biti PRIJE '' rute s '**' redirectom)
+  { path: 'games', component: GamesCatalogComponent },
+  { path: 'games/:id', component: GameDetailsComponent }, // :id = parametar, npr. /games/5
   {
     path: '',
     component: PublicLayoutComponent,

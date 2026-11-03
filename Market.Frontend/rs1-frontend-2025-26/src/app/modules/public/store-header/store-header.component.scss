@@ -1,0 +1,83 @@
+// Boje iz Velidovog landing pagea
+$bg-deep: #0b0c1a;
+$panel: #171a36;
+$panel-edge: #2a2e5c;
+$cyan: #22d3ee;
+$magenta: #e040fb;
+$text: #e8e9ff;
+$text-muted: #8d90b8;
+$neon-gradient: linear-gradient(90deg, $cyan 0%, $magenta 100%);
+
+.store-header {
+  position: sticky;              // ostaje gore pri scrollu
+  top: 0;
+  z-index: 20;
+  padding: 14px 0;
+  background: rgba($bg-deep, 0.75);
+  backdrop-filter: blur(12px);   // "stakleni" efekat preko sadržaja ispod
+  border-bottom: 1px solid rgba($panel-edge, 0.6);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+
+  &:hover .brand-icon {
+    filter: drop-shadow(0 0 10px rgba($cyan, 0.8));
+  }
+}
+
+.brand-icon {
+  font-size: 34px;
+  width: 34px;
+  height: 34px;
+  color: $cyan;
+  filter: drop-shadow(0 0 6px rgba($cyan, 0.5));
+  transition: filter 0.2s ease;
+}
+
+.brand-name {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: $neon-gradient;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.lang-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px 6px 14px;
+  border-radius: 999px;
+  border: 1px solid $panel-edge;
+  background: rgba($panel, 0.85);
+  color: $text;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    border-color: $cyan;
+    box-shadow: 0 0 16px rgba($cyan, 0.3);
+  }
+
+  .flag { font-size: 18px; }
+  .code {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 13px;
+  }
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: $text-muted;
+  }
+}

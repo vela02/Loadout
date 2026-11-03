@@ -60,6 +60,11 @@
         {{ 'ADMIN_PANEL.MENU.CATALOG' | translate }}
       </div>
 
+      <a mat-list-item routerLink="/admin/stats" routerLinkActive="active">
+        <mat-icon matListItemIcon>insights</mat-icon>
+        <span matListItemTitle>{{ 'GAMES.STATS.TITLE' | translate }}</span>
+      </a>
+
       <a mat-list-item routerLink="/admin/product-categories" routerLinkActive="active">
         <mat-icon matListItemIcon>category</mat-icon>
         <span matListItemTitle>{{ 'ADMIN_PANEL.MENU.CATEGORIES' | translate }}</span>

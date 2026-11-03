@@ -77,6 +77,8 @@ public class GameService : IGameService
             ImageUrl = g.ImageUrl,
             Genre = g.Genre,
             CategoryName = g.Category != null ? g.Category.Name : "N/A",
+            ContentType = g.ContentType,
+            ReleaseDate = g.ReleaseDate,
             // Pretpostavka: polje u tabeli Ratings se zove Value
             AverageRating = g.Ratings.Any() ? g.Ratings.Average(r => (double)r.Stars) : 0
         }).ToListAsync();
@@ -96,6 +98,7 @@ public class GameService : IGameService
         var game = await _context.Games
             .Include(g => g.Category)
             .Include(g => g.Comments)
+                .ThenInclude(c => c.User)
             .Include(g => g.Ratings)
             .FirstOrDefaultAsync(g => g.Id == id && !g.IsDeleted);
 
@@ -112,13 +115,17 @@ public class GameService : IGameService
             Developer = game.Developer,
             Publisher = game.Publisher,
             ReleaseDate = game.ReleaseDate,
+            CategoryName = game.Category != null ? game.Category.Name : "N/A",
+            ContentType = game.ContentType,
+            TrailerUrl = game.TrailerUrl,
+            SystemRequirements = game.SystemRequirements,
             AverageRating = game.Ratings.Any() ? game.Ratings.Average(r => (double)r.Stars) : 0,
             Reviews = game.Comments.Select(c => new CommentDto
             {
                 Id = c.Id,
                 Text = c.Content,
-                Username = c.User.Username,
-                DateCreated = DateTime.Now
+                Username = c.User != null ? c.User.Username : "Anonimno",
+                DateCreated = c.CreatedAt
             }).ToList()
         };
     }
