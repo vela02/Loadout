@@ -1,0 +1,25 @@
+<header class="store-header">
+  <div class="container d-flex align-items-center justify-content-between">
+    <!-- Logo = link na početnu -->
+    <a routerLink="/" class="brand">
+      <mat-icon class="brand-icon">sports_esports</mat-icon>
+      <span class="brand-name">Loadout</span>
+    </a>
+
+    <!-- Izbor jezika -->
+    <button type="button" class="lang-button" [matMenuTriggerFor]="langMenu">
+      <span class="flag">{{ current?.flag }}</span>
+      <span class="code">{{ currentLang }}</span>
+      <mat-icon>expand_more</mat-icon>
+    </button>
+    <mat-menu #langMenu="matMenu" xPosition="before">
+      @for (lang of languages; track lang.code) {
+        <button mat-menu-item (click)="switchLanguage(lang.code)">
+          <span class="me-2">{{ lang.flag }}</span>
+          <span>{{ lang.name }}</span>
+          @if (currentLang === lang.code) { <mat-icon>check</mat-icon> }
+        </button>
+      }
+    </mat-menu>
+  </div>
+</header>

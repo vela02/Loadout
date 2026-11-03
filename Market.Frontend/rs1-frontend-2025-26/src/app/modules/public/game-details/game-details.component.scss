@@ -1,0 +1,284 @@
+// Boje iz Velidovog landing pagea (public-layout.component.scss)
+$bg-deep: #0b0c1a;
+$panel: #171a36;
+$panel-edge: #2a2e5c;
+$cyan: #22d3ee;
+$magenta: #e040fb;
+$violet: #7c3aed;
+$text: #e8e9ff;
+$text-muted: #8d90b8;
+$neon-gradient: linear-gradient(90deg, $cyan 0%, $magenta 100%);
+
+mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+
+/* ---------- HERO ---------- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 460px;
+  display: flex;
+  align-items: flex-end;
+  padding: 32px 0 48px;
+  margin-bottom: 32px;
+}
+
+// Oštra slika igre, poravnata desno (kao banner na Steamu)
+.hero-bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 75%;
+  background-size: cover;
+  background-position: center right;
+}
+
+// Gradijenti: lijevo puna tamna boja -> desno slika; dolje se stapa sa stranicom
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, $bg-deep 25%, rgba($bg-deep, 0.85) 45%, rgba($bg-deep, 0.15) 75%, rgba($bg-deep, 0.35) 100%),
+    linear-gradient(0deg, $bg-deep 0%, rgba($bg-deep, 0) 40%);
+}
+
+.hero-inner {
+  position: relative;           // iznad slike i gradijenta
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.hero-text {
+  max-width: 620px;
+}
+
+.pill-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid $panel-edge;
+  border-radius: 999px;
+  background: rgba($panel, 0.7);
+  color: $text;
+  text-decoration: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    border-color: $cyan;
+    box-shadow: 0 0 16px rgba($cyan, 0.3);
+    color: $text;
+  }
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid $panel-edge;
+  background: rgba($panel, 0.8);
+  color: $text-muted;
+  font-size: 0.85rem;
+}
+
+.chip-preorder {
+  border-color: transparent;
+  background: $neon-gradient;
+  color: $bg-deep;
+  font-weight: 700;
+}
+
+.title {
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1.15;
+  padding-bottom: 4px;          // da se donji dijelovi slova (g, j) ne odsijeku
+  margin-bottom: 12px;
+  background: linear-gradient(90deg, $text 0%, $text 60%, $cyan 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+
+  mat-icon {
+    color: $panel-edge;
+
+    &.on {
+      color: #fbbf24;
+      filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.5));
+    }
+  }
+}
+
+/* ---------- PANELI ---------- */
+.panel {
+  background: rgba($panel, 0.85);
+  border: 1px solid $panel-edge;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.panel-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+
+  mat-icon {
+    color: $cyan;
+  }
+}
+
+.description {
+  line-height: 1.7;
+  color: $text;
+}
+
+.sys-req {
+  white-space: pre-wrap;        // duge linije se prelamaju umjesto scrolla
+  margin: 0;
+  padding: 16px;
+  border-radius: 12px;
+  background: $bg-deep;
+  border: 1px solid $panel-edge;
+  color: $text;
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 0.9rem;
+}
+
+.review {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba($panel-edge, 0.6);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.avatar {
+  flex: 0 0 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: $bg-deep;
+  background: $neon-gradient;
+}
+
+/* ---------- KUPOVINA ---------- */
+.buy-panel {
+  position: sticky;             // panel prati scroll na desktopu
+  top: 24px;
+  box-shadow: 0 0 40px rgba($violet, 0.2);
+}
+
+.price {
+  font-size: 2.6rem;
+  font-weight: 800;
+  line-height: 1.2;             // Material globalno stavlja mali line-height -> gradijent bi odsjekao vrh slova
+  margin-bottom: 16px;
+  background: $neon-gradient;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  span {
+    font-size: 1.2rem;
+  }
+}
+
+.buy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba($cyan, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 0 32px rgba($magenta, 0.55);
+  }
+}
+
+.note {
+  margin: 10px 0 0;
+  font-size: 0.85rem;
+  color: $text-muted;
+}
+
+.facts {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0 0;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba($panel-edge, 0.6);
+
+    span {
+      color: $text-muted;
+    }
+  }
+}
+
+.perks {
+  margin-top: 16px;
+  display: grid;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: $text-muted;
+
+  mat-icon {
+    color: $cyan;
+    margin-right: 6px;
+  }
+}
+
+@media (max-width: 991px) {
+  .buy-panel {
+    position: static;           // na mobitelu bez "sticky"
+  }
+
+  // Na uskom ekranu slika ide preko cijele širine, a tekst je čitljiv zbog jačeg gradijenta
+  .hero-bg {
+    width: 100%;
+  }
+
+  .hero-overlay {
+    background:
+      linear-gradient(0deg, $bg-deep 10%, rgba($bg-deep, 0.6) 60%, rgba($bg-deep, 0.3) 100%);
+  }
+
+  .hero {
+    min-height: 380px;
+  }
+}

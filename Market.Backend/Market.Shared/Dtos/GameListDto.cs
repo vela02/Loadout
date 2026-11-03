@@ -17,5 +17,9 @@ namespace Market.Shared.Dtos
         public string? Genre { get; set; }
         public double AverageRating { get; set; }
         public GameContentType ContentType { get; set; }
+        public DateOnly? ReleaseDate { get; set; }
+
+        // Pre-order = igra još nije izašla (datum izlaska je u budućnosti)
+        public bool IsPreOrder => ReleaseDate.HasValue && ReleaseDate.Value > DateOnly.FromDateTime(DateTime.Today);
     }
 }

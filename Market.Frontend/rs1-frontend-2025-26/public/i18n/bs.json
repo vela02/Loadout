@@ -609,5 +609,62 @@
       "SUCCESS": "Lozinka promijenjena. Ostale sesije su odjavljene.",
       "FAILED": "Promjena nije uspjela. Provjeri trenutnu lozinku i pokušaj ponovo."
     }
+  },
+  "GAMES": {
+    "CATALOG": {
+      "TITLE_START": "Katalog",
+      "TITLE_HIGHLIGHT": "igara",
+      "HOME": "Početna",
+      "SEARCH_PLACEHOLDER": "Pretraži igre po nazivu...",
+      "ALL_GENRES": "Sve",
+      "FOUND": "Pronađeno igara: {{count}}",
+      "NO_RESULTS": "Nema igara za zadanu pretragu.",
+      "CLEAR": "Očisti filtere",
+      "PREORDER": "Pre-order"
+    },
+    "DETAILS": {
+      "BACK": "Katalog",
+      "NOT_FOUND": "Igra nije pronađena.",
+      "LOADING": "Učitavanje...",
+      "REVIEWS_COUNT": "{{count}} recenzija",
+      "BUY_NOW": "Kupi odmah",
+      "PREORDER_BTN": "Rezerviši (Pre-order)",
+      "ADDING": "Dodajem...",
+      "PREORDER_NOTE": "Rezervaciju možeš otkazati bilo kad prije izlaska igre.",
+      "RELEASE_DATE": "Datum izlaska",
+      "DEVELOPER": "Developer",
+      "PUBLISHER": "Publisher",
+      "CONTENT_TYPE": "Tip sadržaja",
+      "PERK_KEY": "Digitalni ključ odmah nakon kupovine",
+      "PERK_SECURE": "Sigurno plaćanje",
+      "ABOUT": "O igri",
+      "NO_DESCRIPTION": "Nema opisa.",
+      "SYSTEM_REQUIREMENTS": "Sistemski zahtjevi",
+      "NOT_SPECIFIED": "Nisu navedeni.",
+      "REVIEWS": "Recenzije",
+      "NO_REVIEWS": "Još nema recenzija. Budi prvi!",
+      "LOGIN_TO_BUY": "Prijavite se da biste kupili igru.",
+      "ADDED_TO_CART": "Igra je dodana u korpu.",
+      "PREORDERED": "Igra je rezervisana (pre-order) i dodana u korpu.",
+      "ADD_FAILED": "Dodavanje u korpu nije uspjelo."
+    },
+    "CONTENT_TYPES": {
+      "0": "Igra",
+      "1": "DLC",
+      "2": "Dodatak",
+      "3": "Item"
+    },
+    "NEWS": {
+      "TITLE": "Vijesti i obavijesti"
+    },
+    "STATS": {
+      "TITLE": "Dashboard",
+      "LOAD_ERROR": "Statistika se ne može učitati.",
+      "TOTAL_USERS": "Ukupno korisnika",
+      "TOTAL_EARNINGS": "Ukupna zarada",
+      "LICENSES_SOLD": "Prodane licence",
+      "ACTIVE_PREORDERS": "Aktivni pre-orderi"
+    },
+    "LANDING_CATALOG_BTN": "Katalog igara"
   }
 }

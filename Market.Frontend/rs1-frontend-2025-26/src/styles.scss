@@ -151,3 +151,61 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     color: #22d3ee !important;
   }
 }
+
+
+/* ===== Loadout tamna tema za katalog i detalje igre =====
+   Boje su iste kao na Velidovom landing pageu.
+   data-bs-theme="dark" uključuje Bootstrapovu tamnu varijantu samo unutar tog elementa. */
+.loadout-page {
+  --lo-bg: #0b0c1a;
+  --lo-panel: #171a36;
+  --lo-edge: #2a2e5c;
+  --lo-text: #e8e9ff;
+  --lo-muted: #8d90b8;
+  --lo-cyan: #22d3ee;
+  --lo-magenta: #e040fb;
+
+  --bs-body-bg: var(--lo-bg);
+  --bs-body-color: var(--lo-text);
+  --bs-secondary-color: var(--lo-muted);
+  --bs-border-color: var(--lo-edge);
+  --bs-link-color-rgb: 34, 211, 238;
+  --bs-link-hover-color-rgb: 224, 64, 251;
+
+  min-height: 100vh;
+  background: radial-gradient(circle at 20% 0%, rgba(124, 58, 237, 0.18), transparent 50%), var(--lo-bg);
+  color: var(--lo-text);
+
+  .card {
+    background: var(--lo-panel);
+    border-color: var(--lo-edge);
+    color: var(--lo-text);
+  }
+  .card-header,
+  .list-group-item {
+    background: transparent;
+    border-color: var(--lo-edge);
+    color: var(--lo-text);
+  }
+  .text-secondary {
+    color: var(--lo-muted) !important;
+  }
+  .form-control {
+    background: var(--lo-panel);
+    border-color: var(--lo-edge);
+    color: var(--lo-text);
+    &::placeholder { color: var(--lo-muted); }
+    &:focus {
+      border-color: var(--lo-cyan);
+      box-shadow: 0 0 0 0.2rem rgba(34, 211, 238, 0.25);
+    }
+  }
+  .btn-neon {
+    background: linear-gradient(90deg, var(--lo-cyan) 0%, var(--lo-magenta) 100%);
+    color: var(--lo-bg);
+    font-weight: 700;
+    border: none;
+    &:hover { filter: brightness(1.1); color: var(--lo-bg); }
+    &:disabled { opacity: 0.6; }
+  }
+}

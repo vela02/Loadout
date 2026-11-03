@@ -609,5 +609,62 @@
       "SUCCESS": "Password changed. Other sessions have been logged out.",
       "FAILED": "Change failed. Check your current password and try again."
     }
+  },
+  "GAMES": {
+    "CATALOG": {
+      "TITLE_START": "Game",
+      "TITLE_HIGHLIGHT": "catalog",
+      "HOME": "Home",
+      "SEARCH_PLACEHOLDER": "Search games by title...",
+      "ALL_GENRES": "All",
+      "FOUND": "Games found: {{count}}",
+      "NO_RESULTS": "No games match your search.",
+      "CLEAR": "Clear filters",
+      "PREORDER": "Pre-order"
+    },
+    "DETAILS": {
+      "BACK": "Catalog",
+      "NOT_FOUND": "Game not found.",
+      "LOADING": "Loading...",
+      "REVIEWS_COUNT": "{{count}} reviews",
+      "BUY_NOW": "Buy now",
+      "PREORDER_BTN": "Pre-order now",
+      "ADDING": "Adding...",
+      "PREORDER_NOTE": "You can cancel your pre-order any time before release.",
+      "RELEASE_DATE": "Release date",
+      "DEVELOPER": "Developer",
+      "PUBLISHER": "Publisher",
+      "CONTENT_TYPE": "Content type",
+      "PERK_KEY": "Instant digital key after purchase",
+      "PERK_SECURE": "Secure payment",
+      "ABOUT": "About the game",
+      "NO_DESCRIPTION": "No description.",
+      "SYSTEM_REQUIREMENTS": "System requirements",
+      "NOT_SPECIFIED": "Not specified.",
+      "REVIEWS": "Reviews",
+      "NO_REVIEWS": "No reviews yet. Be the first!",
+      "LOGIN_TO_BUY": "Please log in to buy this game.",
+      "ADDED_TO_CART": "Game added to cart.",
+      "PREORDERED": "Game pre-ordered and added to cart.",
+      "ADD_FAILED": "Could not add to cart."
+    },
+    "CONTENT_TYPES": {
+      "0": "Game",
+      "1": "DLC",
+      "2": "Add-on",
+      "3": "Item"
+    },
+    "NEWS": {
+      "TITLE": "News & announcements"
+    },
+    "STATS": {
+      "TITLE": "Dashboard",
+      "LOAD_ERROR": "Could not load statistics.",
+      "TOTAL_USERS": "Total users",
+      "TOTAL_EARNINGS": "Total earnings",
+      "LICENSES_SOLD": "Licenses sold",
+      "ACTIVE_PREORDERS": "Active pre-orders"
+    },
+    "LANDING_CATALOG_BTN": "Game catalog"
   }
 }

@@ -10,12 +10,19 @@ import {AdminOrdersComponent} from './orders/admin-orders.component';
 import {AdminSettingsComponent} from './admin-settings/admin-settings.component';
 import { CustomProductsAddComponent } from '../custom-ui/products/products-add/custom-products-add.component';
 import { PromotionsComponent } from './catalogs/promotions/promotions.component';
+import { AdminStatsComponent } from './stats/admin-stats.component';
 
 const routes: Routes = [
   {
     path: '',
     component: AdminLayoutComponent,
     children: [
+      // DASHBOARD / STATISTIKA -> /admin/stats
+      {
+        path: 'stats',
+        component: AdminStatsComponent,
+      },
+
       // PRODUCTS
       {
         path: 'products',
