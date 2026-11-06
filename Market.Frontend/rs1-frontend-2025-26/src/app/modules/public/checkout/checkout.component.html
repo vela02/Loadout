@@ -1,0 +1,272 @@
+<div class="loadout-page checkout-page" data-bs-theme="dark">
+  <app-store-header></app-store-header>
+
+  <div class="container py-4">
+    <h1 class="page-title mb-4">{{ 'GAMES.CHECKOUT.TITLE' | translate }}</h1>
+
+    <!-- ===== INDIKATOR KORAKA ===== -->
+    <ol class="stepper mb-4">
+      @for (s of steps; track s; let i = $index) {
+        <li class="step" [class.active]="i === step" [class.done]="i < step"
+            [class.clickable]="canGoTo(i)" (click)="goTo(i)">
+          <span class="dot">
+            @if (i < step) { <mat-icon>check</mat-icon> } @else { {{ i + 1 }} }
+          </span>
+          <span class="label">{{ s | translate }}</span>
+        </li>
+      }
+    </ol>
+
+    @if (loading && step === 0) {
+      <p class="text-secondary">{{ 'GAMES.DETAILS.LOADING' | translate }}</p>
+    } @else {
+      <div class="row g-4">
+
+        <!-- ===== LIJEVO: sadržaj koraka ===== -->
+        <div [class]="step < 3 ? 'col-lg-8' : 'col-12'">
+
+          <!-- KORAK 1: KORPA -->
+          @if (step === 0) {
+            <div class="panel">
+              <h2 class="panel-title"><mat-icon>shopping_cart</mat-icon> {{ 'GAMES.CART.TITLE' | translate }} ({{ activeItems.length }})</h2>
+
+              @for (item of activeItems; track item.cartItemId) {
+                <div class="cart-row">
+                  <img [src]="item.imageUrl || placeholderImage" [alt]="item.gameTitle" (error)="onImageError($event)" />
+                  <div class="flex-grow-1">
+                    <a [routerLink]="['/games', item.gameId]" class="item-title">{{ item.gameTitle }}</a>
+                    @if (item.isPreOrder) { <span class="mini-badge ms-2">Pre-order</span> }
+                    <div class="row-actions">
+                      <button type="button" (click)="toggleSaveForLater(item)">
+                        <mat-icon>bookmark_border</mat-icon> {{ 'GAMES.CART.SAVE_FOR_LATER' | translate }}
+                      </button>
+                      <button type="button" class="danger" (click)="remove(item)">
+                        <mat-icon>delete_outline</mat-icon> {{ 'GAMES.CART.REMOVE' | translate }}
+                      </button>
+                    </div>
+                  </div>
+                  <div class="item-price">{{ item.price * item.quantity | number: '1.2-2' }} KM</div>
+                </div>
+              } @empty {
+                <div class="empty">
+                  <mat-icon>remove_shopping_cart</mat-icon>
+                  <p>{{ 'GAMES.CART.EMPTY' | translate }}</p>
+                  <a routerLink="/games" class="btn btn-neon">{{ 'GAMES.CART.BROWSE' | translate }}</a>
+                </div>
+              }
+            </div>
+
+            <!-- Sačuvano za kasnije -->
+            @if (savedItems.length) {
+              <div class="panel mt-4">
+                <h2 class="panel-title"><mat-icon>bookmark</mat-icon> {{ 'GAMES.CART.SAVED_TITLE' | translate }} ({{ savedItems.length }})</h2>
+                @for (item of savedItems; track item.cartItemId) {
+                  <div class="cart-row saved">
+                    <img [src]="item.imageUrl || placeholderImage" [alt]="item.gameTitle" (error)="onImageError($event)" />
+                    <div class="flex-grow-1">
+                      <a [routerLink]="['/games', item.gameId]" class="item-title">{{ item.gameTitle }}</a>
+                      <div class="row-actions">
+                        <button type="button" (click)="toggleSaveForLater(item)">
+                          <mat-icon>add_shopping_cart</mat-icon> {{ 'GAMES.CART.MOVE_TO_CART' | translate }}
+                        </button>
+                        <button type="button" class="danger" (click)="remove(item)">
+                          <mat-icon>delete_outline</mat-icon> {{ 'GAMES.CART.REMOVE' | translate }}
+                        </button>
+                      </div>
+                    </div>
+                    <div class="item-price">{{ item.price | number: '1.2-2' }} KM</div>
+                  </div>
+                }
+              </div>
+            }
+          }
+
+          <!-- KORAK 2: PODACI KUPCA -->
+          @if (step === 1) {
+            <form class="panel" [formGroup]="billingForm" (ngSubmit)="next()">
+              <h2 class="panel-title"><mat-icon>person</mat-icon> {{ 'GAMES.CHECKOUT.STEP_DETAILS' | translate }}</h2>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">{{ 'GAMES.CHECKOUT.FULL_NAME' | translate }} *</label>
+                  <input class="form-control" formControlName="fullName" autocomplete="name"
+                         [class.is-invalid]="invalid('billing', 'fullName')" />
+                  <div class="invalid-feedback">{{ 'GAMES.CHECKOUT.ERR_NAME' | translate }}</div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Email *</label>
+                  <input class="form-control" type="email" formControlName="email" autocomplete="email"
+                         [class.is-invalid]="invalid('billing', 'email')" />
+                  <div class="invalid-feedback">{{ 'GAMES.CHECKOUT.ERR_EMAIL' | translate }}</div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">{{ 'GAMES.CHECKOUT.PHONE' | translate }}</label>
+                  <input class="form-control" type="tel" formControlName="phone" placeholder="+387 61 123 456" autocomplete="tel"
+                         [class.is-invalid]="invalid('billing', 'phone')" />
+                  <div class="invalid-feedback">{{ 'GAMES.CHECKOUT.ERR_PHONE' | translate }}</div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">{{ 'GAMES.CHECKOUT.COUNTRY' | translate }} *</label>
+                  <select class="form-select" formControlName="country" autocomplete="country"
+                          [class.is-invalid]="invalid('billing', 'country')">
+                    <option value="" disabled>{{ 'GAMES.CHECKOUT.CHOOSE' | translate }}</option>
+                    @for (c of countries; track c.code) {
+                      <option [value]="c.code">{{ c.name }}</option>
+                    }
+                  </select>
+                  <div class="invalid-feedback">{{ 'GAMES.CHECKOUT.ERR_REQUIRED' | translate }}</div>
+                </div>
+                <div class="col-12">
+                  <label class="form-label">{{ 'GAMES.CHECKOUT.ADDRESS' | translate }} *</label>
+                  <input class="form-control" formControlName="address" autocomplete="street-address"
+                         [placeholder]="'GAMES.CHECKOUT.ADDRESS_PH' | translate"
+                         [class.is-invalid]="invalid('billing', 'address')" />
+                  <div class="invalid-feedback">{{ 'GAMES.CHECKOUT.ERR_REQUIRED' | translate }}</div>
+                </div>
+                <div class="col-md-8">
+                  <label class="form-label">{{ 'GAMES.CHECKOUT.CITY' | translate }} *</label>
+                  <input class="form-control" formControlName="city" autocomplete="address-level2"
+                         [class.is-invalid]="invalid('billing', 'city')" />
+                  <div class="invalid-feedback">{{ 'GAMES.CHECKOUT.ERR_REQUIRED' | translate }}</div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label">{{ 'GAMES.CHECKOUT.POSTAL_CODE' | translate }} *</label>
+                  <input class="form-control" formControlName="postalCode" placeholder="71000" autocomplete="postal-code"
+                         [class.is-invalid]="invalid('billing', 'postalCode')" />
+                  <div class="invalid-feedback">{{ 'GAMES.CHECKOUT.ERR_POSTAL' | translate }}</div>
+                </div>
+              </div>
+            </form>
+          }
+
+          <!-- KORAK 3: PLAĆANJE -->
+          @if (step === 2) {
+            <form class="panel" [formGroup]="paymentForm" (ngSubmit)="next()">
+              <h2 class="panel-title"><mat-icon>credit_card</mat-icon> {{ 'GAMES.CHECKOUT.STEP_PAYMENT' | translate }}</h2>
+
+              @if (stripeMissing) {
+                <div class="alert alert-warning">{{ 'GAMES.CHECKOUT.STRIPE_MISSING' | translate }}</div>
+              } @else {
+                <div class="stripe-badge mb-3">
+                  <mat-icon>lock</mat-icon>
+                  <span>{{ 'GAMES.CHECKOUT.SECURE_STRIPE' | translate }}</span>
+                </div>
+
+                <label class="form-label">{{ 'GAMES.CHECKOUT.CARD_DETAILS' | translate }}</label>
+                <!-- Ovdje Stripe ubaci svoje (iframe) polje: broj kartice, datum isteka i CVC -->
+                <div #cardHost class="stripe-card" [class.invalid]="!!cardError" [class.loading]="!stripeReady"></div>
+                @if (cardError) { <div class="card-error">{{ cardError }}</div> }
+
+                <!-- Testne kartice: samo u Stripe TEST modu (pk_test_), sklopljeno dok se ne klikne -->
+                @if (testMode) {
+                  <button type="button" class="test-toggle mt-3" (click)="showTestCards = !showTestCards">
+                    <mat-icon>science</mat-icon> {{ 'GAMES.CHECKOUT.TEST_MODE' | translate }}
+                    <mat-icon class="chev">{{ showTestCards ? 'expand_less' : 'expand_more' }}</mat-icon>
+                  </button>
+                  @if (showTestCards) {
+                    <div class="test-cards mt-2">
+                      <div>
+                        <code>4242 4242 4242 4242</code> – {{ 'GAMES.CHECKOUT.TEST_OK' | translate }}<br />
+                        <code>4000 0025 0000 3155</code> – 3D Secure<br />
+                        <code>4000 0000 0000 0002</code> – {{ 'GAMES.CHECKOUT.TEST_DECLINED' | translate }}<br />
+                        <span class="small">{{ 'GAMES.CHECKOUT.TEST_HINT' | translate }}</span>
+                      </div>
+                    </div>
+                  }
+                }
+              }
+
+              @if (paymentError) {
+                <div class="payment-error mt-3"><mat-icon>error_outline</mat-icon> {{ paymentError }}</div>
+              }
+
+              <div class="form-check mt-4">
+                <input class="form-check-input" type="checkbox" id="terms" formControlName="acceptTerms"
+                       [class.is-invalid]="invalid('payment', 'acceptTerms')" />
+                <label class="form-check-label" for="terms">{{ 'GAMES.CHECKOUT.TERMS' | translate }}</label>
+                <div class="invalid-feedback">{{ 'GAMES.CHECKOUT.ERR_TERMS' | translate }}</div>
+              </div>
+            </form>
+          }
+
+          <!-- KORAK 4: POTVRDA -->
+          @if (step === 3 && result) {
+            <div class="panel success-panel text-center">
+              <div class="success-icon"><mat-icon>check_circle</mat-icon></div>
+              <h2 class="mb-2">{{ (result.isPreOrder ? 'GAMES.CHECKOUT.DONE_PREORDER' : 'GAMES.CHECKOUT.DONE_TITLE') | translate }}</h2>
+              <p class="text-secondary">
+                {{ result.totalAmount | number: '1.2-2' }} KM &middot; {{ billingForm.controls.email.value }}
+              </p>
+
+              @for (order of orders; track order.id) {
+                <div class="keys text-start mt-4">
+                  <div class="order-ref">
+                    {{ 'GAMES.CHECKOUT.ORDER_NO' | translate }} #{{ order.referenceNumber || order.id }}
+                    <span class="order-status">{{ order.status }}</span>
+                    <button type="button" class="pdf-btn ms-auto" (click)="downloadPdf(order)">
+                      <mat-icon>picture_as_pdf</mat-icon> PDF
+                    </button>
+                  </div>
+                  @for (g of order.games; track $index) {
+                    <div class="key-row">
+                      <strong>{{ g.title }}</strong>
+                      @for (k of g.licenseKeys; track k) {
+                        <div class="key">
+                          <code>{{ k | licenseKey }}</code>
+                          <button type="button" [appCopyToClipboard]="k" copyMessage="GAMES.CHECKOUT.KEY_COPIED">
+                            <mat-icon>content_copy</mat-icon>
+                          </button>
+                        </div>
+                      } @empty {
+                        <div class="text-secondary small">{{ 'GAMES.CHECKOUT.KEY_ON_RELEASE' | translate }}</div>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+
+              <div class="d-flex flex-wrap gap-2 justify-content-center mt-4">
+                <a routerLink="/games" class="btn btn-neon">{{ 'GAMES.CHECKOUT.CONTINUE' | translate }}</a>
+                <a routerLink="/client/orders" class="btn btn-outline-light">{{ 'GAMES.ORDERS.TITLE' | translate }}</a>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- ===== DESNO: sažetak (koraci 1–3) ===== -->
+        @if (step < 3) {
+          <div class="col-lg-4">
+            <div class="panel summary">
+              <h2 class="panel-title"><mat-icon>receipt_long</mat-icon> {{ 'GAMES.CHECKOUT.SUMMARY' | translate }}</h2>
+              @for (item of activeItems; track item.cartItemId) {
+                <div class="sum-row"><span>{{ item.gameTitle }}</span><span>{{ item.price * item.quantity | number: '1.2-2' }} KM</span></div>
+              }
+              <div class="sum-total">
+                <span>{{ 'GAMES.CHECKOUT.TOTAL' | translate }}</span>
+                <span class="total">{{ total | number: '1.2-2' }} KM</span>
+              </div>
+              @if (hasPreOrder) {
+                <p class="small text-secondary mt-2">{{ 'GAMES.CHECKOUT.PREORDER_NOTE' | translate }}</p>
+              }
+
+              <button type="button" class="btn btn-neon btn-lg w-100 mt-3"
+                      [disabled]="activeItems.length === 0 || processing || (step === 2 && (stripeMissing || !stripeReady))" (click)="next()">
+                @if (processing) {
+                  {{ 'GAMES.CHECKOUT.PROCESSING' | translate }}
+                } @else if (step === 2) {
+                  {{ 'GAMES.CHECKOUT.PAY' | translate }} {{ total | number: '1.2-2' }} KM
+                } @else {
+                  {{ 'GAMES.CHECKOUT.NEXT' | translate }}
+                }
+              </button>
+              @if (step > 0) {
+                <button type="button" class="btn btn-link w-100 mt-2 back-btn" [disabled]="processing" (click)="back()">
+                  &larr; {{ 'GAMES.CHECKOUT.BACK' | translate }}
+                </button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

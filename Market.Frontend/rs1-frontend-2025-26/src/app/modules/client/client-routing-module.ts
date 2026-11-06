@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ClientLayoutComponent } from './client-layout/client-layout.component';
 import { AccountOverviewComponent } from './account/account-overview.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
+import { MyOrdersComponent } from './orders/my-orders.component';
 
 const routes: Routes = [
   {
@@ -11,7 +12,8 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'account', pathMatch: 'full' },
       { path: 'account', component: AccountOverviewComponent },
-      { path: 'change-password', component: ChangePasswordComponent }
+      { path: 'change-password', component: ChangePasswordComponent },
+      { path: 'orders', component: MyOrdersComponent } // /client/orders -> historija kupovina
     ]
   }
 ];

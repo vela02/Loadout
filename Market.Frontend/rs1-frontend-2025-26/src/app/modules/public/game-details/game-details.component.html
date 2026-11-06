@@ -38,6 +38,10 @@
             <span class="text-secondary ms-2">({{ 'GAMES.DETAILS.REVIEWS_COUNT' | translate: { count: game.reviews.length } }})</span>
           </div>
 
+          <button type="button" class="trailer-btn mt-3" (click)="openTrailer()">
+            <mat-icon>play_circle</mat-icon> {{ 'GAMES.TRAILER.WATCH' | translate }}
+          </button>
+
           @if (game.developer || game.publisher) {
             <p class="text-secondary mt-2 mb-0">
               {{ game.developer }}@if (game.developer && game.publisher) { &middot; }{{ game.publisher }}
@@ -60,6 +64,26 @@
               <mat-icon>{{ game.isPreOrder ? 'event_available' : 'shopping_cart' }}</mat-icon>
               {{ (buying ? 'GAMES.DETAILS.ADDING' : (game.isPreOrder ? 'GAMES.DETAILS.PREORDER_BTN' : 'GAMES.DETAILS.BUY_NOW')) | translate }}
             </button>
+
+            <button type="button" class="btn btn-ghost w-100 mt-2 save-btn" [disabled]="saving" (click)="saveForLater()">
+              <mat-icon>bookmark_border</mat-icon>
+              {{ 'GAMES.CART.SAVE_FOR_LATER' | translate }}
+            </button>
+
+            <!-- Dijeljenje: dinamički QR kod s linkom na igru -->
+            <button type="button" class="btn btn-ghost w-100 mt-2" (click)="showShare = !showShare">
+              <mat-icon>qr_code_2</mat-icon> {{ 'GAMES.SHARE.BUTTON' | translate }}
+            </button>
+            @if (showShare) {
+              <div class="share-box">
+                <app-qr-code [value]="shareUrl" [size]="160"></app-qr-code>
+                <p class="small text-secondary mb-2">{{ 'GAMES.SHARE.HINT' | translate }}</p>
+                <button type="button" class="btn btn-ghost btn-sm" [appCopyToClipboard]="shareUrl"
+                        copyMessage="GAMES.SHARE.LINK_COPIED">
+                  <mat-icon>link</mat-icon> {{ 'GAMES.SHARE.COPY_LINK' | translate }}
+                </button>
+              </div>
+            }
 
             @if (game.isPreOrder) {
               <p class="note">{{ 'GAMES.DETAILS.PREORDER_NOTE' | translate }}</p>
@@ -111,6 +135,58 @@
           </div>
         </div>
 
+      </div>
+    </div>
+  }
+
+  <!-- ===== POPUP: igra dodana u korpu / sačuvana za kasnije ===== -->
+  @if (popup && game) {
+    <div class="cart-popup" role="status">
+      <div class="popup-head">
+        <mat-icon class="ok-icon">{{ popup === 'cart' ? 'check_circle' : 'bookmark_added' }}</mat-icon>
+        <strong>{{ (popup === 'cart'
+            ? (game.isPreOrder ? 'GAMES.DETAILS.PREORDERED' : 'GAMES.DETAILS.ADDED_TO_CART')
+            : 'GAMES.DETAILS.SAVED_FOR_LATER') | translate }}</strong>
+        <button type="button" class="close" (click)="closePopup()" aria-label="Close"><mat-icon>close</mat-icon></button>
+      </div>
+
+      <div class="popup-game">
+        <img [src]="game.imageUrl || placeholderImage" [alt]="game.title" (error)="onImageError($event)" />
+        <div>
+          <div class="popup-title">{{ game.title }}</div>
+          <div class="popup-price">{{ game.price | number: '1.2-2' }} KM</div>
+        </div>
+      </div>
+
+      <div class="popup-actions">
+        <button type="button" class="btn btn-neon flex-fill" (click)="goToCart()">
+          <mat-icon>shopping_cart</mat-icon> {{ 'GAMES.DETAILS.GO_TO_CART' | translate }}
+        </button>
+        <button type="button" class="btn btn-ghost flex-fill" (click)="closePopup()">
+          {{ 'GAMES.CHECKOUT.CONTINUE' | translate }}
+        </button>
+      </div>
+
+      <!-- traka koja se smanjuje 5 s = koliko dugo popup ostaje -->
+      <div class="popup-progress"></div>
+    </div>
+  }
+
+  <!-- ===== TRAILER MODAL ===== -->
+  @if (showTrailer && trailerEmbed) {
+    <div class="trailer-backdrop" (click)="closeTrailer()">
+      <div class="trailer-modal" (click)="$event.stopPropagation()">
+        <div class="trailer-head">
+          <strong>{{ game?.title }} – {{ 'GAMES.TRAILER.TITLE' | translate }}</strong>
+          <button type="button" class="close" (click)="closeTrailer()" aria-label="Close"><mat-icon>close</mat-icon></button>
+        </div>
+        <div class="ratio ratio-16x9">
+          <iframe [src]="trailerEmbed" title="Trailer" allowfullscreen
+                  allow="autoplay; encrypted-media; picture-in-picture; fullscreen"></iframe>
+        </div>
+        <a [href]="trailerWatchUrl" target="_blank" rel="noopener" class="yt-link">
+          <mat-icon>open_in_new</mat-icon> {{ 'GAMES.TRAILER.OPEN_YT' | translate }}
+        </a>
       </div>
     </div>
   }

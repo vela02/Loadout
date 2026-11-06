@@ -6,6 +6,23 @@
       <span class="brand-name">Loadout</span>
     </a>
 
+    <div class="d-flex align-items-center gap-2">
+    <!-- Korpa (samo za prijavljene) ili link za prijavu -->
+    @if (isLoggedIn()) {
+      <a routerLink="/client/orders" class="icon-button" [attr.aria-label]="'GAMES.ORDERS.TITLE' | translate"
+         [title]="'GAMES.ORDERS.TITLE' | translate">
+        <mat-icon>receipt_long</mat-icon>
+      </a>
+      <a routerLink="/cart" class="icon-button" [attr.aria-label]="'GAMES.CART.TITLE' | translate">
+        <mat-icon>shopping_cart</mat-icon>
+        @if ((cartCount$ | async); as count) {
+          <span class="cart-badge">{{ count }}</span>
+        }
+      </a>
+    } @else {
+      <a routerLink="/auth/login" class="login-link">{{ 'GAMES.HEADER.LOGIN' | translate }}</a>
+    }
+
     <!-- Izbor jezika -->
     <button type="button" class="lang-button" [matMenuTriggerFor]="langMenu">
       <span class="flag">{{ current?.flag }}</span>
@@ -21,5 +38,6 @@
         </button>
       }
     </mat-menu>
+    </div>
   </div>
 </header>

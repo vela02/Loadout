@@ -60,9 +60,20 @@
         {{ 'ADMIN_PANEL.MENU.CATALOG' | translate }}
       </div>
 
+      <!-- Povratak na prodavnicu (kao "View store" u Shopify-u) -->
+      <a mat-list-item routerLink="/games">
+        <mat-icon matListItemIcon>storefront</mat-icon>
+        <span matListItemTitle>{{ 'GAMES.ADMIN.VIEW_STORE' | translate }}</span>
+      </a>
+
       <a mat-list-item routerLink="/admin/stats" routerLinkActive="active">
         <mat-icon matListItemIcon>insights</mat-icon>
         <span matListItemTitle>{{ 'GAMES.STATS.TITLE' | translate }}</span>
+      </a>
+
+      <a mat-list-item routerLink="/admin/users" routerLinkActive="active">
+        <mat-icon matListItemIcon>group</mat-icon>
+        <span matListItemTitle>{{ 'GAMES.USERS.TITLE' | translate }}</span>
       </a>
 
       <a mat-list-item routerLink="/admin/product-categories" routerLinkActive="active">

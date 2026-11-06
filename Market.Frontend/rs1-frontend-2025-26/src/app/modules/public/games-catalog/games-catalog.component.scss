@@ -47,6 +47,7 @@ mat-icon {
 }
 
 .search-box {
+  flex: 1;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -244,3 +245,146 @@ mat-icon {
     cursor: pointer;
   }
 }
+
+/* ---------- Napredni filteri ---------- */
+.search-row {
+  display: flex;
+  gap: 10px;
+}
+
+.filter-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid $panel-edge;
+  background: rgba($panel, 0.85);
+  color: $text;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:hover, &.active {
+    border-color: $cyan;
+    box-shadow: 0 0 16px rgba($cyan, 0.25);
+  }
+
+  .count {
+    min-width: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: $neon-gradient;
+    color: $bg-deep;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-align: center;
+  }
+}
+
+.filter-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 18px 20px;
+  border-radius: 16px;
+  border: 1px solid $panel-edge;
+  background: rgba($panel, 0.85);
+  animation: filters-in 0.2s ease-out;
+}
+
+@keyframes filters-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    font-size: 0.8rem;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .error { color: #f87171; font-size: 0.8rem; }
+}
+
+.price-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: $text-muted;
+
+  input {
+    width: 100px;
+    height: 38px;
+    padding: 0 12px;
+    border-radius: 10px;
+    border: 1px solid $panel-edge;
+    background: $bg-deep;
+    color: $text;
+    outline: none;
+    color-scheme: dark;
+
+    &:focus { border-color: $cyan; }
+    &.invalid { border-color: #f87171; }
+  }
+}
+
+.stars {
+  display: flex;
+  align-items: center;
+  height: 38px;
+
+  button {
+    border: none;
+    background: none;
+    padding: 0 2px;
+    cursor: pointer;
+    color: $panel-edge;
+    transition: transform 0.15s, color 0.15s;
+
+    mat-icon { font-size: 26px; width: 26px; height: 26px; }
+    &:hover { transform: scale(1.15); }
+    &.on {
+      color: #fbbf24;
+      filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.5));
+    }
+  }
+
+  .stars-label {
+    margin-left: 6px;
+    color: #fbbf24;
+    font-weight: 700;
+  }
+}
+
+.type-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.reset-link {
+  align-self: flex-end;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: none;
+  color: $text-muted;
+  cursor: pointer;
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  &:hover:not(:disabled) { color: $cyan; }
+  &:disabled { opacity: 0.4; cursor: default; }
+}
+
+.date-inputs input { width: 150px; }
+.genre-chip.small { padding: 3px 12px; font-size: 0.8rem; }

@@ -18,6 +18,7 @@ import { ChangeStatusDialogComponent } from './orders/change-status-dialog/chang
 import { CustomProductsAddComponent } from '../custom-ui/products/products-add/custom-products-add.component';
 import { PromotionsComponent } from './catalogs/promotions/promotions.component';
 import { AdminStatsComponent } from './stats/admin-stats.component';
+import { AdminUsersComponent } from './users/admin-users.component';
 import { PromotionCreateDialogComponent } from './catalogs/promotions/promotion-create-dialog/promotion-create-dialog.component';
 
 
@@ -37,6 +38,7 @@ import { PromotionCreateDialogComponent } from './catalogs/promotions/promotion-
     PromotionsComponent,
     PromotionCreateDialogComponent,
     AdminStatsComponent,
+    AdminUsersComponent,
   ],
   imports: [
     AdminRoutingModule,

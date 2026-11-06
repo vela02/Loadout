@@ -11,7 +11,11 @@ namespace Market.Application.Abstractions
     {
         Task<bool> AddToCartAsync(int userId, int gameId, int quantity);
         Task<List<CartItemDto>> GetCartAsync(int userId);
+        Task<bool> RemoveFromCartAsync(int userId, int cartItemId);
+        Task<bool> SetSavedForLaterAsync(int userId, int cartItemId, bool saved);
+        Task<bool> SaveGameForLaterAsync(int userId, int gameId);
         Task<CheckoutResultDto> CheckoutAsync(int userId);
+        Task<decimal> CalculateCartTotalAsync(int userId);
         Task<List<OrderHistoryDto>> GetOrderHistoryAsync(int userId);
         Task<bool> CancelPreOrderAsync(int orderId);
         Task<SalesReportDto> GetSalesReportAsync(DateTime from, DateTime to);

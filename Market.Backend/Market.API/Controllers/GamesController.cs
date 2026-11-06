@@ -32,9 +32,14 @@ namespace Market.API.Controllers
             [FromQuery] string? genre,
             [FromQuery] int? categoryId,
             [FromQuery] Market.Shared.Enums.GameContentType? type,
-            [FromQuery] int? minRating)
+            [FromQuery] int? minRating,
+            [FromQuery] DateOnly? releasedFrom,   // npr. ?releasedFrom=2020-01-01
+            [FromQuery] DateOnly? releasedTo)
         {
-            var games = await _gameService.GetFilteredGamesAsync(searchTerm,minPrice, maxPrice, genre, categoryId, type, minRating);
+            if (releasedFrom.HasValue && releasedTo.HasValue && releasedFrom > releasedTo)
+                return BadRequest(new { message = "Datum 'od' ne može biti poslije datuma 'do'." });
+
+            var games = await _gameService.GetFilteredGamesAsync(searchTerm,minPrice, maxPrice, genre, categoryId, type, minRating, releasedFrom, releasedTo);
             return Ok(games);
         }
 

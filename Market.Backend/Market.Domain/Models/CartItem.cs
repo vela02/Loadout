@@ -12,6 +12,9 @@ public partial class CartItem
 
     public DateTime AddedAt { get; set; }
 
+    // "Save for later": stavka ostaje kod korisnika, ali se NE naplaćuje pri checkoutu
+    public bool IsSavedForLater { get; set; }
+
     public virtual Cart? Cart { get; set; }
 
     public virtual Game? Game { get; set; }

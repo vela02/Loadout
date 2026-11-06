@@ -1,0 +1,80 @@
+<div class="orders-page">
+  <h1 class="page-title">{{ 'GAMES.ORDERS.TITLE' | translate }}</h1>
+
+  @if (loading) {
+    <p class="muted">{{ 'GAMES.DETAILS.LOADING' | translate }}</p>
+  } @else {
+    @for (o of orders; track o.id) {
+      <div class="order-card">
+        <!-- Zaglavlje narudžbe -->
+        <div class="order-head">
+          <div>
+            <div class="ref">#{{ o.referenceNumber || o.id }}</div>
+            <div class="muted small">{{ o.date | date: 'dd.MM.yyyy HH:mm' }}</div>
+          </div>
+          <span class="status" [ngClass]="statusClass(o)">{{ o.status }}</span>
+          <div class="order-total">{{ o.totalAmount | number: '1.2-2' }} KM</div>
+          <button type="button" class="pdf-btn" (click)="downloadPdf(o)" [title]="'GAMES.ORDERS.PDF' | translate">
+            <mat-icon>picture_as_pdf</mat-icon> PDF
+          </button>
+        </div>
+
+        <!-- Igre i ključevi -->
+        @for (g of o.games; track $index) {
+          <div class="game-row">
+            <img [src]="g.imageUrl || placeholderImage" [alt]="g.title" (error)="onImageError($event)" />
+            <div class="flex-grow-1">
+              <a [routerLink]="['/games', g.gameId]" class="game-title">{{ g.title }}</a>
+              <div class="muted small">{{ g.priceAtPurchase | number: '1.2-2' }} KM</div>
+
+              @if (o.statusId === 5) {
+                <div class="muted small mt-1">{{ 'GAMES.ORDERS.NO_KEY_CANCELLED' | translate }}</div>
+              } @else {
+                @for (k of g.licenseKeys; track k) {
+                  <div class="key">
+                    <code>{{ k | licenseKey }}</code>
+                    <div class="key-actions">
+                      <button type="button" (click)="toggleQr(k)" [class.active]="qrKey === k">
+                        <mat-icon>qr_code_2</mat-icon>
+                      </button>
+                      <button type="button" [appCopyToClipboard]="k" copyMessage="GAMES.CHECKOUT.KEY_COPIED">
+                        <mat-icon>content_copy</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                  @if (qrKey === k) {
+                    <div class="key-qr">
+                      <app-qr-code [value]="k" [size]="140"></app-qr-code>
+                      <span class="muted small">{{ 'GAMES.ORDERS.QR_HINT' | translate }}</span>
+                    </div>
+                  }
+                } @empty {
+                  <div class="release-note">
+                    <mat-icon>schedule</mat-icon>
+                    {{ 'GAMES.ORDERS.KEY_ON' | translate }}
+                    {{ g.releaseDate | date: 'dd.MM.yyyy' }}
+                  </div>
+                }
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Otkazivanje pre-ordera -->
+        @if (o.canCancel) {
+          <div class="order-actions">
+            <button type="button" class="cancel-btn" [disabled]="cancellingId === o.id" (click)="cancel(o)">
+              <mat-icon>event_busy</mat-icon> {{ 'GAMES.ORDERS.CANCEL_BTN' | translate }}
+            </button>
+          </div>
+        }
+      </div>
+    } @empty {
+      <div class="empty">
+        <mat-icon>receipt_long</mat-icon>
+        <p>{{ 'GAMES.ORDERS.EMPTY' | translate }}</p>
+        <a routerLink="/games" class="btn-neon">{{ 'GAMES.CART.BROWSE' | translate }}</a>
+      </div>
+    }
+  }
+</div>

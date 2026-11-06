@@ -17,6 +17,9 @@ public partial class Payment
 
     public int? StatusId { get; set; }
 
+    // ID transakcije u vanjskom sistemu (Stripe PaymentIntent, npr. "pi_3Q...")
+    public string? TransactionId { get; set; }
+
     public virtual Order? Order { get; set; }
 
     public virtual ICollection<Refund> Refunds { get; set; } = new List<Refund>();

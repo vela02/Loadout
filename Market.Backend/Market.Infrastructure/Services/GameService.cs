@@ -22,7 +22,9 @@ public class GameService : IGameService
     string? genre,
     int? categoryId,
     Market.Shared.Enums.GameContentType? type,
-    int? minRating)
+    int? minRating,
+    DateOnly? releasedFrom = null,
+    DateOnly? releasedTo = null)
     {
         // 1. Osnovni upit sa potrebnim relacijama
         var query = _context.Games
@@ -60,6 +62,16 @@ public class GameService : IGameService
         if (categoryId.HasValue)
         {
             query = query.Where(g => g.CategoryId == categoryId);
+        }
+
+        // 6b. Filtriranje po DATUMU IZLASKA (raspon, oba kraja uključena)
+        if (releasedFrom.HasValue)
+        {
+            query = query.Where(g => g.ReleaseDate != null && g.ReleaseDate >= releasedFrom.Value);
+        }
+        if (releasedTo.HasValue)
+        {
+            query = query.Where(g => g.ReleaseDate != null && g.ReleaseDate <= releasedTo.Value);
         }
 
         // 6. Filtriranje po TIPU SADRŽAJA (Enum)

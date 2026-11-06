@@ -1,5 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { CartStateService } from '../../../api-services/games/cart-state.service';
+import { CurrentUserService } from '../../../core/services/auth/current-user.service';
 
 /**
  * Zajedničko zaglavlje za katalog i stranicu igre:
@@ -11,8 +13,13 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './store-header.component.html',
   styleUrl: './store-header.component.scss',
 })
-export class StoreHeaderComponent {
+export class StoreHeaderComponent implements OnInit {
   private translate = inject(TranslateService);
+  private cartState = inject(CartStateService);
+  private currentUser = inject(CurrentUserService);
+
+  cartCount$ = this.cartState.count$;           // broj stavki za bedž na ikoni korpe
+  isLoggedIn = this.currentUser.isAuthenticated; // signal (čita se kao isLoggedIn())
 
   // Jezik se pamti u localStorage pod istim ključem kao kod Velida -> isti izbor na svim stranicama
   currentLang: string = localStorage.getItem('language') || this.translate.currentLang || 'bs';
@@ -27,6 +34,10 @@ export class StoreHeaderComponent {
     if (this.translate.currentLang !== this.currentLang) {
       this.translate.use(this.currentLang);
     }
+  }
+
+  ngOnInit(): void {
+    this.cartState.refresh(); // učitaj broj stavki u korpi
   }
 
   switchLanguage(code: string): void {

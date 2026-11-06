@@ -40,7 +40,10 @@ public class OrderService : IOrderService
 
         if (existingItem != null)
         {
-            existingItem.Quantity += quantity;
+            if (existingItem.IsSavedForLater)
+                existingItem.IsSavedForLater = false; // vrati iz "za kasnije" u korpu
+            else
+                existingItem.Quantity += quantity;
         }
         else
         {
@@ -65,22 +68,99 @@ public class OrderService : IOrderService
             .ThenInclude(ci => ci.Game)
             .FirstOrDefaultAsync(c => c.UserId == userId);
 
-        if (cart == null || !cart.CartItems.Any())
+        // Naplaćujemo samo stavke koje NISU sačuvane za kasnije
+        var itemsToBuy = cart?.CartItems.Where(ci => !ci.IsSavedForLater).ToList() ?? new List<CartItem>();
+
+        if (cart == null || !itemsToBuy.Any())
         {
             return new CheckoutResultDto { OrderId = 0, Message = "Korpa je prazna.", IsPreOrder = false };
         }
 
-        // 2. Provjera datuma za Pre-order
+        // 2. Podijeli stavke: igre koje su izašle (plaćaju se odmah) i pre-order igre.
+        //    Svaka grupa ide u SVOJU narudžbu, kako bi se pre-order mogao otkazati
+        //    nezavisno od igara koje su već kupljene.
         var today = DateOnly.FromDateTime(DateTime.Now);
-        bool isPreOrder = cart.CartItems.Any(ci => ci.Game != null && ci.Game.ReleaseDate > today);
+        var releasedItems = itemsToBuy.Where(ci => ci.Game != null && !(ci.Game.ReleaseDate > today)).ToList();
+        var preOrderItems = itemsToBuy.Where(ci => ci.Game != null && ci.Game.ReleaseDate > today).ToList();
 
-        // 3. Kreiranje Narudžbe (TotalAmount ćemo podesiti nakon petlje kad uračunamo popuste)
+        var createdOrders = new List<Order>();
+        decimal grandTotal = 0;
+
+        if (releasedItems.Any())
+        {
+            var (order, total) = await CreateOrderAsync(userId, releasedItems, statusId: 1, generateLicenses: true);
+            createdOrders.Add(order);
+            grandTotal += total;
+        }
+
+        if (preOrderItems.Any())
+        {
+            // Pre-order: status 4, ključevi se NE generišu (dobijaju se na dan izlaska)
+            var (order, total) = await CreateOrderAsync(userId, preOrderItems, statusId: 4, generateLicenses: false);
+            createdOrders.Add(order);
+            grandTotal += total;
+        }
+
+        // 3. Isprazni korpu (samo kupljene stavke; "za kasnije" ostaju)
+        _context.CartItems.RemoveRange(itemsToBuy);
+
+        // 4. Spasi sve promjene u bazu (jedna transakcija za sve narudžbe)
+        await _context.SaveChangesAsync();
+
+        bool hasPreOrder = preOrderItems.Any();
+        return new CheckoutResultDto
+        {
+            OrderId = createdOrders.First().Id,
+            OrderIds = createdOrders.Select(o => o.Id).ToList(),
+            IsPreOrder = hasPreOrder,
+            TotalAmount = grandTotal,
+            Message = hasPreOrder
+                ? "Kupovina uspješna! Pre-order igre su rezervisane u posebnoj narudžbi."
+                : "Kupovina uspješna! Status je 'Placeno', popusti su obračunati i ključevi dostupni."
+        };
+    }
+
+    /// <summary>Ukupan iznos aktivnih stavki korpe (s popustima) – koristi se za Stripe naplatu.</summary>
+    public async Task<decimal> CalculateCartTotalAsync(int userId)
+    {
+        var items = await _context.CartItems
+            .Include(ci => ci.Game)
+            .Where(ci => ci.Cart!.UserId == userId && !ci.IsSavedForLater && ci.Game != null)
+            .ToListAsync();
+
+        decimal total = 0;
+        foreach (var item in items)
+            total += await GetPriceToPayAsync(item.Game!) * item.Quantity;
+        return total;
+    }
+
+    /// <summary>Cijena igre s najvećim aktivnim popustom (isto pravilo kao pri kreiranju narudžbe).</summary>
+    private async Task<decimal> GetPriceToPayAsync(Game game)
+    {
+        var activeDiscount = await _context.Discounts
+            .Where(d => d.GameId == game.Id && d.StartDate <= DateTime.Now && d.EndDate >= DateTime.Now)
+            .OrderByDescending(d => d.DiscountPercentage)
+            .FirstOrDefaultAsync();
+
+        decimal basePrice = game.Price ?? 0;
+        return activeDiscount != null
+            ? basePrice - (basePrice * (activeDiscount.DiscountPercentage / 100.0m))
+            : basePrice;
+    }
+
+    /// <summary>
+    /// Kreira jednu narudžbu od zadanih stavki korpe: obračuna popuste, upiše OrderGame
+    /// i (opcionalno) generiše licencne ključeve. Ne poziva SaveChanges.
+    /// </summary>
+    private async Task<(Order order, decimal total)> CreateOrderAsync(
+        int userId, List<CartItem> items, int statusId, bool generateLicenses)
+    {
         var order = new Order
         {
             UserId = userId,
             Date = DateTime.Now,
-            TotalAmount = 0, // Privremeno 0, sabrat ćemo u petlji
-            StatusId = isPreOrder ? 4 : 1,
+            TotalAmount = 0,
+            StatusId = statusId,
             ReferenceNumber = "ORD-" + Guid.NewGuid().ToString().ToUpper().Substring(0, 8),
             OrderedAtUtc = DateTime.UtcNow
         };
@@ -88,79 +168,43 @@ public class OrderService : IOrderService
 
         decimal runningTotal = 0;
 
-        // 4. Obrada stavki, popusta i licenci
-        foreach (var item in cart.CartItems)
+        foreach (var item in items)
         {
             if (item.GameId == null || item.Game == null) continue;
 
-            // Provjeri postoji li aktivan popust (da je danas između početka i kraja popusta).
-            // Ako se više promocija preklapa, kupac dobija najveći popust.
-            var activeDiscount = await _context.Discounts
-                .Where(d => d.GameId == item.GameId &&
-                            d.StartDate <= DateTime.Now &&
-                            d.EndDate >= DateTime.Now)
-                .OrderByDescending(d => d.DiscountPercentage)
-                .FirstOrDefaultAsync();
+            // Aktivan popust (ako se više promocija preklapa, kupac dobija najveći)
+            decimal priceToPay = await GetPriceToPayAsync(item.Game);
 
-            decimal basePrice = item.Game.Price ?? 0;
-            decimal priceToPay = basePrice;
-
-            // Obračunaj popust ako postoji
-            if (activeDiscount != null)
-            {
-                // Koristimo 100.0m da bi C# znao da radi sa decimalama, ne cijelim brojevima
-                priceToPay = basePrice - (basePrice * (activeDiscount.DiscountPercentage / 100.0m));
-            }
-
-            // Dodaj u ukupni zbir narudžbe
             runningTotal += priceToPay * item.Quantity;
 
-            // Spasi u OrderGame sa STVARNOM cijenom koju je platio (priceToPay)
-            var orderGame = new OrderGame
+            _context.OrderGames.Add(new OrderGame
             {
                 Order = order,
                 GameId = item.GameId.Value,
                 Quantity = item.Quantity,
-                PriceAtPurchase = priceToPay // PREPRAVLJENO: Sada spasava cijenu sa popustom
-            };
-            _context.OrderGames.Add(orderGame);
+                PriceAtPurchase = priceToPay
+            });
 
-            // 5. GENERISANJE LICENCI: Samo ako igra NIJE pre-order
-            if (item.Game.ReleaseDate <= today)
+            if (generateLicenses)
             {
                 for (int i = 0; i < item.Quantity; i++)
                 {
-                    var license = new License
+                    _context.Licenses.Add(new License
                     {
                         UserId = userId,
                         GameId = item.GameId.Value,
                         LicenseKey = Guid.NewGuid().ToString().ToUpper().Substring(0, 16),
                         IssueDate = DateTime.Now,
                         ExpiryDate = DateTime.Now.AddYears(10)
-                    };
-                    _context.Licenses.Add(license);
+                    });
                 }
             }
         }
 
-        // 6. Postavi finalni iznos narudžbe koji smo sakupili u petlji
         order.TotalAmount = runningTotal;
-
-        // 7. ISPRAZNI KORPU (Ovo je falilo!)
-        _context.CartItems.RemoveRange(cart.CartItems);
-
-        // 8. Spasi sve promjene u bazu
-        await _context.SaveChangesAsync();
-
-        return new CheckoutResultDto
-        {
-            OrderId = order.Id,
-            IsPreOrder = isPreOrder,
-            Message = isPreOrder
-                ? "Pre-order uspješan! Igra je rezervisana, status je 'Pre-ordered'."
-                : "Kupovina uspješna! Status je 'Placeno', popusti su obračunati i ključevi dostupni."
-        };
+        return (order, runningTotal);
     }
+
     public async Task<bool> CancelPreOrderAsync(int orderId)
     {
         var order = await _context.Orders
@@ -185,6 +229,8 @@ public class OrderService : IOrderService
     // 3. PREGLED HISTORIJE
     public async Task<List<OrderHistoryDto>> GetOrderHistoryAsync(int userId)
     {
+        var today = DateOnly.FromDateTime(DateTime.Now);
+
         return await _context.Orders
             .Where(o => o.UserId == userId)
             .Include(o => o.Status) // Povlači tabelu OrderStatus (onu sa tvoje slike)
@@ -199,10 +245,17 @@ public class OrderService : IOrderService
 
                 // Čitamo "Name" direktno iz tvoje tabele statusa
                 Status = o.Status != null ? o.Status.Name : "N/A",
+                StatusId = o.StatusId,
+                ReferenceNumber = o.ReferenceNumber,
+                // Ista pravila kao u CancelPreOrderAsync: status 4 (Pre-order) i nijedna igra još nije izašla
+                CanCancel = o.StatusId == 4 && o.OrderGames.All(og => og.Game.ReleaseDate > today),
 
                 Games = o.OrderGames.Select(og => new BoughtGameDto
                 {
+                    GameId = og.GameId,
                     Title = og.Game.Title,
+                    ImageUrl = og.Game.ImageUrl,
+                    ReleaseDate = og.Game.ReleaseDate,
                     PriceAtPurchase = og.PriceAtPurchase ?? 0,
                     // Povlačimo ključeve iz tabele License
                     LicenseKeys = _context.Licenses
@@ -223,8 +276,65 @@ public class OrderService : IOrderService
                 GameId = ci.GameId ?? 0,
                 GameTitle = ci.Game.Title,
                 Price = ci.Game.Price ?? 0,
-                Quantity = ci.Quantity
+                Quantity = ci.Quantity,
+                ImageUrl = ci.Game.ImageUrl,
+                ReleaseDate = ci.Game.ReleaseDate,
+                IsSavedForLater = ci.IsSavedForLater
             }).ToListAsync();
+    }
+
+    public async Task<bool> RemoveFromCartAsync(int userId, int cartItemId)
+    {
+        // Provjera vlasništva: stavka mora pripadati korpi ovog korisnika
+        var item = await _context.CartItems
+            .FirstOrDefaultAsync(ci => ci.Id == cartItemId && ci.Cart!.UserId == userId);
+        if (item == null) return false;
+
+        _context.CartItems.Remove(item);
+        return await _context.SaveChangesAsync() > 0;
+    }
+
+    /// <summary>"Sačuvaj za kasnije" direktno sa stranice igre (bez dodavanja u aktivnu korpu).</summary>
+    public async Task<bool> SaveGameForLaterAsync(int userId, int gameId)
+    {
+        var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserId == userId);
+        if (cart == null)
+        {
+            cart = new Cart { UserId = userId, CreatedAt = DateTime.Now, UpdatedAt = DateTime.Now };
+            _context.Carts.Add(cart);
+            await _context.SaveChangesAsync();
+        }
+
+        var item = await _context.CartItems.FirstOrDefaultAsync(ci => ci.CartId == cart.Id && ci.GameId == gameId);
+        if (item == null)
+        {
+            _context.CartItems.Add(new CartItem
+            {
+                CartId = cart.Id,
+                GameId = gameId,
+                Quantity = 1,
+                AddedAt = DateTime.Now,
+                IsSavedForLater = true
+            });
+        }
+        else
+        {
+            item.IsSavedForLater = true; // ako je već u korpi, premjesti je u "za kasnije"
+        }
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> SetSavedForLaterAsync(int userId, int cartItemId, bool saved)
+    {
+        var item = await _context.CartItems
+            .FirstOrDefaultAsync(ci => ci.Id == cartItemId && ci.Cart!.UserId == userId);
+        if (item == null) return false;
+
+        item.IsSavedForLater = saved;
+        await _context.SaveChangesAsync();
+        return true;
     }
 
     public async Task<SalesReportDto> GetSalesReportAsync(DateTime from, DateTime to)

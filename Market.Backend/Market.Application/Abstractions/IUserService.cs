@@ -10,6 +10,8 @@ namespace Market.Application.Abstractions
     public interface IUserService
     {
         Task<List<UserDto>> GetAllUsersAsync(string? searchTerm);
+        Task<Market.Application.Common.PageResult<UserDto>> GetUsersPagedAsync(UserFilterDto filter);
+        Task<List<RoleDto>> GetRolesAsync();
         Task<UserDto?> GetUserByIdAsync(int id);
         Task<bool> CreateUserAsync(UserUpdateDto dto);
         Task<bool> UpdateUserAsync(int id, UserUpdateDto dto);

@@ -8,11 +8,81 @@
     </h1>
 
     <!-- Pretraga: svaki unos ide u search$ -> backend searchTerm filter -->
-    <div class="search-box mb-3">
-      <mat-icon>search</mat-icon>
-      <input type="search" [placeholder]="'GAMES.CATALOG.SEARCH_PLACEHOLDER' | translate"
-             [(ngModel)]="searchTerm" (ngModelChange)="onSearch($event)" />
+    <div class="search-row mb-3">
+      <div class="search-box">
+        <mat-icon>search</mat-icon>
+        <input type="search" [placeholder]="'GAMES.CATALOG.SEARCH_PLACEHOLDER' | translate"
+               [(ngModel)]="searchTerm" (ngModelChange)="onSearch($event)" />
+      </div>
+      <button type="button" class="filter-toggle" [class.active]="showFilters || activeFilterCount"
+              (click)="showFilters = !showFilters">
+        <mat-icon>tune</mat-icon>
+        <span class="d-none d-sm-inline">{{ 'GAMES.FILTERS.TITLE' | translate }}</span>
+        @if (activeFilterCount) { <span class="count">{{ activeFilterCount }}</span> }
+      </button>
     </div>
+
+    <!-- Napredni filteri: cijena, ocjena, tip sadržaja -> backend minPrice/maxPrice/minRating/type -->
+    @if (showFilters) {
+      <div class="filter-panel mb-3">
+        <div class="filter-group">
+          <label>{{ 'GAMES.FILTERS.PRICE' | translate }} (KM)</label>
+          <div class="price-inputs">
+            <input type="number" min="0" step="1" [placeholder]="'GAMES.FILTERS.FROM' | translate"
+                   [(ngModel)]="filters.minPrice" (ngModelChange)="applyFilters()" [class.invalid]="!!priceError" />
+            <span>–</span>
+            <input type="number" min="0" step="1" [placeholder]="'GAMES.FILTERS.TO' | translate"
+                   [(ngModel)]="filters.maxPrice" (ngModelChange)="applyFilters()" [class.invalid]="!!priceError" />
+          </div>
+          @if (priceError) { <small class="error">{{ priceError | translate }}</small> }
+        </div>
+
+        <div class="filter-group">
+          <label>{{ 'GAMES.FILTERS.MIN_RATING' | translate }}</label>
+          <div class="stars">
+            @for (r of ratingOptions; track r) {
+              <button type="button" [class.on]="filters.minRating !== null && r <= filters.minRating"
+                      (click)="setRating(r)" [title]="r + '+'">
+                <mat-icon>star</mat-icon>
+              </button>
+            }
+            @if (filters.minRating) { <span class="stars-label">{{ filters.minRating }}+</span> }
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label>{{ 'GAMES.FILTERS.TYPE' | translate }}</label>
+          <div class="type-chips">
+            <button type="button" class="genre-chip" [class.active]="filters.type === null" (click)="setType(null)">
+              {{ 'GAMES.CATALOG.ALL_GENRES' | translate }}
+            </button>
+            @for (t of contentTypes; track t) {
+              <button type="button" class="genre-chip" [class.active]="filters.type === t" (click)="setType(t)">
+                {{ 'GAMES.CONTENT_TYPES.' + t | translate }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label>{{ 'GAMES.FILTERS.RELEASE' | translate }}</label>
+          <div class="price-inputs date-inputs">
+            <input type="date" [(ngModel)]="filters.releasedFrom" (ngModelChange)="applyFilters()" [class.invalid]="!!dateError" />
+            <span>–</span>
+            <input type="date" [(ngModel)]="filters.releasedTo" (ngModelChange)="applyFilters()" [class.invalid]="!!dateError" />
+          </div>
+          <div class="type-chips">
+            <button type="button" class="genre-chip small" (click)="setReleasePreset('upcoming')">{{ 'GAMES.FILTERS.UPCOMING' | translate }}</button>
+            <button type="button" class="genre-chip small" (click)="setReleasePreset('lastYear')">{{ 'GAMES.FILTERS.LAST_YEAR' | translate }}</button>
+          </div>
+          @if (dateError) { <small class="error">{{ dateError | translate }}</small> }
+        </div>
+
+        <button type="button" class="reset-link" [disabled]="!activeFilterCount" (click)="resetAdvancedFilters()">
+          <mat-icon>filter_alt_off</mat-icon> {{ 'GAMES.FILTERS.RESET' | translate }}
+        </button>
+      </div>
+    }
 
     <!-- Žanr chipovi -> backend genre filter -->
     @if (genres.length) {

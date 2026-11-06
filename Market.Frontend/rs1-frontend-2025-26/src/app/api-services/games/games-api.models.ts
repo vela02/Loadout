@@ -44,3 +44,45 @@ export interface Announcement {
   type: string;      // npr. "Sale", "Info", "Maintenance"
   createdAt: string;
 }
+
+// ---------- Korpa i narudžbe ----------
+export interface CartItem {
+  cartItemId: number;
+  gameId: number;
+  gameTitle: string;
+  price: number;
+  quantity: number;
+  total: number;
+  imageUrl: string | null;
+  isSavedForLater: boolean;   // "Save for later": ne naplaćuje se pri checkoutu
+  releaseDate: string | null;
+  isPreOrder: boolean;
+}
+
+export interface CheckoutResult {
+  orderId: number;
+  orderIds: number[];   // plaćena narudžba + (posebna) pre-order narudžba
+  message: string;
+  isPreOrder: boolean;
+  totalAmount: number;
+}
+
+export interface BoughtGame {
+  gameId: number;
+  title: string;
+  imageUrl: string | null;
+  releaseDate: string | null;
+  priceAtPurchase: number;
+  licenseKeys: string[];
+}
+
+export interface OrderHistory {
+  id: number;
+  date: string;
+  totalAmount: number;
+  status: string;
+  statusId: number | null;
+  referenceNumber: string | null;
+  canCancel: boolean;   // backend: aktivan pre-order čije igre još nisu izašle
+  games: BoughtGame[];
+}

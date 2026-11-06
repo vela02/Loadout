@@ -14,6 +14,8 @@ namespace Market.Shared.Dtos
         public string RoleName { get; set; }
         public int RoleId { get; set; }
         public bool IsEnabled { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? LastLogin { get; set; }
 
     }
 }

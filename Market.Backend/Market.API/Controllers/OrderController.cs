@@ -32,6 +32,33 @@ namespace Market.API.Controllers
             return Ok(cart);
         }
 
+        // DELETE api/Order/cart/5/items/12 -> ukloni stavku iz korpe
+        [HttpDelete("cart/{userId}/items/{cartItemId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RemoveFromCart(int userId, int cartItemId)
+        {
+            var ok = await _orderService.RemoveFromCartAsync(userId, cartItemId);
+            return ok ? NoContent() : NotFound();
+        }
+
+        // PUT api/Order/cart/5/items/12/save-for-later?saved=true -> premjesti u "za kasnije" (ili nazad)
+        [HttpPut("cart/{userId}/items/{cartItemId}/save-for-later")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SaveForLater(int userId, int cartItemId, [FromQuery] bool saved = true)
+        {
+            var ok = await _orderService.SetSavedForLaterAsync(userId, cartItemId, saved);
+            return ok ? NoContent() : NotFound();
+        }
+
+        // POST api/Order/save-for-later?userId=5&gameId=3 -> sačuvaj igru za kasnije sa stranice igre
+        [HttpPost("save-for-later")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SaveGameForLater(int userId, int gameId)
+        {
+            await _orderService.SaveGameForLaterAsync(userId, gameId);
+            return Ok();
+        }
+
         [HttpPost("checkout/{userId}")]
         [AllowAnonymous]
         public async Task<IActionResult> Checkout(int userId)
@@ -45,7 +72,10 @@ namespace Market.API.Controllers
             return Ok(new
             {
                 OrderId = result.OrderId,
-                Message = result.Message
+                OrderIds = result.OrderIds,
+                Message = result.Message,
+                IsPreOrder = result.IsPreOrder,
+                TotalAmount = result.TotalAmount
             });
         }
 
