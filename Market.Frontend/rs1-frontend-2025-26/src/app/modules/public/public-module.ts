@@ -8,6 +8,7 @@ import {GamesCatalogComponent} from './games-catalog/games-catalog.component';
 import {GameDetailsComponent} from './game-details/game-details.component';
 import {NewsFeedComponent} from './news-feed/news-feed.component';
 import {StoreHeaderComponent} from './store-header/store-header.component';
+import {CheckoutComponent} from './checkout/checkout.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import {StoreHeaderComponent} from './store-header/store-header.component';
     GamesCatalogComponent,
     GameDetailsComponent,
     NewsFeedComponent,
-    StoreHeaderComponent
+    StoreHeaderComponent,
+    CheckoutComponent
   ],
   imports: [
     SharedModule,

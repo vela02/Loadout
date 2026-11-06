@@ -123,6 +123,9 @@ namespace Market.Infrastructure.Migrations
                     b.Property<int?>("GameId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsSavedForLater")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
@@ -589,6 +592,11 @@ namespace Market.Infrastructure.Migrations
 
                     b.Property<int?>("StatusId")
                         .HasColumnType("int");
+
+                    b.Property<string>("TransactionId")
+                        .HasMaxLength(255)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id")
                         .HasName("PK__Payment__3214EC076942E066");

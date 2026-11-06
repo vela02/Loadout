@@ -1,0 +1,296 @@
+$bg-deep: #0b0c1a;
+$panel: #171a36;
+$panel-edge: #2a2e5c;
+$cyan: #22d3ee;
+$magenta: #e040fb;
+$text: #e8e9ff;
+$text-muted: #8d90b8;
+$neon-gradient: linear-gradient(90deg, $cyan 0%, $magenta 100%);
+$danger: #f87171;
+$ok: #34d399;
+
+mat-icon { font-size: 20px; width: 20px; height: 20px; vertical-align: middle; }
+
+.users-page { color: $text; padding: 24px; }
+.muted { color: $text-muted; }
+
+.page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+
+  h1 { font-size: 1.8rem; font-weight: 800; line-height: 1.2; margin: 0 0 4px; }
+  p { margin: 0; }
+}
+
+.panel {
+  background: rgba($panel, 0.85);
+  border: 1px solid $panel-edge;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+/* ---------- dugmad ---------- */
+.btn-neon, .btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: box-shadow 0.2s, border-color 0.2s, opacity 0.2s;
+
+  &:disabled { opacity: 0.5; cursor: default; }
+}
+
+.btn-neon {
+  border: none;
+  background: $neon-gradient;
+  color: $bg-deep;
+  box-shadow: 0 0 16px rgba($cyan, 0.3);
+
+  &:hover:not(:disabled) { box-shadow: 0 0 28px rgba($magenta, 0.5); }
+}
+
+.btn-ghost {
+  border: 1px solid $panel-edge;
+  background: transparent;
+  color: $text;
+
+  &:hover:not(:disabled) { border-color: $cyan; }
+
+  .count {
+    min-width: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: $neon-gradient;
+    color: $bg-deep;
+    font-size: 0.75rem;
+    text-align: center;
+  }
+}
+
+/* ---------- filteri ---------- */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 150px;
+
+  &.grow { flex: 1; min-width: 220px; }
+
+  label { font-size: 0.8rem; color: $text-muted; }
+
+  input, select {
+    height: 42px;
+    padding: 0 12px;
+    border-radius: 10px;
+    border: 1px solid $panel-edge;
+    background: $bg-deep;
+    color: $text;
+    outline: none;
+    color-scheme: dark;              // tamni date picker i dropdown
+
+    &:focus { border-color: $cyan; box-shadow: 0 0 0 3px rgba($cyan, 0.15); }
+    &.invalid { border-color: $danger; }
+  }
+}
+
+.input-icon {
+  position: relative;
+
+  mat-icon { position: absolute; left: 10px; top: 11px; color: $text-muted; }
+  input { width: 100%; padding-left: 38px; }
+}
+
+/* ---------- tabela ---------- */
+.table-wrap { overflow-x: auto; padding: 0; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 820px;
+
+  th {
+    text-align: left;
+    padding: 14px 16px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: $text-muted;
+    border-bottom: 1px solid $panel-edge;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+
+    mat-icon { font-size: 16px; width: 16px; height: 16px; opacity: 0.5; }
+    &:hover { color: $text; }
+    &.sorted { color: $cyan; mat-icon { opacity: 1; } }
+    &.actions-col { cursor: default; }
+  }
+
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba($panel-edge, 0.5);
+  }
+
+  tbody tr:hover { background: rgba($cyan, 0.04); }
+  tbody.loading { opacity: 0.5; }
+
+  .actions-col { text-align: right; white-space: nowrap; }
+  .empty { text-align: center; padding: 32px; color: $text-muted; }
+}
+
+.user-cell { display: flex; align-items: center; gap: 10px; }
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  color: $bg-deep;
+  background: $neon-gradient;
+}
+
+.role {
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid $panel-edge;
+  font-size: 0.8rem;
+
+  &.admin { border-color: rgba($magenta, 0.6); color: $magenta; }
+}
+
+.status {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: $danger;
+  background: rgba($danger, 0.1);
+
+  &.on { color: $ok; background: rgba($ok, 0.1); }
+}
+
+.icon-btn {
+  border: none;
+  background: none;
+  color: $text-muted;
+  padding: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover { color: $cyan; background: rgba($cyan, 0.08); }
+  &.danger:hover { color: $danger; background: rgba($danger, 0.08); }
+}
+
+/* ---------- paging ---------- */
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 16px;
+
+  .pages { display: flex; gap: 4px; }
+
+  button {
+    min-width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid $panel-edge;
+    background: transparent;
+    color: $text;
+    cursor: pointer;
+
+    &.active { background: $neon-gradient; color: $bg-deep; border: none; font-weight: 800; }
+    &:disabled { opacity: 0.4; cursor: default; }
+  }
+
+  select {
+    height: 36px;
+    padding: 0 10px;
+    border-radius: 10px;
+    border: 1px solid $panel-edge;
+    background: $bg-deep;
+    color: $text;
+    color-scheme: dark;
+  }
+}
+
+/* ---------- modal ---------- */
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba($bg-deep, 0.7);
+  backdrop-filter: blur(6px);
+}
+
+.modal-panel {
+  width: min(520px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px;
+  border-radius: 18px;
+  border: 1px solid rgba($cyan, 0.4);
+  background: $panel;
+  box-shadow: 0 0 40px rgba($magenta, 0.2), 0 24px 48px rgba(0, 0, 0, 0.6);
+  animation: modal-in 0.25s ease-out;
+
+  h2 { font-size: 1.3rem; font-weight: 800; margin: 0 0 4px; }
+  .field { min-width: 0; }
+}
+
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.switch {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  color: $text !important;
+  font-size: 0.95rem !important;
+
+  input { width: 18px; height: 18px; accent-color: $cyan; }
+}
+
+.error { color: $danger; font-size: 0.8rem; }
+
+.server-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: $danger;
+  background: rgba($danger, 0.1);
+  border: 1px solid rgba($danger, 0.4);
+}
+
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px; }

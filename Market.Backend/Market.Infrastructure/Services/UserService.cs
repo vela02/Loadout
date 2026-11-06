@@ -2,6 +2,8 @@
 using Market.Application.Abstractions;
 using Market.Domain.Models;
 using Market.Infrastructure.Common;
+using Market.Application.Common;
+using Market.Application.Common.Exceptions;
 using Market.Shared.Dtos;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -43,8 +45,75 @@ namespace Market.Infrastructure.Services
             }).ToListAsync();
         }
 
+        /// <summary>Admin lista: 5 filtera + sortiranje po koloni + backend paging.</summary>
+        public async Task<PageResult<UserDto>> GetUsersPagedAsync(UserFilterDto f)
+        {
+            var query = _context.Users.Include(u => u.Role).Where(u => !u.IsDeleted).AsQueryable();
+
+            // ---- FILTERI (svaki se primjenjuje samo ako je zadan) ----
+            if (!string.IsNullOrWhiteSpace(f.Search))
+            {
+                var s = f.Search.Trim();
+                query = query.Where(u => u.Username.Contains(s) || u.Email.Contains(s));
+            }
+            if (f.RoleId.HasValue) query = query.Where(u => u.RoleId == f.RoleId);
+            if (f.IsEnabled.HasValue) query = query.Where(u => u.IsEnabled == f.IsEnabled);
+            if (f.CreatedFrom.HasValue) query = query.Where(u => u.CreatedAt >= f.CreatedFrom.Value.Date);
+            if (f.CreatedTo.HasValue) query = query.Where(u => u.CreatedAt < f.CreatedTo.Value.Date.AddDays(1)); // uključivo cijeli dan
+
+            // ---- SORTIRANJE PO KOLONI ----
+            bool desc = string.Equals(f.SortDir, "desc", StringComparison.OrdinalIgnoreCase);
+            query = (f.SortBy?.ToLower()) switch
+            {
+                "username"  => desc ? query.OrderByDescending(u => u.Username)  : query.OrderBy(u => u.Username),
+                "email"     => desc ? query.OrderByDescending(u => u.Email)     : query.OrderBy(u => u.Email),
+                "role"      => desc ? query.OrderByDescending(u => u.Role!.Name) : query.OrderBy(u => u.Role!.Name),
+                "lastlogin" => desc ? query.OrderByDescending(u => u.LastLogin) : query.OrderBy(u => u.LastLogin),
+                "status"    => desc ? query.OrderByDescending(u => u.IsEnabled) : query.OrderBy(u => u.IsEnabled),
+                _           => desc ? query.OrderByDescending(u => u.CreatedAt) : query.OrderBy(u => u.CreatedAt),
+            };
+
+            var projected = query.Select(u => new UserDto
+            {
+                Id = u.Id,
+                Username = u.Username,
+                Email = u.Email,
+                RoleName = u.Role != null ? u.Role.Name : "N/A",
+                RoleId = u.RoleId ?? 0,
+                IsEnabled = u.IsEnabled,
+                CreatedAt = u.CreatedAt,
+                LastLogin = u.LastLogin
+            });
+
+            // ---- PAGING (Skip/Take u SQL-u, plus ukupan broj) ----
+            var paging = new PageRequest { Page = f.Page < 1 ? 1 : f.Page, PageSize = f.PageSize };
+            return await PageResult<UserDto>.FromQueryableAsync(projected, paging);
+        }
+
+        public async Task<List<RoleDto>> GetRolesAsync()
+        {
+            return await _context.Roles
+                .OrderBy(r => r.Name)
+                .Select(r => new RoleDto { Id = r.Id, Name = r.Name })
+                .ToListAsync();
+        }
+
+        /// <summary>Email i username moraju biti jedinstveni (provjera na backendu).</summary>
+        private async Task EnsureUniqueAsync(string username, string email, int? exceptUserId = null)
+        {
+            var e = email.Trim().ToLower();
+            if (await _context.Users.AnyAsync(u => !u.IsDeleted && u.Id != exceptUserId && u.Email.ToLower() == e))
+                throw new MarketConflictException("Korisnik s ovim emailom već postoji.");
+            if (await _context.Users.AnyAsync(u => !u.IsDeleted && u.Id != exceptUserId && u.Username == username.Trim()))
+                throw new MarketConflictException("Korisničko ime je zauzeto.");
+        }
+
         public async Task<bool> CreateUserAsync(UserUpdateDto dto)
         {
+            await EnsureUniqueAsync(dto.Username, dto.Email);
+            dto.Email = dto.Email.Trim().ToLower(); // login poredi emailove malim slovima
+            dto.Username = dto.Username.Trim();
+
             var user = new User
             {
                 Username = dto.Username,
@@ -71,8 +140,12 @@ namespace Market.Infrastructure.Services
             var user=await _context.Users.FindAsync(userId);
             if (user == null) return false;
 
-            user.Username=dto.Username;
-            user.Email=dto.Email;
+            await EnsureUniqueAsync(dto.Username, dto.Email, userId);
+
+            user.Username=dto.Username.Trim();
+            user.Email=dto.Email.Trim().ToLower();
+            if (!string.IsNullOrWhiteSpace(dto.Password))
+                user.PasswordHash = _passwordHasher.HashPassword(user, dto.Password); // nova šifra samo ako je unesena
             user.RoleId=dto.RoleId;
             user.IsEnabled=dto.IsEnabled;
 

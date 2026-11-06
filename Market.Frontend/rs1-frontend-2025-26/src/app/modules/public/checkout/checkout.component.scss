@@ -1,0 +1,433 @@
+// Boje iz Velidovog landing pagea
+$bg-deep: #0b0c1a;
+$panel: #171a36;
+$panel-edge: #2a2e5c;
+$cyan: #22d3ee;
+$magenta: #e040fb;
+$violet: #7c3aed;
+$text: #e8e9ff;
+$text-muted: #8d90b8;
+$neon-gradient: linear-gradient(90deg, $cyan 0%, $magenta 100%);
+
+mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+/* ---------- Indikator koraka ---------- */
+.stepper {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 8px;
+}
+
+.step {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid $panel-edge;
+  background: rgba($panel, 0.6);
+  color: $text-muted;
+  position: relative;
+
+  .dot {
+    flex: 0 0 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    border: 1px solid $panel-edge;
+  }
+
+  &.active {
+    border-color: $cyan;
+    color: $text;
+    box-shadow: 0 0 16px rgba($cyan, 0.25);
+
+    .dot {
+      background: $neon-gradient;
+      color: $bg-deep;
+      border: none;
+    }
+  }
+
+  &.done {
+    color: $text;
+
+    .dot {
+      background: rgba($cyan, 0.15);
+      color: $cyan;
+      border-color: $cyan;
+    }
+  }
+
+  &.clickable {
+    cursor: pointer;
+
+    &:hover { border-color: $cyan; }
+  }
+}
+
+@media (max-width: 767px) {
+  .step .label { display: none; }   // na mobitelu samo brojevi
+  .step { justify-content: center; }
+}
+
+/* ---------- Paneli ---------- */
+.panel {
+  background: rgba($panel, 0.85);
+  border: 1px solid $panel-edge;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.panel-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+
+  mat-icon { color: $cyan; }
+}
+
+/* ---------- Stavke korpe ---------- */
+.cart-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba($panel-edge, 0.6);
+
+  &:last-child { border-bottom: none; }
+
+  img {
+    width: 120px;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid $panel-edge;
+  }
+
+  &.saved img { opacity: 0.7; }
+}
+
+.item-title {
+  color: $text;
+  font-weight: 700;
+  text-decoration: none;
+
+  &:hover { color: $cyan; }
+}
+
+.mini-badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: $neon-gradient;
+  color: $bg-deep;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 6px;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: $text-muted;
+    font-size: 0.85rem;
+    cursor: pointer;
+
+    mat-icon { font-size: 18px; width: 18px; height: 18px; }
+
+    &:hover { color: $cyan; }
+    &.danger:hover { color: #f87171; }
+  }
+}
+
+.item-price {
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.empty {
+  text-align: center;
+  padding: 32px 0;
+  color: $text-muted;
+
+  mat-icon { font-size: 48px; width: 48px; height: 48px; color: $panel-edge; }
+  p { margin: 12px 0 16px; }
+}
+
+/* ---------- Forme ---------- */
+.form-label {
+  color: $text-muted;
+  font-size: 0.85rem;
+}
+
+.form-select {
+  background-color: $panel;
+  border-color: $panel-edge;
+  color: $text;
+}
+
+.pay-methods {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pay-method {
+  flex: 1;
+  min-width: 160px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid $panel-edge;
+  background: $bg-deep;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  input { accent-color: $cyan; }
+
+  &.selected {
+    border-color: $cyan;
+    box-shadow: 0 0 16px rgba($cyan, 0.25);
+  }
+}
+
+.form-check-input:checked {
+  background-color: $cyan;
+  border-color: $cyan;
+}
+
+/* ---------- Sažetak ---------- */
+.summary {
+  position: sticky;
+  top: 90px;                 // ispod sticky zaglavlja
+  box-shadow: 0 0 40px rgba($violet, 0.2);
+}
+
+.sum-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  color: $text-muted;
+  font-size: 0.9rem;
+}
+
+.sum-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid $panel-edge;
+  font-weight: 700;
+
+  .total {
+    font-size: 1.8rem;
+    font-weight: 800;
+    line-height: 1.2;
+    background: $neon-gradient;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+.back-btn {
+  color: $text-muted;
+  text-decoration: none;
+
+  &:hover { color: $cyan; }
+}
+
+/* ---------- Potvrda ---------- */
+.success-panel {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.success-icon mat-icon {
+  font-size: 72px;
+  width: 72px;
+  height: 72px;
+  color: $cyan;
+  filter: drop-shadow(0 0 16px rgba($cyan, 0.6));
+}
+
+.key-row {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba($panel-edge, 0.6);
+}
+
+.key {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: $bg-deep;
+  border: 1px dashed $panel-edge;
+
+  code {
+    color: $cyan;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+  }
+
+  button {
+    border: none;
+    background: none;
+    color: $text-muted;
+    cursor: pointer;
+
+    &:hover { color: $cyan; }
+  }
+}
+
+.order-ref {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  padding-bottom: 6px;
+  border-bottom: 1px solid $panel-edge;
+
+  .order-status {
+    padding: 2px 10px;
+    border-radius: 999px;
+    border: 1px solid $panel-edge;
+    color: $text-muted;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+}
+
+.pdf-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid $panel-edge;
+  background: transparent;
+  color: $text;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover { border-color: $magenta; color: $magenta; }
+}
+
+// direktiva appCopyToClipboard doda klasu "copied" na 1.5 s
+.key button.copied { color: #34d399; }
+
+/* ---------- Stripe ---------- */
+.stripe-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba($cyan, 0.4);
+  color: $cyan;
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  mat-icon { font-size: 16px; width: 16px; height: 16px; }
+}
+
+// Kontejner u koji Stripe montira svoj iframe – izgleda kao naša ostala polja
+.stripe-card {
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid $panel-edge;
+  background: $bg-deep;
+  min-height: 50px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &.StripeElement--focus {            // klasu dodaje sam Stripe
+    border-color: $cyan;
+    box-shadow: 0 0 0 3px rgba($cyan, 0.15);
+  }
+  &.invalid { border-color: #f87171; }
+  &.loading { opacity: 0.5; }
+}
+
+.card-error {
+  margin-top: 6px;
+  color: #f87171;
+  font-size: 0.85rem;
+}
+
+.test-cards {
+  display: flex;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px dashed $panel-edge;
+  color: $text-muted;
+  font-size: 0.85rem;
+  line-height: 1.7;
+
+  mat-icon { color: $magenta; flex: 0 0 20px; }
+  code { color: $cyan; }
+  strong { color: $text; }
+}
+
+.payment-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: #f87171;
+  background: rgba(#f87171, 0.1);
+  border: 1px solid rgba(#f87171, 0.4);
+}
+
+.test-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px dashed $panel-edge;
+  background: transparent;
+  color: $text-muted;
+  font-size: 0.8rem;
+  cursor: pointer;
+
+  mat-icon { font-size: 16px; width: 16px; height: 16px; color: $magenta; }
+  .chev { color: $text-muted; }
+  &:hover { border-color: $magenta; color: $text; }
+}

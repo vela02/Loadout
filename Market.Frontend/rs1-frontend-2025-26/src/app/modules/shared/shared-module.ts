@@ -8,6 +8,9 @@ import { FitConfirmDialogComponent } from './components/fit-confirm-dialog/fit-c
 import {DialogHelperService} from './services/dialog-helper.service';
 import { FitLoadingBarComponent } from './components/fit-loading-bar/fit-loading-bar.component';
 import { FitTableSkeletonComponent } from './components/fit-table-skeleton/fit-table-skeleton.component';
+import { LicenseKeyPipe } from './pipes/license-key.pipe';
+import { CopyToClipboardDirective } from './directives/copy-to-clipboard.directive';
+import { QrCodeComponent } from './components/qr-code/qr-code.component';
 
 
 
@@ -16,7 +19,10 @@ import { FitTableSkeletonComponent } from './components/fit-table-skeleton/fit-t
     FitPaginatorBarComponent,
     FitConfirmDialogComponent,
     FitLoadingBarComponent,
-    FitTableSkeletonComponent
+    FitTableSkeletonComponent,
+    LicenseKeyPipe,
+    CopyToClipboardDirective,
+    QrCodeComponent
   ],
   imports: [
     CommonModule,
@@ -36,6 +42,9 @@ import { FitTableSkeletonComponent } from './components/fit-table-skeleton/fit-t
     FormsModule,
     FitLoadingBarComponent,
     FitTableSkeletonComponent,
+    LicenseKeyPipe,
+    CopyToClipboardDirective,
+    QrCodeComponent,
     materialModules
   ]
 })

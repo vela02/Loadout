@@ -1,0 +1,215 @@
+// Boje iz Velidovog dizajna
+$bg-deep: #0b0c1a;
+$panel: #171a36;
+$panel-edge: #2a2e5c;
+$cyan: #22d3ee;
+$magenta: #e040fb;
+$text: #e8e9ff;
+$text-muted: #8d90b8;
+$neon-gradient: linear-gradient(90deg, $cyan 0%, $magenta 100%);
+
+mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+
+.orders-page { color: $text; }
+
+.page-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 24px;
+}
+
+.muted { color: $text-muted; }
+.small { font-size: 0.85rem; }
+
+.order-card {
+  background: rgba($panel, 0.85);
+  border: 1px solid $panel-edge;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.order-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba($panel-edge, 0.6);
+
+  .ref {
+    font-weight: 800;
+    letter-spacing: 0.05em;
+  }
+}
+
+.order-total {
+  margin-left: auto;
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1.3;
+  background: $neon-gradient;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.status {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border: 1px solid;
+
+  &.status-paid { color: #34d399; border-color: rgba(#34d399, 0.5); background: rgba(#34d399, 0.1); }
+  &.status-preorder { color: $magenta; border-color: rgba($magenta, 0.5); background: rgba($magenta, 0.1); }
+  &.status-cancelled { color: #f87171; border-color: rgba(#f87171, 0.5); background: rgba(#f87171, 0.1); }
+}
+
+.game-row {
+  display: flex;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba($panel-edge, 0.4);
+
+  &:last-of-type { border-bottom: none; }
+
+  img {
+    width: 120px;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid $panel-edge;
+  }
+}
+
+.game-title {
+  color: $text;
+  font-weight: 700;
+  text-decoration: none;
+
+  &:hover { color: $cyan; }
+}
+
+.key {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 380px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: $bg-deep;
+  border: 1px dashed $panel-edge;
+
+  code {
+    color: $cyan;
+    letter-spacing: 0.1em;
+  }
+
+  button {
+    border: none;
+    background: none;
+    color: $text-muted;
+    cursor: pointer;
+
+    &:hover { color: $cyan; }
+  }
+}
+
+.release-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  color: $magenta;
+  font-size: 0.85rem;
+}
+
+.order-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 12px;
+}
+
+.cancel-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(#f87171, 0.5);
+  background: transparent;
+  color: #f87171;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+
+  &:hover:not(:disabled) {
+    background: rgba(#f87171, 0.1);
+    box-shadow: 0 0 16px rgba(#f87171, 0.25);
+  }
+
+  &:disabled { opacity: 0.5; }
+}
+
+.empty {
+  text-align: center;
+  padding: 48px 0;
+  color: $text-muted;
+
+  mat-icon { font-size: 48px; width: 48px; height: 48px; color: $panel-edge; }
+  p { margin: 12px 0 20px; }
+}
+
+.btn-neon {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 12px;
+  background: $neon-gradient;
+  color: $bg-deep;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+@media (max-width: 575px) {
+  .game-row img { width: 80px; }
+}
+
+.key-actions {
+  display: flex;
+  gap: 4px;
+
+  button.active,
+  button.copied { color: #34d399; }  // "copied" dodaje direktiva appCopyToClipboard
+}
+
+.key-qr {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.pdf-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid $panel-edge;
+  background: transparent;
+  color: $text;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+
+  &:hover { border-color: $magenta; color: $magenta; }
+}

@@ -2,6 +2,7 @@
 using Market.Shared.Dtos;
 using Microsoft.AspNetCore.Authorization; // OVO JE BITNO
 using Microsoft.AspNetCore.Mvc;
+using Market.Application.Common.Exceptions;
 
 namespace Market.API.Controllers
 {
@@ -25,22 +26,50 @@ namespace Market.API.Controllers
             return Ok(users);
         }
 
+        // 1b. Lista s 5 filtera, sortiranjem i backend pagingom
+        // GET api/admin/users/paged?search=&roleId=&isEnabled=&createdFrom=&createdTo=&sortBy=&sortDir=&page=&pageSize=
+        [HttpGet("paged")]
+        public async Task<IActionResult> GetUsersPaged([FromQuery] UserFilterDto filter)
+        {
+            return Ok(await _userService.GetUsersPagedAsync(filter));
+        }
+
+        // Lista uloga za padajući meni
+        [HttpGet("roles")]
+        public async Task<IActionResult> GetRoles()
+        {
+            return Ok(await _userService.GetRolesAsync());
+        }
+
         // 2. Dodavanje korisnika
         [HttpPost]
         [AllowAnonymous] // Privremeno ostavljamo da možeš napraviti prvog Admina bez tokena
         public async Task<IActionResult> Create([FromBody] UserUpdateDto dto)
         {
-            var result = await _userService.CreateUserAsync(dto);
-            return Ok(result);
+            try
+            {
+                var result = await _userService.CreateUserAsync(dto);
+                return Ok(result);
+            }
+            catch (MarketConflictException ex)
+            {
+                return Conflict(new { message = ex.Message }); // 409: email/username zauzet
+            }
         }
 
         // 3. Uređivanje korisnika
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UserUpdateDto dto)
         {
-            var result = await _userService.UpdateUserAsync(id, dto);
-            if (!result) return NotFound("Korisnik nije pronađen.");
-            return Ok(result);
+            try
+            {
+                var result = await _userService.UpdateUserAsync(id, dto);
+                return Ok(result);
+            }
+            catch (MarketConflictException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
         }
 
         // 4. Brisanje korisnika (Soft delete)

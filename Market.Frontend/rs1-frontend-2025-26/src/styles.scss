@@ -209,3 +209,24 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     &:disabled { opacity: 0.6; }
   }
 }
+
+/* ===== Neon toast: uklanjamo standardnu pozadinu/sjenu Material snackbara,
+   tako da se vidi samo naša NeonToastComponent ===== */
+.mat-mdc-snack-bar-container.neon-toast-panel {
+  --mdc-snackbar-container-color: transparent;
+  --mat-snack-bar-container-color: transparent;
+  --mdc-snackbar-container-shape: 14px;
+  margin: 84px 16px 0 !important;         // ispod sticky zaglavlja
+
+  .mdc-snackbar__surface {
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    min-width: 0 !important;
+  }
+
+  .mdc-snackbar__label,
+  .mat-mdc-snack-bar-label {
+    padding: 0 !important;
+  }
+}

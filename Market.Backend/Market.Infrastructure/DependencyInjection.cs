@@ -50,6 +50,10 @@ public static class DependencyInjection
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAdminService, AdminService>(); // <--- DODANO OVDJE ZA ADMINISTRACIJU
 
+        // Stripe naplata (ključevi iz User Secrets, sekcija "Stripe")
+        services.Configure<StripeOptions>(configuration.GetSection(StripeOptions.SectionName));
+        services.AddScoped<IPaymentService, PaymentService>();
+
         services.AddScoped<IAppCurrentUser, AppCurrentUser>();
 
         // Identity hasher

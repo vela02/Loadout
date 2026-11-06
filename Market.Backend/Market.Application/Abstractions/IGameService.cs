@@ -17,7 +17,9 @@ namespace Market.Application.Abstractions
         string? genre,
         int? categoryId,
         GameContentType? type,
-        int? minRating);
+        int? minRating,
+        DateOnly? releasedFrom = null,
+        DateOnly? releasedTo = null);
 
         Task<GameDetailsDto?> GetGameDetailsAsync(int id);
     }

@@ -1,63 +1,44 @@
 import { Injectable, inject } from '@angular/core';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { NeonToastComponent, ToastData, ToastType } from '../components/neon-toast/neon-toast.component';
 
 /**
  * Global toaster service for displaying notifications.
- * Uses Material Snackbar for consistent UI.
+ * Javne metode su ISTE kao prije (success/error/warning/info),
+ * ali se umjesto standardnog snackbara prikazuje jedinstvena neon notifikacija
+ * (NeonToastComponent) – isti izgled u cijeloj aplikaciji.
  */
 @Injectable({
   providedIn: 'root'
 })
 export class ToasterService {
   private snackBar = inject(MatSnackBar);
+  private readonly defaultDuration = 4000;
 
-  private defaultConfig: MatSnackBarConfig = {
-    duration: 3000,
-    horizontalPosition: 'end',
-    verticalPosition: 'top'
-  };
-
-  /**
-   * Show success message (green)
-   */
   success(message: string, duration?: number): void {
-    this.snackBar.open(message, 'Close', {
-      ...this.defaultConfig,
-      duration: duration ?? this.defaultConfig.duration,
-      panelClass: ['snackbar-success']
-    });
+    this.show('success', message, duration);
   }
 
-  /**
-   * Show error message (red)
-   */
   error(message: string, duration?: number): void {
-    this.snackBar.open(message, 'Close', {
-      ...this.defaultConfig,
-      duration: duration ?? this.defaultConfig.duration,
-      panelClass: ['snackbar-error']
-    });
+    this.show('error', message, duration ?? 5000); // greške ostaju malo duže
   }
 
-  /**
-   * Show warning message (orange)
-   */
   warning(message: string, duration?: number): void {
-    this.snackBar.open(message, 'Close', {
-      ...this.defaultConfig,
-      duration: duration ?? this.defaultConfig.duration,
-      panelClass: ['snackbar-warning']
-    });
+    this.show('warning', message, duration);
   }
 
-  /**
-   * Show info message (blue)
-   */
   info(message: string, duration?: number): void {
-    this.snackBar.open(message, 'Close', {
-      ...this.defaultConfig,
-      duration: duration ?? this.defaultConfig.duration,
-      panelClass: ['snackbar-info']
+    this.show('info', message, duration);
+  }
+
+  private show(type: ToastType, message: string, duration?: number): void {
+    const ms = duration ?? this.defaultDuration;
+    this.snackBar.openFromComponent<NeonToastComponent, ToastData>(NeonToastComponent, {
+      data: { type, message, duration: ms },
+      duration: ms,
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+      panelClass: ['neon-toast-panel'],   // globalni stil uklanja standardnu Material "kutiju"
     });
   }
 }

@@ -357,6 +357,9 @@ public partial class LoadoutDbContext : DbContext, IAppDbContext
             entity.Property(e => e.PaymentMethod)
                 .HasMaxLength(255)
                 .IsUnicode(false);
+            entity.Property(e => e.TransactionId)
+                .HasMaxLength(255)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.Order).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.OrderId)

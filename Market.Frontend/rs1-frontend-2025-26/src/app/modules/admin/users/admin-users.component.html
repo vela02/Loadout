@@ -1,0 +1,178 @@
+<div class="users-page" data-bs-theme="dark">
+  <div class="page-head">
+    <div>
+      <h1>{{ 'GAMES.USERS.TITLE' | translate }}</h1>
+      <p class="muted">{{ 'GAMES.USERS.SUBTITLE' | translate: { count: result?.totalItems ?? 0 } }}</p>
+    </div>
+    <button type="button" class="btn-neon" (click)="openCreate()">
+      <mat-icon>person_add</mat-icon> {{ 'GAMES.USERS.ADD' | translate }}
+    </button>
+  </div>
+
+  <!-- ===== FILTERI (5 parametara) ===== -->
+  <form class="panel filters" [formGroup]="filterForm">
+    <div class="field grow">
+      <label>{{ 'GAMES.USERS.F_SEARCH' | translate }}</label>
+      <div class="input-icon">
+        <mat-icon>search</mat-icon>
+        <input type="search" formControlName="search" [placeholder]="'GAMES.USERS.F_SEARCH_PH' | translate" />
+      </div>
+    </div>
+    <div class="field">
+      <label>{{ 'GAMES.USERS.ROLE' | translate }}</label>
+      <select formControlName="roleId">
+        <option [ngValue]="null">{{ 'GAMES.USERS.ALL' | translate }}</option>
+        @for (r of roles; track r.id) { <option [ngValue]="r.id">{{ r.name }}</option> }
+      </select>
+    </div>
+    <div class="field">
+      <label>{{ 'GAMES.USERS.STATUS' | translate }}</label>
+      <select formControlName="isEnabled">
+        <option [ngValue]="null">{{ 'GAMES.USERS.ALL' | translate }}</option>
+        <option [ngValue]="true">{{ 'GAMES.USERS.ACTIVE' | translate }}</option>
+        <option [ngValue]="false">{{ 'GAMES.USERS.BLOCKED' | translate }}</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>{{ 'GAMES.USERS.F_FROM' | translate }}</label>
+      <input type="date" formControlName="createdFrom" />
+    </div>
+    <div class="field">
+      <label>{{ 'GAMES.USERS.F_TO' | translate }}</label>
+      <input type="date" formControlName="createdTo" />
+    </div>
+    <button type="button" class="btn-ghost" [disabled]="!activeFilterCount" (click)="resetFilters()">
+      <mat-icon>filter_alt_off</mat-icon>
+      {{ 'GAMES.USERS.RESET' | translate }}
+      @if (activeFilterCount) { <span class="count">{{ activeFilterCount }}</span> }
+    </button>
+  </form>
+
+  <!-- ===== TABELA (klik na zaglavlje = sortiranje) ===== -->
+  <div class="panel table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th (click)="sort('username')" [class.sorted]="sortBy === 'username'">
+            {{ 'GAMES.USERS.USERNAME' | translate }} <mat-icon>{{ sortIcon('username') }}</mat-icon></th>
+          <th (click)="sort('email')" [class.sorted]="sortBy === 'email'">
+            Email <mat-icon>{{ sortIcon('email') }}</mat-icon></th>
+          <th (click)="sort('role')" [class.sorted]="sortBy === 'role'">
+            {{ 'GAMES.USERS.ROLE' | translate }} <mat-icon>{{ sortIcon('role') }}</mat-icon></th>
+          <th (click)="sort('status')" [class.sorted]="sortBy === 'status'">
+            {{ 'GAMES.USERS.STATUS' | translate }} <mat-icon>{{ sortIcon('status') }}</mat-icon></th>
+          <th (click)="sort('createdAt')" [class.sorted]="sortBy === 'createdAt'">
+            {{ 'GAMES.USERS.CREATED' | translate }} <mat-icon>{{ sortIcon('createdAt') }}</mat-icon></th>
+          <th (click)="sort('lastLogin')" [class.sorted]="sortBy === 'lastLogin'">
+            {{ 'GAMES.USERS.LAST_LOGIN' | translate }} <mat-icon>{{ sortIcon('lastLogin') }}</mat-icon></th>
+          <th class="actions-col"></th>
+        </tr>
+      </thead>
+      <tbody [class.loading]="loading">
+        @for (u of result?.items ?? []; track u.id) {
+          <tr>
+            <td>
+              <div class="user-cell">
+                <span class="avatar">{{ u.username.charAt(0).toUpperCase() }}</span>
+                <strong>{{ u.username }}</strong>
+              </div>
+            </td>
+            <td class="muted">{{ u.email }}</td>
+            <td><span class="role" [class.admin]="u.roleName === 'Administrator'">{{ u.roleName }}</span></td>
+            <td>
+              <span class="status" [class.on]="u.isEnabled">
+                {{ (u.isEnabled ? 'GAMES.USERS.ACTIVE' : 'GAMES.USERS.BLOCKED') | translate }}
+              </span>
+            </td>
+            <td class="muted">{{ u.createdAt | date: 'dd.MM.yyyy' }}</td>
+            <td class="muted">{{ u.lastLogin ? (u.lastLogin | date: 'dd.MM.yyyy HH:mm') : '—' }}</td>
+            <td class="actions-col">
+              <button type="button" class="icon-btn" (click)="openEdit(u)" [title]="'GAMES.USERS.EDIT' | translate">
+                <mat-icon>edit</mat-icon></button>
+              <button type="button" class="icon-btn danger" (click)="remove(u)" [title]="'GAMES.USERS.DELETE' | translate">
+                <mat-icon>delete_outline</mat-icon></button>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="7" class="empty">{{ 'GAMES.USERS.EMPTY' | translate }}</td></tr>
+        }
+      </tbody>
+    </table>
+
+    <!-- ===== PAGING ===== -->
+    @if (result && result.totalItems > 0) {
+      <div class="pager">
+        <span class="muted">
+          {{ (result.currentPage - 1) * result.pageSize + 1 }}–{{ (result.currentPage - 1) * result.pageSize + result.items.length }}
+          / {{ result.totalItems }}
+        </span>
+        <div class="pages">
+          <button type="button" (click)="goToPage(page - 1)" [disabled]="page <= 1"><mat-icon>chevron_left</mat-icon></button>
+          @for (p of pages; track p) {
+            <button type="button" [class.active]="p === page" (click)="goToPage(p)">{{ p }}</button>
+          }
+          <button type="button" (click)="goToPage(page + 1)" [disabled]="page >= result.totalPages"><mat-icon>chevron_right</mat-icon></button>
+        </div>
+        <select [ngModel]="pageSize" (ngModelChange)="changePageSize($event)" [ngModelOptions]="{ standalone: true }">
+          @for (s of pageSizes; track s) { <option [ngValue]="s">{{ s }} / {{ 'GAMES.USERS.PAGE' | translate }}</option> }
+        </select>
+      </div>
+    }
+  </div>
+
+  <!-- ===== MODAL: DODAJ / UREDI ===== -->
+  @if (showForm) {
+    <div class="modal-backdrop-custom" (click)="closeForm()">
+      <form class="modal-panel" [formGroup]="userForm" (ngSubmit)="save()" (click)="$event.stopPropagation()">
+        <h2>{{ (editingId ? 'GAMES.USERS.EDIT_TITLE' : 'GAMES.USERS.ADD') | translate }}</h2>
+
+        <div class="field">
+          <label>{{ 'GAMES.USERS.USERNAME' | translate }} *</label>
+          <input formControlName="username" [class.invalid]="invalid('username')" />
+          @if (invalid('username')) { <small class="error">{{ 'GAMES.USERS.ERR_USERNAME' | translate }}</small> }
+        </div>
+
+        <div class="field">
+          <label>Email *</label>
+          <input type="email" formControlName="email" [class.invalid]="invalid('email')" />
+          @if (invalid('email')) { <small class="error">{{ 'GAMES.CHECKOUT.ERR_EMAIL' | translate }}</small> }
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label>{{ 'GAMES.USERS.ROLE' | translate }} *</label>
+            <select formControlName="roleId" [class.invalid]="invalid('roleId')">
+              <option [ngValue]="0" disabled>{{ 'GAMES.CHECKOUT.CHOOSE' | translate }}</option>
+              @for (r of roles; track r.id) { <option [ngValue]="r.id">{{ r.name }}</option> }
+            </select>
+            @if (invalid('roleId')) { <small class="error">{{ 'GAMES.CHECKOUT.ERR_REQUIRED' | translate }}</small> }
+          </div>
+          <div class="field">
+            <label>{{ 'GAMES.USERS.STATUS' | translate }}</label>
+            <label class="switch">
+              <input type="checkbox" formControlName="isEnabled" />
+              <span>{{ (userForm.controls.isEnabled.value ? 'GAMES.USERS.ACTIVE' : 'GAMES.USERS.BLOCKED') | translate }}</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>{{ 'GAMES.USERS.PASSWORD' | translate }} {{ editingId ? '' : '*' }}</label>
+          <input type="password" formControlName="password" autocomplete="new-password"
+                 [placeholder]="(editingId ? 'GAMES.USERS.PASSWORD_KEEP' : '') | translate"
+                 [class.invalid]="invalid('password')" />
+          @if (invalid('password')) { <small class="error">{{ 'GAMES.USERS.ERR_PASSWORD' | translate }}</small> }
+        </div>
+
+        @if (serverError) { <div class="server-error"><mat-icon>error_outline</mat-icon> {{ serverError }}</div> }
+
+        <div class="modal-actions">
+          <button type="button" class="btn-ghost" (click)="closeForm()">{{ 'GAMES.CHECKOUT.BACK' | translate }}</button>
+          <button type="submit" class="btn-neon" [disabled]="saving">
+            <mat-icon>save</mat-icon> {{ 'GAMES.USERS.SAVE' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+</div>
