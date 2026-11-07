@@ -54,6 +54,11 @@ public static class DependencyInjection
         services.Configure<StripeOptions>(configuration.GetSection(StripeOptions.SectionName));
         services.AddScoped<IPaymentService, PaymentService>();
 
+        // Pozadinski procesi (scheduler) + praćenje njihovog stanja
+        services.AddSingleton<Market.Infrastructure.BackgroundJobs.BackgroundJobMonitor>();
+        services.AddSingleton<Market.Infrastructure.BackgroundJobs.ScheduledTasksService>();
+        services.AddHostedService(sp => sp.GetRequiredService<Market.Infrastructure.BackgroundJobs.ScheduledTasksService>());
+
         services.AddScoped<IAppCurrentUser, AppCurrentUser>();
 
         // Identity hasher

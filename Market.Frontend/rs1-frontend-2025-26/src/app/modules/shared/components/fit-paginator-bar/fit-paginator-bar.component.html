@@ -22,6 +22,7 @@
         <span class="selector-label">{{ 'PAGINATION.ITEMS_PER_PAGE' | translate }}:</span>
         <mat-form-field appearance="fill" class="page-size-field">
           <mat-select
+            panelClass="loadout-select-panel"
             [value]="vm.request.paging.pageSize"
             (selectionChange)="vm.changePageSize($event.value)"
             [disabled]="vm.isLoading"

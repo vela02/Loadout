@@ -9,7 +9,7 @@
           <mat-icon>account_circle</mat-icon>
         </div>
         <div class="user-details">
-          <div class="user-email">{{ auth.currentUser()?.email }}</div>
+          <div class="user-email" [title]="auth.currentUser()?.email ?? ''">{{ auth.currentUser()?.email }}</div>
           <div class="user-role">
             @if (auth.isAdmin()) {
             <mat-chip class="role-chip admin">
@@ -69,6 +69,16 @@
       <a mat-list-item routerLink="/admin/stats" routerLinkActive="active">
         <mat-icon matListItemIcon>insights</mat-icon>
         <span matListItemTitle>{{ 'GAMES.STATS.TITLE' | translate }}</span>
+      </a>
+
+      <a mat-list-item routerLink="/admin/jobs" routerLinkActive="active">
+        <mat-icon matListItemIcon>memory</mat-icon>
+        <span matListItemTitle>{{ 'GAMES.JOBS.TITLE' | translate }}</span>
+      </a>
+
+      <a mat-list-item routerLink="/admin/news" routerLinkActive="active">
+        <mat-icon matListItemIcon>campaign</mat-icon>
+        <span matListItemTitle>{{ 'GAMES.NEWS_ADMIN.TITLE' | translate }}</span>
       </a>
 
       <a mat-list-item routerLink="/admin/users" routerLinkActive="active">

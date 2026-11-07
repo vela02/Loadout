@@ -1,0 +1,109 @@
+@use '../users/admin-users.component';
+
+$panel-edge: #2a2e5c;
+$bg-deep: #0b0c1a;
+$cyan: #22d3ee;
+$magenta: #e040fb;
+
+.small-text { font-size: 0.8rem; }
+
+.live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 4px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 8px #34d399;
+  animation: pulse 1.6s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.job-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  transition: box-shadow 0.3s, border-color 0.3s;
+
+  &.running {
+    border-color: $cyan;
+    box-shadow: 0 0 24px rgba($cyan, 0.3);
+  }
+}
+
+.job-head { display: flex; align-items: center; gap: 12px; }
+
+.job-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba($cyan, 0.12);
+  color: $cyan;
+
+  mat-icon { font-size: 24px; width: 24px; height: 24px; }
+}
+
+.state {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 1px solid $panel-edge;
+  color: #8d90b8;
+
+  &.ok { color: #34d399; border-color: rgba(#34d399, 0.5); }
+  &.error { color: #f87171; border-color: rgba(#f87171, 0.5); }
+  &.running { color: $cyan; border-color: $cyan; }
+}
+
+.job-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: $bg-deep;
+    border: 1px solid $panel-edge;
+  }
+
+  span { font-size: 0.75rem; color: #8d90b8; }
+}
+
+.last-result {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border-left: 3px solid #34d399;
+  background: rgba(#34d399, 0.06);
+  font-size: 0.85rem;
+
+  &.error { border-left-color: #f87171; background: rgba(#f87171, 0.06); }
+}
+
+.section-title { font-size: 1.2rem; font-weight: 800; margin: 0 0 12px; }
+
+.trigger {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid $panel-edge;
+
+  &.manual { border-color: rgba($magenta, 0.5); color: $magenta; }
+}

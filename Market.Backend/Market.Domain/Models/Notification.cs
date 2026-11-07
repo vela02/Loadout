@@ -20,4 +20,8 @@ public partial class Notification
     public virtual User? User { get; set; }
     public bool IsActive { get; set; } = true;
     public string Title { get; set; } = null!;
+
+    // Zakazivanje: vijest se vidi tek od PublishAt, a pozadinski proces je deaktivira nakon ExpiresAt
+    public DateTime? PublishAt { get; set; }
+    public DateTime? ExpiresAt { get; set; }
 }

@@ -13,10 +13,35 @@ namespace Market.API.Controllers;
 public class AdminController : ControllerBase
 {
     private readonly IAdminService _adminService;
+    private readonly Market.Infrastructure.BackgroundJobs.BackgroundJobMonitor _jobMonitor;
+    private readonly Market.Infrastructure.BackgroundJobs.ScheduledTasksService _scheduler;
 
-    public AdminController(IAdminService adminService)
+    public AdminController(
+        IAdminService adminService,
+        Market.Infrastructure.BackgroundJobs.BackgroundJobMonitor jobMonitor,
+        Market.Infrastructure.BackgroundJobs.ScheduledTasksService scheduler)
     {
         _adminService = adminService;
+        _jobMonitor = jobMonitor;
+        _scheduler = scheduler;
+    }
+
+    // ---------- POZADINSKI PROCESI ----------
+
+    // GET api/Admin/jobs -> stanje svih zadataka + historija zadnjih 50 izvršavanja
+    [HttpGet("jobs")]
+    public IActionResult GetJobs()
+    {
+        return Ok(_jobMonitor.GetSnapshot());
+    }
+
+    // POST api/Admin/jobs/ReleasePreOrders/run -> ručno pokretanje ("Pokreni sada")
+    [HttpPost("jobs/{name}/run")]
+    public async Task<IActionResult> RunJob(string name)
+    {
+        if (!_jobMonitor.Exists(name)) return NotFound(new { message = "Zadatak ne postoji." });
+        await _scheduler.RunJobAsync(name, "Manual");
+        return Ok(_jobMonitor.GetSnapshot());
     }
 
 
@@ -43,6 +68,29 @@ public class AdminController : ControllerBase
     
 
     
+    // GET api/Admin/announcements?title=&type=&isActive=&createdFrom=&createdTo=&page=&pageSize=
+    [HttpGet("announcements")]
+    public async Task<IActionResult> GetAnnouncements([FromQuery] AnnouncementFilterDto filter)
+    {
+        return Ok(await _adminService.GetAnnouncementsPagedAsync(filter));
+    }
+
+    // PUT api/Admin/announcements/5 -> izmjena (ista validacija kao kod kreiranja)
+    [HttpPut("announcements/{id}")]
+    public async Task<IActionResult> UpdateAnnouncement(int id, CreateNotificationDto dto)
+    {
+        var ok = await _adminService.UpdateAnnouncementAsync(id, dto);
+        return ok ? NoContent() : NotFound(new { message = "Obavještenje nije pronađeno." });
+    }
+
+    // DELETE api/Admin/announcements/5
+    [HttpDelete("announcements/{id}")]
+    public async Task<IActionResult> DeleteAnnouncement(int id)
+    {
+        var ok = await _adminService.DeleteAnnouncementAsync(id);
+        return ok ? NoContent() : NotFound(new { message = "Obavještenje nije pronađeno." });
+    }
+
     [HttpPost("announcements")]
     public async Task<IActionResult> PostAnnouncement(CreateNotificationDto dto)
     {

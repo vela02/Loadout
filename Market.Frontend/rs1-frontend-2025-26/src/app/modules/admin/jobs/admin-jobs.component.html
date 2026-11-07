@@ -1,0 +1,82 @@
+<div class="users-page" data-bs-theme="dark">
+  <div class="page-head">
+    <div>
+      <h1>{{ 'GAMES.JOBS.TITLE' | translate }}</h1>
+      <p class="muted"><span class="live-dot"></span> {{ 'GAMES.JOBS.SUBTITLE' | translate }}</p>
+    </div>
+  </div>
+
+  @if (!data) {
+    <p class="muted">{{ 'GAMES.DETAILS.LOADING' | translate }}</p>
+  } @else {
+    <!-- ===== KARTICE ZADATAKA ===== -->
+    <div class="jobs-grid">
+      @for (job of data.jobs; track job.name) {
+        <div class="panel job-card" [class.running]="job.isRunning">
+          <div class="job-head">
+            <span class="job-icon"><mat-icon>{{ jobIcon(job.name) }}</mat-icon></span>
+            <div class="flex-grow-1">
+              <strong>{{ jobTitle(job.name) }}</strong>
+              <div class="muted small-text">{{ job.description }}</div>
+            </div>
+            @if (job.isRunning) {
+              <span class="state running">{{ 'GAMES.JOBS.RUNNING' | translate }}</span>
+            } @else if (job.lastSuccess === false) {
+              <span class="state error">{{ 'GAMES.JOBS.ERROR' | translate }}</span>
+            } @else if (job.lastSuccess) {
+              <span class="state ok">OK</span>
+            } @else {
+              <span class="state">{{ 'GAMES.JOBS.WAITING' | translate }}</span>
+            }
+          </div>
+
+          <div class="job-stats">
+            <div><span>{{ 'GAMES.JOBS.INTERVAL' | translate }}</span><strong>{{ job.intervalSeconds }} s</strong></div>
+            <div><span>{{ 'GAMES.JOBS.LAST_RUN' | translate }}</span><strong>{{ job.lastRunAt ? (job.lastRunAt | date: 'HH:mm:ss') : '—' }}</strong></div>
+            <div><span>{{ 'GAMES.JOBS.NEXT_RUN' | translate }}</span><strong>{{ 'GAMES.JOBS.IN_SECONDS' | translate: { s: secondsUntil(job.nextRunAt) } }}</strong></div>
+            <div><span>{{ 'GAMES.JOBS.RUNS' | translate }}</span><strong>{{ job.totalRuns }} <small class="muted">({{ job.failedRuns }} ✕)</small></strong></div>
+          </div>
+
+          @if (job.lastResult) {
+            <div class="last-result" [class.error]="job.lastSuccess === false">{{ job.lastResult }}</div>
+          }
+
+          <button type="button" class="btn-ghost mt-auto" [disabled]="running === job.name || job.isRunning" (click)="run(job)">
+            <mat-icon>play_arrow</mat-icon> {{ 'GAMES.JOBS.RUN_NOW' | translate }}
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- ===== HISTORIJA ===== -->
+    <h2 class="section-title">{{ 'GAMES.JOBS.HISTORY' | translate }}</h2>
+    <div class="panel table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>{{ 'GAMES.JOBS.TIME' | translate }}</th>
+            <th>{{ 'GAMES.JOBS.JOB' | translate }}</th>
+            <th>{{ 'GAMES.JOBS.TRIGGER' | translate }}</th>
+            <th>{{ 'GAMES.JOBS.DURATION' | translate }}</th>
+            <th>{{ 'GAMES.USERS.STATUS' | translate }}</th>
+            <th>{{ 'GAMES.JOBS.RESULT' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of data.history; track $index) {
+            <tr>
+              <td class="muted">{{ r.startedAt | date: 'dd.MM. HH:mm:ss' }}</td>
+              <td>{{ jobTitle(r.jobName) }}</td>
+              <td><span class="trigger" [class.manual]="r.trigger === 'Manual'">{{ ('GAMES.JOBS.TRIGGER_' + r.trigger) | translate }}</span></td>
+              <td class="muted">{{ r.durationMs }} ms</td>
+              <td><span class="status" [class.on]="r.success">{{ (r.success ? 'GAMES.JOBS.SUCCESS' : 'GAMES.JOBS.ERROR') | translate }}</span></td>
+              <td>{{ r.result }}</td>
+            </tr>
+          } @empty {
+            <tr><td colspan="6" class="empty">{{ 'GAMES.JOBS.NO_HISTORY' | translate }}</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
