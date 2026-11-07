@@ -230,3 +230,23 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     padding: 0 !important;
   }
 }
+
+/* ===== Padajuća lista "stavki po stranici" (paginator) – neon tamna tema ===== */
+.loadout-select-panel {
+  --mat-select-panel-background-color: #171a36;
+  --mat-option-label-text-color: #e8e9ff;
+  --mat-option-hover-state-layer-color: rgba(34, 211, 238, 0.1);
+  --mat-option-selected-state-layer-color: rgba(34, 211, 238, 0.16);
+  --mat-option-selected-state-label-text-color: #22d3ee;
+  background: #171a36 !important;
+  border: 1px solid #2a2e5c;
+  border-radius: 12px !important;
+  box-shadow: 0 0 24px rgba(224, 64, 251, 0.2), 0 12px 32px rgba(0, 0, 0, 0.5) !important;
+
+  .mat-mdc-option {
+    min-height: 38px;
+    color: #e8e9ff;
+    font-weight: 600;
+  }
+}
+

@@ -2,6 +2,8 @@
 using Market.Application.Abstractions;
 using Market.Domain.Models;
 using Market.Shared.Dtos;
+using Market.Application.Common;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -49,6 +51,65 @@ namespace Market.Infrastructure.Services
             _context.Comments.Remove(comment);
             return await _context.SaveChangesAsync() > 0;
         }
+        /// <summary>Admin lista globalnih vijesti (UserId = null): 5 filtera + backend paging, najnovije prve.</summary>
+        public async Task<PageResult<AnnouncementAdminDto>> GetAnnouncementsPagedAsync(AnnouncementFilterDto f)
+        {
+            var query = _context.Notifications.Where(n => n.UserId == null).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(f.Title))
+                query = query.Where(n => n.Title.Contains(f.Title.Trim()));
+            if (!string.IsNullOrWhiteSpace(f.Type))
+                query = query.Where(n => n.Type == f.Type);
+            if (f.IsActive.HasValue)
+                query = query.Where(n => n.IsActive == f.IsActive.Value);
+            if (f.CreatedFrom.HasValue)
+                query = query.Where(n => n.CreatedAt >= f.CreatedFrom.Value.Date);
+            if (f.CreatedTo.HasValue)
+                query = query.Where(n => n.CreatedAt < f.CreatedTo.Value.Date.AddDays(1)); // uključivo cijeli dan
+
+            var projected = query
+                .OrderByDescending(n => n.CreatedAt)
+                .Select(n => new AnnouncementAdminDto
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Message = n.Message,
+                    Type = n.Type,
+                    IsActive = n.IsActive,
+                    CreatedAt = n.CreatedAt,
+                    PublishAt = n.PublishAt,
+                    ExpiresAt = n.ExpiresAt
+                });
+
+            var paging = new PageRequest { Page = f.Page < 1 ? 1 : f.Page, PageSize = f.PageSize };
+            return await PageResult<AnnouncementAdminDto>.FromQueryableAsync(projected, paging);
+        }
+
+        public async Task<bool> UpdateAnnouncementAsync(int id, CreateNotificationDto dto)
+        {
+            var n = await _context.Notifications.FirstOrDefaultAsync(x => x.Id == id && x.UserId == null);
+            if (n == null) return false;
+
+            n.Title = dto.Title.Trim();
+            n.Message = dto.Message;
+            n.Type = dto.Type;
+            n.IsActive = dto.IsActive;
+            n.PublishAt = dto.PublishAt;
+            n.ExpiresAt = dto.ExpiresAt;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> DeleteAnnouncementAsync(int id)
+        {
+            var n = await _context.Notifications.FirstOrDefaultAsync(x => x.Id == id && x.UserId == null);
+            if (n == null) return false;
+
+            _context.Notifications.Remove(n);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<bool> CreateAnnouncementAsync(CreateNotificationDto dto)
         {
             var notification = new Notification
@@ -58,7 +119,9 @@ namespace Market.Infrastructure.Services
                 Type = dto.Type,
                 CreatedAt = DateTime.Now,
                 IsRead = false,
-                IsActive = true,
+                IsActive = dto.IsActive,
+                PublishAt = dto.PublishAt,
+                ExpiresAt = dto.ExpiresAt,
                 UserId = null
             };
 
@@ -69,7 +132,10 @@ namespace Market.Infrastructure.Services
         public async Task<List<NotificationDto>> GetLatestNotificationsAsync()
         {
             return await _context.Notifications
-                .Where(n => n.UserId == null && n.IsActive) //samo aktivne vijesti za sve
+                // samo aktivne vijesti za sve, čiji je termin objave došao, a nisu istekle
+                .Where(n => n.UserId == null && n.IsActive
+                            && (n.PublishAt == null || n.PublishAt <= DateTime.Now)
+                            && (n.ExpiresAt == null || n.ExpiresAt > DateTime.Now))
                 .OrderByDescending(n => n.CreatedAt)
                 .Select(n => new NotificationDto
                 {

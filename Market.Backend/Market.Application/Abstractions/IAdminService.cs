@@ -15,6 +15,9 @@ namespace Market.Application.Abstractions
         Task<bool> CreateAnnouncementAsync(CreateNotificationDto dto);
         Task<List<NotificationDto>> GetLatestNotificationsAsync();
         Task<bool> ToggleNotificationStatusAsync(int id);
+        Task<Market.Application.Common.PageResult<AnnouncementAdminDto>> GetAnnouncementsPagedAsync(AnnouncementFilterDto filter);
+        Task<bool> UpdateAnnouncementAsync(int id, CreateNotificationDto dto);
+        Task<bool> DeleteAnnouncementAsync(int id);
         Task<List<LogAction>> GetAuditLogsAsync();
         Task<DashBoardStatsDto> GetDashboardStatsAsync();
     }

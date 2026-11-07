@@ -1,0 +1,206 @@
+<div class="users-page" data-bs-theme="dark">
+  <div class="page-head">
+    <div>
+      <h1>{{ 'GAMES.NEWS_ADMIN.TITLE' | translate }}</h1>
+      <p class="muted">{{ 'GAMES.NEWS_ADMIN.SUBTITLE' | translate: { count: result?.totalItems ?? 0 } }}</p>
+    </div>
+    <button type="button" class="btn-neon" (click)="openCreate()">
+      <mat-icon>campaign</mat-icon> {{ 'GAMES.NEWS_ADMIN.ADD' | translate }}
+    </button>
+  </div>
+
+  <!-- ===== FILTERI (5 parametara) ===== -->
+  <form class="panel filters" [formGroup]="filterForm">
+    <div class="field grow">
+      <label>{{ 'GAMES.NEWS_ADMIN.F_TITLE' | translate }}</label>
+      <div class="input-icon">
+        <mat-icon>search</mat-icon>
+        <input type="search" formControlName="title" [placeholder]="'GAMES.NEWS_ADMIN.F_TITLE_PH' | translate" />
+      </div>
+    </div>
+    <div class="field">
+      <label>{{ 'GAMES.NEWS_ADMIN.TYPE' | translate }}</label>
+      <select formControlName="type">
+        <option [ngValue]="null">{{ 'GAMES.USERS.ALL' | translate }}</option>
+        @for (t of types; track t) { <option [ngValue]="t">{{ t }}</option> }
+      </select>
+    </div>
+    <div class="field">
+      <label>{{ 'GAMES.USERS.STATUS' | translate }}</label>
+      <select formControlName="isActive">
+        <option [ngValue]="null">{{ 'GAMES.USERS.ALL' | translate }}</option>
+        <option [ngValue]="true">{{ 'GAMES.NEWS_ADMIN.ACTIVE' | translate }}</option>
+        <option [ngValue]="false">{{ 'GAMES.NEWS_ADMIN.INACTIVE' | translate }}</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>{{ 'GAMES.NEWS_ADMIN.F_FROM' | translate }}</label>
+      <input type="date" formControlName="createdFrom" />
+    </div>
+    <div class="field">
+      <label>{{ 'GAMES.NEWS_ADMIN.F_TO' | translate }}</label>
+      <input type="date" formControlName="createdTo" />
+    </div>
+    <button type="button" class="btn-ghost" [disabled]="!activeFilterCount" (click)="resetFilters()">
+      <mat-icon>filter_alt_off</mat-icon> {{ 'GAMES.USERS.RESET' | translate }}
+      @if (activeFilterCount) { <span class="count">{{ activeFilterCount }}</span> }
+    </button>
+  </form>
+
+  <!-- ===== TABELA ===== -->
+  <div class="panel table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>{{ 'GAMES.NEWS_ADMIN.TITLE_COL' | translate }}</th>
+          <th>{{ 'GAMES.NEWS_ADMIN.TYPE' | translate }}</th>
+          <th>{{ 'GAMES.USERS.STATUS' | translate }}</th>
+          <th>{{ 'GAMES.NEWS_ADMIN.PUBLISHED' | translate }}</th>
+          <th class="actions-col"></th>
+        </tr>
+      </thead>
+      <tbody [class.loading]="loading">
+        @for (n of result?.items ?? []; track n.id) {
+          <tr>
+            <td>
+              <strong>{{ n.title }}</strong>
+              <div class="muted small-text">{{ preview(n.message) }}</div>
+            </td>
+            <td><span class="type-badge" [attr.data-type]="n.type">{{ n.type }}</span></td>
+            <td>
+              <!-- klik na status = brzo uključivanje/isključivanje -->
+              <button type="button" class="status status-btn" [class.on]="n.isActive" (click)="toggle(n)"
+                      [title]="'GAMES.NEWS_ADMIN.TOGGLE' | translate">
+                {{ (n.isActive ? 'GAMES.NEWS_ADMIN.ACTIVE' : 'GAMES.NEWS_ADMIN.INACTIVE') | translate }}
+              </button>
+              @if (feedStatus(n) === 'scheduled') {
+                <div class="sched scheduled"><mat-icon>schedule</mat-icon> {{ 'GAMES.NEWS_ADMIN.SCHEDULED' | translate }} {{ n.publishAt | date: 'dd.MM. HH:mm' }}</div>
+              } @else if (feedStatus(n) === 'expired') {
+                <div class="sched expired"><mat-icon>history</mat-icon> {{ 'GAMES.NEWS_ADMIN.EXPIRED' | translate }}</div>
+              } @else if (n.isActive && n.expiresAt) {
+                <div class="sched"><mat-icon>timer</mat-icon> {{ 'GAMES.NEWS_ADMIN.UNTIL' | translate }} {{ n.expiresAt | date: 'dd.MM. HH:mm' }}</div>
+              }
+            </td>
+            <td class="muted">{{ n.createdAt | date: 'dd.MM.yyyy HH:mm' }}</td>
+            <td class="actions-col">
+              <button type="button" class="icon-btn" (click)="openEdit(n)" [title]="'GAMES.USERS.EDIT' | translate">
+                <mat-icon>edit</mat-icon></button>
+              <button type="button" class="icon-btn danger" (click)="remove(n)" [title]="'GAMES.USERS.DELETE' | translate">
+                <mat-icon>delete_outline</mat-icon></button>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="5" class="empty">{{ 'GAMES.NEWS_ADMIN.EMPTY' | translate }}</td></tr>
+        }
+      </tbody>
+    </table>
+
+    @if (result && result.totalItems > 0) {
+      <div class="pager">
+        <span class="muted">
+          {{ (result.currentPage - 1) * result.pageSize + 1 }}–{{ (result.currentPage - 1) * result.pageSize + result.items.length }}
+          / {{ result.totalItems }}
+        </span>
+        <div class="pages">
+          <button type="button" (click)="goToPage(page - 1)" [disabled]="page <= 1"><mat-icon>chevron_left</mat-icon></button>
+          @for (p of pages; track p) {
+            <button type="button" [class.active]="p === page" (click)="goToPage(p)">{{ p }}</button>
+          }
+          <button type="button" (click)="goToPage(page + 1)" [disabled]="page >= result.totalPages"><mat-icon>chevron_right</mat-icon></button>
+        </div>
+        <select [ngModel]="pageSize" (ngModelChange)="changePageSize($event)" [ngModelOptions]="{ standalone: true }">
+          @for (s of pageSizes; track s) { <option [ngValue]="s">{{ s }} / {{ 'GAMES.USERS.PAGE' | translate }}</option> }
+        </select>
+      </div>
+    }
+  </div>
+
+  <!-- ===== MODAL: DODAJ / UREDI ===== -->
+  @if (showForm) {
+    <div class="modal-backdrop-custom" (click)="closeForm()">
+      <form class="modal-panel wide with-preview" [formGroup]="newsForm" (ngSubmit)="save()" (click)="$event.stopPropagation()">
+        <h2>{{ (editingId ? 'GAMES.NEWS_ADMIN.EDIT_TITLE' : 'GAMES.NEWS_ADMIN.ADD') | translate }}</h2>
+        <div class="form-grid">
+        <div class="form-col">
+
+        <div class="field">
+          <label>{{ 'GAMES.NEWS_ADMIN.TITLE_COL' | translate }} *</label>
+          <input formControlName="title" maxlength="150" [class.invalid]="invalid('title')" />
+          @if (invalid('title')) { <small class="error">{{ 'GAMES.NEWS_ADMIN.ERR_TITLE' | translate }}</small> }
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label>{{ 'GAMES.NEWS_ADMIN.TYPE' | translate }} *</label>
+            <select formControlName="type">
+              @for (t of types; track t) { <option [ngValue]="t">{{ t }}</option> }
+            </select>
+          </div>
+          <div class="field">
+            <label>{{ 'GAMES.USERS.STATUS' | translate }}</label>
+            <label class="switch">
+              <input type="checkbox" formControlName="isActive" />
+              <span>{{ (newsForm.controls.isActive.value ? 'GAMES.NEWS_ADMIN.ACTIVE' : 'GAMES.NEWS_ADMIN.INACTIVE') | translate }}</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>{{ 'GAMES.NEWS_ADMIN.MESSAGE' | translate }} *</label>
+          <textarea formControlName="message" rows="6" maxlength="4000" [class.invalid]="invalid('message')"></textarea>
+          <div class="hint">
+            @if (invalid('message')) { <small class="error">{{ 'GAMES.NEWS_ADMIN.ERR_MESSAGE' | translate }}</small> }
+            <small class="muted ms-auto">{{ newsForm.controls.message.value.length }} / 4000</small>
+          </div>
+        </div>
+
+        <!-- Zakazivanje -->
+        <div class="row-2">
+          <div class="field">
+            <label>{{ 'GAMES.NEWS_ADMIN.PUBLISH_AT' | translate }}</label>
+            <input type="datetime-local" formControlName="publishAt" />
+          </div>
+          <div class="field">
+            <label>{{ 'GAMES.NEWS_ADMIN.EXPIRES_AT' | translate }}</label>
+            <input type="datetime-local" formControlName="expiresAt" [class.invalid]="newsForm.hasError('scheduleOrder')" />
+          </div>
+        </div>
+        @if (newsForm.hasError('scheduleOrder')) {
+          <small class="error">{{ 'GAMES.NEWS_ADMIN.ERR_SCHEDULE' | translate }}</small>
+        } @else {
+          <small class="muted">{{ 'GAMES.NEWS_ADMIN.SCHEDULE_HINT' | translate }}</small>
+        }
+        </div>
+
+        <!-- PREGLED UŽIVO: kako će vijest izgledati u feedu -->
+        <div class="preview-col">
+          <label class="preview-label"><mat-icon>visibility</mat-icon> {{ 'GAMES.NEWS_ADMIN.PREVIEW' | translate }}</label>
+          <div class="preview-card">
+            <div class="preview-head">
+              <span class="type-badge" [attr.data-type]="previewData.type">{{ previewData.type }}</span>
+              <small class="muted">{{ (previewData.publishAt || now) | date: 'dd.MM.yyyy HH:mm' }}</small>
+            </div>
+            <strong class="preview-title">{{ previewData.title || ('GAMES.NEWS_ADMIN.PREVIEW_TITLE' | translate) }}</strong>
+            <p class="preview-text">{{ previewData.message || ('GAMES.NEWS_ADMIN.PREVIEW_TEXT' | translate) }}</p>
+          </div>
+          @switch (feedStatus(previewData)) {
+            @case ('live') { <small class="feed-state live"><mat-icon>check_circle</mat-icon> {{ 'GAMES.NEWS_ADMIN.STATE_LIVE' | translate }}</small> }
+            @case ('scheduled') { <small class="feed-state scheduled"><mat-icon>schedule</mat-icon> {{ 'GAMES.NEWS_ADMIN.STATE_SCHEDULED' | translate }}</small> }
+            @case ('expired') { <small class="feed-state expired"><mat-icon>history</mat-icon> {{ 'GAMES.NEWS_ADMIN.STATE_EXPIRED' | translate }}</small> }
+            @default { <small class="feed-state"><mat-icon>visibility_off</mat-icon> {{ 'GAMES.NEWS_ADMIN.STATE_HIDDEN' | translate }}</small> }
+          }
+        </div>
+        </div>
+
+        @if (serverError) { <div class="server-error"><mat-icon>error_outline</mat-icon> {{ serverError }}</div> }
+
+        <div class="modal-actions">
+          <button type="button" class="btn-ghost" (click)="closeForm()">{{ 'GAMES.CHECKOUT.BACK' | translate }}</button>
+          <button type="submit" class="btn-neon" [disabled]="saving">
+            <mat-icon>save</mat-icon> {{ 'GAMES.USERS.SAVE' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+</div>

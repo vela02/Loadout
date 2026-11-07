@@ -522,3 +522,156 @@ $sidebar-width: 280px;
     }
   }
 }
+
+/* =====================================================================
+   LOADOUT NEON TEMA ZA ADMIN PANEL (čitljivost)
+   Problem: u Windows dark modu meni dobije tamnu pozadinu, a Angular Material
+   za tekst stavki koristi svoju TAMNU boju -> tamno na tamnom, teško čitljivo.
+   Rješenje: ista neon paleta kao ostatak aplikacije + Material CSS tokeni
+   za boju teksta i ikona, nezavisno od postavki operativnog sistema.
+   ===================================================================== */
+$lo-bg-deep: #0b0c1a;
+$lo-bg: #11132a;
+$lo-panel: #171a36;
+$lo-edge: #2a2e5c;
+$lo-cyan: #22d3ee;
+$lo-magenta: #e040fb;
+$lo-text: #e8e9ff;
+$lo-muted: #a3a6cc;   // malo svjetlija od uobičajene "muted" boje -> bolji kontrast na tamnom
+
+.sidenav-container {
+  background: $lo-bg-deep;
+
+  .sidenav {
+    background: $lo-bg;
+    border-right: 1px solid $lo-edge;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+
+    // Material tokeni: boja teksta i ikona u listi (inače su tamni)
+    --mat-list-list-item-label-text-color: #{$lo-text};
+    --mat-list-list-item-hover-label-text-color: #{$lo-text};
+    --mat-list-list-item-focus-label-text-color: #{$lo-text};
+    --mat-list-list-item-leading-icon-color: #{$lo-muted};
+    --mat-list-list-item-hover-leading-icon-color: #{$lo-cyan};
+    --mdc-list-list-item-label-text-color: #{$lo-text};
+    --mdc-list-list-item-hover-label-text-color: #{$lo-text};
+    --mdc-list-list-item-leading-icon-color: #{$lo-muted};
+
+    .sidebar-header {
+      background:
+        radial-gradient(circle at 0% 0%, rgba($lo-cyan, 0.25), transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba($lo-magenta, 0.25), transparent 60%),
+        $lo-panel;
+      border-bottom: 1px solid $lo-edge;
+
+      // Email se ne skraćuje s "..." nego se prelomi u novi red (npr. kod "@")
+      .user-info .user-details .user-email {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        overflow-wrap: anywhere;
+        line-height: 1.35;
+        font-size: 13.5px;
+        color: $lo-text;
+      }
+
+      // Bedž uloge: širina prema tekstu (umjesto fiksnih 80%), bez skraćivanja u "ADMI..."
+      .user-info .user-details .user-role .role-chip {
+        width: auto;
+        max-width: 100%;
+        height: 26px;
+        padding: 0 10px;
+        font-size: 12px;
+        letter-spacing: 0;
+        text-transform: none;          // "Administrator" umjesto "ADMINISTRATOR" -> kraće, stane u okvir
+        background: rgba($lo-magenta, 0.15);
+        border: 1px solid rgba($lo-magenta, 0.5);
+        color: $lo-text;
+
+        mat-icon {
+          font-size: 14px;
+          width: 14px;
+          height: 14px;
+        }
+
+        // Material chip ima svoje unutrašnje razmake – smanjimo ih da tekst stane
+        ::ng-deep .mdc-evolution-chip__action--primary {
+          padding-left: 0;
+          padding-right: 0;
+        }
+
+        // Unutrašnji elementi Material chipa (zato ::ng-deep): ne skraćuj tekst
+        ::ng-deep .mdc-evolution-chip__cell,
+        ::ng-deep .mdc-evolution-chip__action,
+        ::ng-deep .mdc-evolution-chip__text-label {
+          overflow: visible;
+          text-overflow: clip;
+          white-space: nowrap;
+          color: $lo-text;
+        }
+      }
+    }
+
+    mat-nav-list {
+      .nav-section-title {
+        color: $lo-muted;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+      }
+
+      a[mat-list-item] {
+        color: $lo-text;
+
+        span[matListItemTitle] {
+          color: $lo-text !important;       // tekst stavke: uvijek svijetao
+          font-size: 14.5px;
+          font-weight: 500;
+        }
+
+        mat-icon[matListItemIcon] {
+          color: $lo-muted !important;
+        }
+
+        &::before {
+          background: linear-gradient(90deg, $lo-cyan 0%, $lo-magenta 100%);
+        }
+
+        &:hover:not(.active) {
+          background-color: rgba($lo-cyan, 0.08);
+
+          mat-icon[matListItemIcon] { color: $lo-cyan !important; }
+        }
+
+        // Aktivna stavka: neon traka lijevo + cijan tekst
+        &.active {
+          background: linear-gradient(90deg, rgba($lo-cyan, 0.16) 0%, rgba($lo-magenta, 0.08) 100%);
+          box-shadow: inset 0 0 0 1px rgba($lo-cyan, 0.35), 0 0 16px rgba($lo-cyan, 0.12);
+
+          span[matListItemTitle] { color: $lo-cyan !important; font-weight: 700; }
+          mat-icon[matListItemIcon] {
+            color: $lo-cyan !important;
+            filter: drop-shadow(0 0 6px rgba($lo-cyan, 0.6));
+          }
+        }
+
+        &.logout-item {
+          background-color: rgba(#f87171, 0.08);
+          border: 1px solid rgba(#f87171, 0.3);
+
+          span[matListItemTitle],
+          mat-icon[matListItemIcon] { color: #f87171 !important; }
+        }
+      }
+
+      mat-divider { background-color: $lo-edge; }
+    }
+  }
+
+  .main-content {
+    background:
+      radial-gradient(circle at 20% 0%, rgba(124, 58, 237, 0.12), transparent 50%),
+      $lo-bg-deep;
+    color: $lo-text;
+  }
+}
+

@@ -79,8 +79,8 @@ $hover-bg: rgba(73, 118, 181, 0.08);
       }
 
       .page-size-field {
-        width: 80px;
-        height: 65px;
+        width: 84px;
+        height: 38px;   // Loadout tema: kompaktno polje (prije 65px)
 
         ::ng-deep {
           .mat-form-field-wrapper {
@@ -88,7 +88,7 @@ $hover-bg: rgba(73, 118, 181, 0.08);
             margin: 0;
           }
           .mdc-text-field--filled:not(.mdc-text-field--disabled) {
-            background-color: white !important;
+            background-color: #0b0c1a !important;   // Loadout tema: tamno umjesto bijelog
           }
 
           .mat-form-field-flex {
@@ -317,3 +317,146 @@ $hover-bg: rgba(73, 118, 181, 0.08);
     }
   }
 }
+
+/* =====================================================================
+   LOADOUT NEON TEMA (čitljivost na tamnim admin stranicama)
+   Original je bio za svijetlu temu (bijela traka, plavi/sivi tekst).
+   Struktura i ponašanje paginatora ostaju isti – mijenjaju se samo boje.
+   ===================================================================== */
+$lo-bg-deep: #0b0c1a;
+$lo-panel: #171a36;
+$lo-edge: #2a2e5c;
+$lo-cyan: #22d3ee;
+$lo-magenta: #e040fb;
+$lo-text: #e8e9ff;
+$lo-muted: #a3a6cc;
+
+.paginator-bar {
+  .paginator-container {
+    background: rgba($lo-panel, 0.95) !important;
+    border: 1px solid $lo-edge;
+    border-top: none;
+    color: $lo-text;
+  }
+
+  .paginator-info {
+    color: $lo-muted !important;
+
+    .info-icon { color: $lo-cyan !important; }
+    strong { color: $lo-text !important; }
+    .info-divider { color: $lo-edge !important; }
+  }
+
+  .selector-label { color: $lo-muted !important; }
+
+  // Izbor broja stavki po stranici (Material select) – tokeni za tamnu pozadinu
+  .page-size-field {
+    --mdc-filled-text-field-container-color: #{$lo-bg-deep};
+    --mat-form-field-filled-container-color: #{$lo-bg-deep};
+    --mdc-filled-text-field-active-indicator-color: #{$lo-edge};
+    --mdc-filled-text-field-focus-active-indicator-color: #{$lo-cyan};
+    --mat-select-enabled-trigger-text-color: #{$lo-text};
+    --mat-select-enabled-arrow-color: #{$lo-cyan};
+    --mat-form-field-container-text-color: #{$lo-text};
+
+    ::ng-deep .mdc-text-field--filled,
+    ::ng-deep .mat-mdc-text-field-wrapper {
+      background-color: $lo-bg-deep !important;
+      border: 1px solid $lo-edge;
+      border-radius: 8px !important;
+    }
+    ::ng-deep .mat-mdc-select-value,
+    ::ng-deep .mat-mdc-select-value-text { color: $lo-text !important; }
+    ::ng-deep .mat-mdc-select-arrow { color: $lo-cyan !important; }
+  }
+
+  // Dugmad Prethodna / Sljedeća
+  .nav-btn {
+    background: transparent !important;
+    border: 1px solid $lo-edge !important;
+    color: $lo-text !important;
+
+    mat-icon { color: $lo-cyan; }
+
+    &:hover:not(:disabled) {
+      background: rgba($lo-cyan, 0.08) !important;
+      border-color: $lo-cyan !important;
+      box-shadow: 0 0 14px rgba($lo-cyan, 0.25);
+    }
+
+    &:disabled {
+      background: transparent !important;
+      border-color: rgba($lo-edge, 0.6) !important;
+      color: rgba($lo-muted, 0.5) !important;
+
+      mat-icon { color: rgba($lo-muted, 0.5); }
+    }
+  }
+
+  // Broj trenutne stranice
+  .page-indicator {
+    background: linear-gradient(90deg, $lo-cyan 0%, $lo-magenta 100%) !important;
+    color: $lo-bg-deep !important;
+    font-weight: 800;
+    box-shadow: 0 0 14px rgba($lo-magenta, 0.35);
+  }
+}
+
+// ---- "Stavki po stranici": kompaktno zaobljeno polje umjesto Material "fill" kutije ----
+.paginator-bar .page-size-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .page-size-field {
+    width: 84px;
+
+    // ukloni prazan prostor ispod polja (za hint/grešku) i donju liniju
+    ::ng-deep .mat-mdc-form-field-subscript-wrapper { display: none; }
+    ::ng-deep .mdc-line-ripple { display: none; }
+
+    ::ng-deep .mat-mdc-text-field-wrapper {
+      height: 38px;
+      padding: 0 12px !important;
+      border-radius: 999px !important;
+      border: 1px solid $lo-edge;
+      background: $lo-bg-deep !important;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    ::ng-deep .mat-mdc-form-field-flex { height: 38px; align-items: center; }
+    ::ng-deep .mat-mdc-form-field-infix {
+      min-height: 0;
+      padding: 0 !important;
+      width: auto;
+    }
+
+    ::ng-deep .mat-mdc-select-value-text {
+      color: $lo-text !important;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    &:hover ::ng-deep .mat-mdc-text-field-wrapper,
+    &.mat-focused ::ng-deep .mat-mdc-text-field-wrapper {
+      border-color: $lo-cyan;
+      box-shadow: 0 0 12px rgba($lo-cyan, 0.25);
+    }
+  }
+}
+
+// Broj u polju "stavki po stranici": uvijek svijetao i jasan
+.paginator-bar .paginator-container .paginator-actions .page-size-selector .page-size-field {
+  ::ng-deep .mat-mdc-select-value,
+  ::ng-deep .mat-mdc-select-value-text,
+  ::ng-deep .mat-mdc-select-min-line {
+    color: #e8e9ff !important;
+    opacity: 1 !important;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  ::ng-deep .mat-mdc-select-arrow { color: #22d3ee !important; }
+  ::ng-deep .mat-mdc-select-arrow-wrapper { height: auto; }
+}
+
