@@ -540,3 +540,6 @@ http-client.private.env.json
 # Apifox Helper cache
 .idea/.cache/.Apifox_Helper
 .idea/ApifoxUploaderProjectSetting.xml
+
+# JetBrains (WebStorm/Rider) – lične postavke IDE-a, ne idu u repo
+.idea/
