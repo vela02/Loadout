@@ -287,7 +287,8 @@ public partial class LoadoutDbContext : DbContext, IAppDbContext
             entity.ToTable("Notification");
 
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
-            entity.Property(e => e.Message).HasColumnType("text");
+            // nvarchar(max): HTML iz WYSIWYG editora + naša slova (č, ć, š, ž, đ); "text" je bio non-unicode
+            entity.Property(e => e.Message).HasColumnType("nvarchar(max)");
             entity.Property(e => e.Type)
                 .HasMaxLength(255)
                 .IsUnicode(false);

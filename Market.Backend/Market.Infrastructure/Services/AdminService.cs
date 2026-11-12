@@ -91,7 +91,7 @@ namespace Market.Infrastructure.Services
             if (n == null) return false;
 
             n.Title = dto.Title.Trim();
-            n.Message = dto.Message;
+            n.Message = Market.Infrastructure.Common.HtmlSanitizer.Sanitize(dto.Message); // ukloni opasan HTML
             n.Type = dto.Type;
             n.IsActive = dto.IsActive;
             n.PublishAt = dto.PublishAt;
@@ -115,7 +115,7 @@ namespace Market.Infrastructure.Services
             var notification = new Notification
             {
                 Title = dto.Title,
-                Message = dto.Message,
+                Message = Market.Infrastructure.Common.HtmlSanitizer.Sanitize(dto.Message), // ukloni opasan HTML
                 Type = dto.Type,
                 CreatedAt = DateTime.Now,
                 IsRead = false,

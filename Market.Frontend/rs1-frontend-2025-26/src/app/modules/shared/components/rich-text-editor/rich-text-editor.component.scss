@@ -1,0 +1,80 @@
+// Quill "snow" tema prilagođena Loadout tamnoj paleti.
+// Svi selektori počinju s .loadout-rte -> utiču samo na ovaj editor.
+.loadout-rte {
+  border-radius: 10px;
+  border: 1px solid #2a2e5c;
+  background: #0b0c1a;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:focus-within {
+    border-color: #22d3ee;
+    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15);
+  }
+
+  &.invalid { border-color: #f87171; }
+
+  // Alatna traka
+  .ql-toolbar.ql-snow {
+    border: none;
+    border-bottom: 1px solid #2a2e5c;
+    background: #171a36;
+    padding: 6px 8px;
+
+    button {
+      border-radius: 6px;
+
+      .ql-stroke { stroke: #a3a6cc; }
+      .ql-fill { fill: #a3a6cc; }
+
+      &:hover,
+      &.ql-active {
+        background: rgba(34, 211, 238, 0.12);
+
+        .ql-stroke { stroke: #22d3ee; }
+        .ql-fill { fill: #22d3ee; }
+      }
+    }
+  }
+
+  // Polje za pisanje
+  .ql-container.ql-snow {
+    border: none;
+    font-family: inherit;
+    font-size: 14px;
+  }
+
+  .ql-editor {
+    min-height: 140px;
+    max-height: 280px;
+    overflow-y: auto;
+    color: #e8e9ff;
+    line-height: 1.6;
+
+    a { color: #22d3ee; }
+
+    &.ql-blank::before {
+      color: #8d90b8;
+      font-style: normal;
+    }
+  }
+
+  // Popup za unos linka
+  .ql-snow .ql-tooltip {
+    background: #171a36;
+    border: 1px solid #2a2e5c;
+    color: #e8e9ff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    z-index: 10;
+
+    input[type='text'] {
+      background: #0b0c1a;
+      border: 1px solid #2a2e5c;
+      color: #e8e9ff;
+      border-radius: 6px;
+    }
+
+    a { color: #22d3ee; }
+  }
+}

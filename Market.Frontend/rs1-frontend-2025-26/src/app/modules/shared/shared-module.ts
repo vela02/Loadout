@@ -11,6 +11,7 @@ import { FitTableSkeletonComponent } from './components/fit-table-skeleton/fit-t
 import { LicenseKeyPipe } from './pipes/license-key.pipe';
 import { CopyToClipboardDirective } from './directives/copy-to-clipboard.directive';
 import { QrCodeComponent } from './components/qr-code/qr-code.component';
+import { RichTextEditorComponent } from './components/rich-text-editor/rich-text-editor.component';
 
 
 
@@ -22,7 +23,8 @@ import { QrCodeComponent } from './components/qr-code/qr-code.component';
     FitTableSkeletonComponent,
     LicenseKeyPipe,
     CopyToClipboardDirective,
-    QrCodeComponent
+    QrCodeComponent,
+    RichTextEditorComponent
   ],
   imports: [
     CommonModule,
@@ -45,6 +47,7 @@ import { QrCodeComponent } from './components/qr-code/qr-code.component';
     LicenseKeyPipe,
     CopyToClipboardDirective,
     QrCodeComponent,
+    RichTextEditorComponent,
     materialModules
   ]
 })

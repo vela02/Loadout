@@ -147,10 +147,12 @@
 
         <div class="field">
           <label>{{ 'GAMES.NEWS_ADMIN.MESSAGE' | translate }} *</label>
-          <textarea formControlName="message" rows="6" maxlength="4000" [class.invalid]="invalid('message')"></textarea>
+          <!-- WYSIWYG editor (Quill) – radi kao obično polje forme zahvaljujući ControlValueAccessor-u -->
+          <app-rich-text-editor formControlName="message" [invalid]="invalid('message')"
+                                [placeholder]="'GAMES.NEWS_ADMIN.PREVIEW_TEXT' | translate"></app-rich-text-editor>
           <div class="hint">
             @if (invalid('message')) { <small class="error">{{ 'GAMES.NEWS_ADMIN.ERR_MESSAGE' | translate }}</small> }
-            <small class="muted ms-auto">{{ newsForm.controls.message.value.length }} / 4000</small>
+            <small class="muted ms-auto">{{ messageLength }} / 4000</small>
           </div>
         </div>
 
@@ -181,7 +183,12 @@
               <small class="muted">{{ (previewData.publishAt || now) | date: 'dd.MM.yyyy HH:mm' }}</small>
             </div>
             <strong class="preview-title">{{ previewData.title || ('GAMES.NEWS_ADMIN.PREVIEW_TITLE' | translate) }}</strong>
-            <p class="preview-text">{{ previewData.message || ('GAMES.NEWS_ADMIN.PREVIEW_TEXT' | translate) }}</p>
+            @if (previewData.message) {
+              <!-- [innerHTML]: Angular automatski uklanja opasan HTML (script, onclick...) -->
+              <div class="preview-text rich-content" [innerHTML]="previewData.message"></div>
+            } @else {
+              <p class="preview-text">{{ 'GAMES.NEWS_ADMIN.PREVIEW_TEXT' | translate }}</p>
+            }
           </div>
           @switch (feedStatus(previewData)) {
             @case ('live') { <small class="feed-state live"><mat-icon>check_circle</mat-icon> {{ 'GAMES.NEWS_ADMIN.STATE_LIVE' | translate }}</small> }

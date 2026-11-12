@@ -473,7 +473,7 @@ namespace Market.Infrastructure.Migrations
 
                     b.Property<string>("Message")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("PublishAt")
                         .HasColumnType("datetime2");
