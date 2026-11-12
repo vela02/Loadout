@@ -845,7 +845,7 @@
       "TOGGLE": "Klikni za uključivanje/isključivanje u feedu",
       "EMPTY": "Nema vijesti za zadane filtere.",
       "ERR_TITLE": "Naslov mora imati 3–150 znakova.",
-      "ERR_MESSAGE": "Tekst mora imati 10–4000 znakova.",
+      "ERR_MESSAGE": "Tekst mora imati 10–4000 znakova (bez formatiranja).",
       "CREATED": "Vijest je objavljena.",
       "UPDATED": "Vijest je ažurirana.",
       "DELETED": "Vijest je obrisana.",

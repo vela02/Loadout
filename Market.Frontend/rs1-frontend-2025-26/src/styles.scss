@@ -250,3 +250,14 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   }
 }
 
+/* ===== Formatiran HTML iz WYSIWYG editora (vijesti): feed i pregled uživo ===== */
+.rich-content {
+  line-height: 1.6;
+  word-break: break-word;
+
+  p { margin: 0 0 6px; }
+  p:last-child { margin-bottom: 0; }
+  ul, ol { margin: 4px 0 6px; padding-left: 22px; }
+  a { color: #22d3ee; text-decoration: underline; }
+  strong { color: #ffffff; }
+}

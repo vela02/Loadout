@@ -15,7 +15,8 @@ namespace Market.Shared.Dtos
         public string Title { get; set; } = null!;
 
         [Required(ErrorMessage = "Tekst vijesti je obavezan.")]
-        [StringLength(4000, MinimumLength = 10, ErrorMessage = "Tekst mora imati 10–4000 znakova.")]
+        // Tekst je HTML iz WYSIWYG editora (tagovi zauzimaju mjesto), pa je limit veći
+        [StringLength(8000, MinimumLength = 10, ErrorMessage = "Tekst mora imati 10–8000 znakova (uključujući formatiranje).")]
         public string Message { get; set; } = null!;
 
         [Required(ErrorMessage = "Tip je obavezan.")]

@@ -845,7 +845,7 @@
       "TOGGLE": "Click to show/hide in the news feed",
       "EMPTY": "No news match the filters.",
       "ERR_TITLE": "Title must have 3–150 characters.",
-      "ERR_MESSAGE": "Message must have 10–4000 characters.",
+      "ERR_MESSAGE": "Message must have 10–4000 characters (excluding formatting).",
       "CREATED": "Announcement published.",
       "UPDATED": "Announcement updated.",
       "DELETED": "Announcement deleted.",

@@ -61,13 +61,28 @@ export class AdminNewsComponent implements OnInit, OnDestroy {
     {
       title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(150)]],
       type: ['Info' as AnnouncementType, Validators.required],
-      message: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(4000)]],
+      // HTML iz editora: dužinu provjeravamo na ČISTOM tekstu (bez tagova), a ukupnu veličinu HTML-a do 8000
+      message: ['', [Validators.required, AdminNewsComponent.plainTextLength(10, 4000), Validators.maxLength(8000)]],
       isActive: [true],
       publishAt: [''],   // "2026-11-07T10:00" iz <input type="datetime-local">
       expiresAt: [''],
     },
     { validators: AdminNewsComponent.scheduleValidator },
   );
+
+  /** Validator: dužina teksta BEZ HTML tagova (npr. "<p><b>Hi</b></p>" ima samo 2 znaka) */
+  static plainTextLength(min: number, max: number) {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const text = (control.value ?? '').replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim();
+      if (!text) return null;                       // prazno hvata Validators.required
+      return text.length < min || text.length > max ? { plainTextLength: { min, max, actual: text.length } } : null;
+    };
+  }
+
+  /** Broj znakova bez formatiranja – za brojač ispod editora */
+  get messageLength(): number {
+    return (this.newsForm.controls.message.value ?? '').replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ').trim().length;
+  }
 
   /** Validator na nivou cijele forme: istek mora biti poslije objave */
   static scheduleValidator(group: AbstractControl): ValidationErrors | null {

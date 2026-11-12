@@ -96,7 +96,7 @@ input[type='datetime-local'] { color-scheme: dark; }
 
 .preview-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
 .preview-title { display: block; margin-bottom: 6px; word-break: break-word; }
-.preview-text { margin: 0; color: #c7c9e8; white-space: pre-wrap; word-break: break-word; font-size: 0.9rem; }
+.preview-text { margin: 0; color: #c7c9e8; word-break: break-word; font-size: 0.9rem; }
 
 .feed-state {
   display: flex;
