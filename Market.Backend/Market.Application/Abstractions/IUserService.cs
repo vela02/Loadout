@@ -17,6 +17,7 @@ namespace Market.Application.Abstractions
         Task<bool> UpdateUserAsync(int id, UserUpdateDto dto);
         Task<bool> DeleteUserAsync(int id);
         Task<List<OrderHistoryDto>> GetUserPurchaseHistoryAsync(int userId);
+        Task<UserPurchaseHistoryDto?> GetUserPurchasesAsync(int userId, DateTime? from, DateTime? to);
         Task<LoginResponseDto?> LoginAsync(LoginRequestDto dto);
     }
 }

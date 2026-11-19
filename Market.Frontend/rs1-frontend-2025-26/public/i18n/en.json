@@ -771,7 +771,13 @@
       "KEY": "Key",
       "KEY_LATER": "The key will be delivered on release day.",
       "TOTAL": "Total",
-      "FOOTER": "Thank you for your purchase! Loadout - digital game store."
+      "FOOTER": "Thank you for your purchase! Loadout - digital game store.",
+      "REPORT_TITLE": "User purchase report",
+      "REPORT_ROLE": "Role",
+      "REPORT_PERIOD": "Period",
+      "REPORT_ALL_TIME": "All time",
+      "REPORT_GENERATED": "Generated",
+      "REPORT_NOTE": "Cancelled orders are not included in the total."
     },
     "USERS": {
       "TITLE": "Users",
@@ -895,6 +901,22 @@
       "TRIGGER_Scheduler": "Automatic",
       "TRIGGER_Manual": "Manual",
       "NO_HISTORY": "No runs yet."
+    },
+    "USER_HISTORY": {
+      "TITLE": "Purchase history",
+      "NOT_FOUND": "User not found.",
+      "REGISTERED": "Registered",
+      "PDF_BTN": "PDF report",
+      "PDF_OK": "PDF report downloaded.",
+      "FROM": "Period from",
+      "TO": "Period to",
+      "LAST_MONTH": "Last month",
+      "LAST_YEAR": "Last year",
+      "ALL": "All",
+      "ORDERS": "Orders",
+      "GAMES": "Games purchased",
+      "TOTAL": "Total spent",
+      "EMPTY": "No orders in the selected period."
     }
   }
 }

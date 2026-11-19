@@ -294,3 +294,10 @@ table {
 }
 
 .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px; }
+
+// link (<a>) koji izgleda kao icon-btn – npr. "Historija kupovina"
+a.icon-btn {
+  display: inline-flex;
+  vertical-align: middle;
+  text-decoration: none;
+}

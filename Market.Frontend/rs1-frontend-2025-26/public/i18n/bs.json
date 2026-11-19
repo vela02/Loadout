@@ -771,7 +771,13 @@
       "KEY": "Kljuc",
       "KEY_LATER": "Kljuc stize na dan izlaska igre.",
       "TOTAL": "Ukupno",
-      "FOOTER": "Hvala na kupovini! Loadout - digitalna prodavnica igara."
+      "FOOTER": "Hvala na kupovini! Loadout - digitalna prodavnica igara.",
+      "REPORT_TITLE": "Izvjestaj o kupovinama korisnika",
+      "REPORT_ROLE": "Uloga",
+      "REPORT_PERIOD": "Period",
+      "REPORT_ALL_TIME": "Cijeli period",
+      "REPORT_GENERATED": "Generisano",
+      "REPORT_NOTE": "Otkazane narudzbe nisu ukljucene u ukupan iznos."
     },
     "USERS": {
       "TITLE": "Korisnici",
@@ -895,6 +901,22 @@
       "TRIGGER_Scheduler": "Automatski",
       "TRIGGER_Manual": "Ručno",
       "NO_HISTORY": "Još nema izvršavanja."
+    },
+    "USER_HISTORY": {
+      "TITLE": "Historija kupovina",
+      "NOT_FOUND": "Korisnik nije pronađen.",
+      "REGISTERED": "Registrovan",
+      "PDF_BTN": "PDF izvještaj",
+      "PDF_OK": "PDF izvještaj je preuzet.",
+      "FROM": "Period od",
+      "TO": "Period do",
+      "LAST_MONTH": "Zadnji mjesec",
+      "LAST_YEAR": "Zadnja godina",
+      "ALL": "Sve",
+      "ORDERS": "Narudžbe",
+      "GAMES": "Kupljene igre",
+      "TOTAL": "Ukupno potrošeno",
+      "EMPTY": "Nema narudžbi u odabranom periodu."
     }
   }
 }
