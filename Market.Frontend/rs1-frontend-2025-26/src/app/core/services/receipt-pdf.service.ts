@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { jsPDF } from 'jspdf';
 import { toDataURL } from 'qrcode';
 import { OrderHistory } from '../../api-services/games/games-api.models';
+import { UserPurchaseHistory } from '../../api-services/admin-users/admin-users-api.service';
 
 /**
  * Generiše PDF potvrdu o kupovini za JEDNU narudžbu (parametar: narudžba / ID).
@@ -112,6 +113,156 @@ export class ReceiptPdfService {
     doc.text(t('GAMES.PDF.FOOTER'), W / 2, 285, { align: 'center' });
 
     doc.save(`Loadout-${ref}.pdf`);
+  }
+
+  /**
+   * PDF IZVJEŠTAJ O KUPOVINAMA KORISNIKA (admin)
+   * Parametri: korisnik + period (datum od, datum do) – dolaze iz UserPurchaseHistory.
+   * Sadrži: podatke o korisniku, period, sažetak, tabelu narudžbi i ukupan iznos.
+   */
+  async downloadUserReport(data: UserPurchaseHistory): Promise<void> {
+    const t = (key: string, params?: object) => this.ascii(this.translate.instant(key, params));
+    const fmtDate = (iso: string | null) => (iso ? new Date(iso).toLocaleDateString('de-DE') : '');
+
+    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+    const W = doc.internal.pageSize.getWidth();
+
+    // ---------- Zaglavlje ----------
+    const header = () => {
+      doc.setFillColor(11, 12, 26);
+      doc.rect(0, 0, W, 30, 'F');
+      doc.setFillColor(34, 211, 238);
+      doc.rect(0, 30, W / 2, 1.2, 'F');
+      doc.setFillColor(224, 64, 251);
+      doc.rect(W / 2, 30, W / 2, 1.2, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(20);
+      doc.text('LOADOUT', 15, 17);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(141, 144, 184);
+      doc.text(t('GAMES.PDF.REPORT_TITLE'), 15, 24);
+    };
+    header();
+
+    // ---------- Korisnik i period ----------
+    let y = 44;
+    doc.setTextColor(20, 20, 30);
+    doc.setFontSize(10);
+    const period = data.from || data.to
+      ? `${fmtDate(data.from) || '...'} - ${fmtDate(data.to) || '...'}`
+      : t('GAMES.PDF.REPORT_ALL_TIME');
+    const info: [string, string][] = [
+      [t('GAMES.PDF.CUSTOMER'), `${this.ascii(data.username)} (${data.email})`],
+      [t('GAMES.PDF.REPORT_ROLE'), this.ascii(data.roleName)],
+      [t('GAMES.PDF.REPORT_PERIOD'), period],
+      [t('GAMES.PDF.REPORT_GENERATED'), new Date().toLocaleString('de-DE')],
+    ];
+    info.forEach(([label, value]) => {
+      doc.setFont('helvetica', 'bold');
+      doc.text(label, 15, y);
+      doc.setFont('helvetica', 'normal');
+      doc.text(value, 60, y);
+      y += 7;
+    });
+
+    // ---------- Sažetak (3 "kartice") ----------
+    y += 4;
+    const boxW = (W - 30 - 10) / 3;
+    const summary: [string, string][] = [
+      [t('GAMES.USER_HISTORY.ORDERS'), String(data.ordersCount)],
+      [t('GAMES.USER_HISTORY.GAMES'), String(data.gamesCount)],
+      [t('GAMES.USER_HISTORY.TOTAL'), `${data.totalSpent.toFixed(2)} KM`],
+    ];
+    summary.forEach(([label, value], i) => {
+      const x = 15 + i * (boxW + 5);
+      doc.setFillColor(243, 244, 250);
+      doc.setDrawColor(220, 222, 235);
+      doc.roundedRect(x, y, boxW, 18, 2, 2, 'FD');
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(110, 112, 140);
+      doc.text(label, x + 4, y + 6);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(13);
+      doc.setTextColor(i === 2 ? 124 : 20, i === 2 ? 58 : 20, i === 2 ? 237 : 30);
+      doc.text(value, x + 4, y + 14);
+    });
+    y += 28;
+
+    // ---------- Tabela narudžbi ----------
+    const tableHeader = () => {
+      doc.setFillColor(23, 26, 54);
+      doc.rect(15, y - 6, W - 30, 9, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.text(t('GAMES.PDF.DATE'), 18, y);
+      doc.text(t('GAMES.PDF.ORDER'), 45, y);
+      doc.text(t('GAMES.PDF.ITEM'), 65, y);
+      doc.text(t('GAMES.PDF.STATUS'), 140, y);
+      doc.text(t('GAMES.PDF.PRICE'), W - 18, y, { align: 'right' });
+      y += 9;
+    };
+    tableHeader();
+
+    doc.setFontSize(9);
+    if (data.orders.length === 0) {
+      doc.setTextColor(110, 112, 140);
+      doc.setFont('helvetica', 'italic');
+      doc.text(t('GAMES.USER_HISTORY.EMPTY'), 18, y);
+      y += 8;
+    }
+
+    for (const o of data.orders) {
+      const titles = o.games.map((g) => this.ascii(g.title));
+      const rowH = Math.max(1, titles.length) * 5 + 3;
+      if (y + rowH > 270) {              // nova stranica + ponovo zaglavlje tabele
+        doc.addPage();
+        header();
+        y = 44;
+        tableHeader();
+        doc.setFontSize(9);
+      }
+      const cancelled = o.statusId === 5;
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(cancelled ? 160 : 20, cancelled ? 160 : 20, cancelled ? 170 : 30);
+      doc.text(new Date(o.date).toLocaleDateString('de-DE'), 18, y);
+      doc.text(`#${o.id}`, 45, y);
+      titles.forEach((title, i) => doc.text(title.length > 38 ? title.slice(0, 37) + '...' : title, 65, y + i * 5));
+      doc.text(this.ascii(o.status), 140, y);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`${o.totalAmount.toFixed(2)} KM`, W - 18, y, { align: 'right' });
+      y += rowH;
+      doc.setDrawColor(225, 226, 236);
+      doc.line(15, y - 3, W - 15, y - 3);
+    }
+
+    // ---------- Ukupno ----------
+    y += 4;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12);
+    doc.setTextColor(20, 20, 30);
+    doc.text(t('GAMES.PDF.TOTAL'), 18, y);
+    doc.setTextColor(124, 58, 237);
+    doc.text(`${data.totalSpent.toFixed(2)} KM`, W - 18, y, { align: 'right' });
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(141, 144, 184);
+    doc.text(t('GAMES.PDF.REPORT_NOTE'), 18, y + 6);
+
+    // ---------- Broj stranice u podnožju ----------
+    const pages = doc.getNumberOfPages();
+    for (let p = 1; p <= pages; p++) {
+      doc.setPage(p);
+      doc.setFontSize(8);
+      doc.setTextColor(141, 144, 184);
+      doc.text(`Loadout  |  ${p} / ${pages}`, W / 2, 287, { align: 'center' });
+    }
+
+    const suffix = data.from || data.to ? `_${data.from ?? 'start'}_${data.to ?? 'today'}` : '';
+    doc.save(`Loadout-report-${this.ascii(data.username)}${suffix}.pdf`);
   }
 
   /** ABCD1234EFGH5678 -> ABCD-1234-EFGH-5678 */

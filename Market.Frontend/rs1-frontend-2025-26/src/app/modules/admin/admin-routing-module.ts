@@ -12,6 +12,7 @@ import { CustomProductsAddComponent } from '../custom-ui/products/products-add/c
 import { PromotionsComponent } from './catalogs/promotions/promotions.component';
 import { AdminStatsComponent } from './stats/admin-stats.component';
 import { AdminUsersComponent } from './users/admin-users.component';
+import { AdminUserHistoryComponent } from './users/user-history/admin-user-history.component';
 import { AdminNewsComponent } from './news/admin-news.component';
 import { AdminJobsComponent } from './jobs/admin-jobs.component';
 
@@ -36,6 +37,11 @@ const routes: Routes = [
       {
         path: 'users',
         component: AdminUsersComponent,
+      },
+      // HISTORIJA KUPOVINA KORISNIKA -> /admin/users/5/history
+      {
+        path: 'users/:id/history',
+        component: AdminUserHistoryComponent,
       },
 
       // DASHBOARD / STATISTIKA -> /admin/stats

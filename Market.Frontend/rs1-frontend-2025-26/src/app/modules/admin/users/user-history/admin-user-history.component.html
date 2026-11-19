@@ -1,0 +1,75 @@
+<div class="users-page" data-bs-theme="dark">
+  <a routerLink="/admin/users" class="back-link"><mat-icon>arrow_back</mat-icon> {{ 'GAMES.USERS.TITLE' | translate }}</a>
+
+  @if (notFound) {
+    <div class="panel empty">{{ 'GAMES.USER_HISTORY.NOT_FOUND' | translate }}</div>
+  } @else if (data) {
+    <!-- ===== KORISNIK ===== -->
+    <div class="panel user-card">
+      <span class="avatar big">{{ data.username.charAt(0).toUpperCase() }}</span>
+      <div class="flex-grow-1">
+        <h1>{{ data.username }}</h1>
+        <div class="muted">{{ data.email }}</div>
+        <div class="meta">
+          <span class="role" [class.admin]="data.roleName === 'Administrator'">{{ data.roleName }}</span>
+          <span class="muted small-text">{{ 'GAMES.USER_HISTORY.REGISTERED' | translate }} {{ data.registeredAt | date: 'dd.MM.yyyy' }}</span>
+        </div>
+      </div>
+      <button type="button" class="btn-neon" [disabled]="generating || periodInvalid || loading" (click)="downloadReport()">
+        <mat-icon>picture_as_pdf</mat-icon> {{ 'GAMES.USER_HISTORY.PDF_BTN' | translate }}
+      </button>
+    </div>
+
+    <!-- ===== PERIOD (parametri izvještaja) ===== -->
+    <form class="panel filters" [formGroup]="periodForm">
+      <div class="field">
+        <label>{{ 'GAMES.USER_HISTORY.FROM' | translate }}</label>
+        <input type="date" formControlName="from" [class.invalid]="periodInvalid" />
+      </div>
+      <div class="field">
+        <label>{{ 'GAMES.USER_HISTORY.TO' | translate }}</label>
+        <input type="date" formControlName="to" [class.invalid]="periodInvalid" />
+      </div>
+      <div class="presets">
+        <button type="button" class="btn-ghost" (click)="setPreset('month')">{{ 'GAMES.USER_HISTORY.LAST_MONTH' | translate }}</button>
+        <button type="button" class="btn-ghost" (click)="setPreset('year')">{{ 'GAMES.USER_HISTORY.LAST_YEAR' | translate }}</button>
+        <button type="button" class="btn-ghost" (click)="setPreset('all')">{{ 'GAMES.USER_HISTORY.ALL' | translate }}</button>
+      </div>
+      @if (periodInvalid) {
+        <small class="error w-100">{{ 'GAMES.FILTERS.ERR_DATE_RANGE' | translate }}</small>
+      }
+    </form>
+
+    <!-- ===== STATISTIKA ===== -->
+    <div class="stats">
+      <div class="panel stat"><span>{{ 'GAMES.USER_HISTORY.ORDERS' | translate }}</span><strong>{{ data.ordersCount }}</strong></div>
+      <div class="panel stat"><span>{{ 'GAMES.USER_HISTORY.GAMES' | translate }}</span><strong>{{ data.gamesCount }}</strong></div>
+      <div class="panel stat highlight"><span>{{ 'GAMES.USER_HISTORY.TOTAL' | translate }}</span><strong>{{ data.totalSpent | number: '1.2-2' }} KM</strong></div>
+    </div>
+
+    <!-- ===== NARUDŽBE ===== -->
+    <div [class.loading]="loading">
+      @for (o of data.orders; track o.id) {
+        <div class="panel order">
+          <div class="order-head">
+            <strong>#{{ o.id }}</strong>
+            <span class="muted">{{ o.date | date: 'dd.MM.yyyy HH:mm' }}</span>
+            <span class="order-status" [ngClass]="statusClass(o.statusId)">{{ o.status }}</span>
+            <strong class="order-total">{{ o.totalAmount | number: '1.2-2' }} KM</strong>
+          </div>
+          @for (g of o.games; track $index) {
+            <div class="game-row">
+              <img [src]="g.imageUrl || placeholderImage" [alt]="g.title" (error)="onImageError($event)" />
+              <span class="flex-grow-1">{{ g.title }}</span>
+              <span class="muted">{{ g.priceAtPurchase | number: '1.2-2' }} KM</span>
+            </div>
+          }
+        </div>
+      } @empty {
+        <div class="panel empty">{{ 'GAMES.USER_HISTORY.EMPTY' | translate }}</div>
+      }
+    </div>
+  } @else {
+    <p class="muted">{{ 'GAMES.DETAILS.LOADING' | translate }}</p>
+  }
+</div>

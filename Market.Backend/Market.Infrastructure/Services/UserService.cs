@@ -177,6 +177,58 @@ namespace Market.Infrastructure.Services
                 }).FirstOrDefaultAsync();
         }
 
+        /// <summary>
+        /// Historija kupovina korisnika za admina, s opcionalnim periodom (od–do, uključivo).
+        /// Koristi se za ekran "Historija kupovina" i za PDF izvještaj.
+        /// </summary>
+        public async Task<UserPurchaseHistoryDto?> GetUserPurchasesAsync(int userId, DateTime? from, DateTime? to)
+        {
+            var user = await _context.Users.Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.Id == userId && !u.IsDeleted);
+            if (user == null) return null;
+
+            var query = _context.Orders.Where(o => o.UserId == userId);
+            if (from.HasValue) query = query.Where(o => o.Date >= from.Value.Date);
+            if (to.HasValue) query = query.Where(o => o.Date < to.Value.Date.AddDays(1)); // cijeli zadnji dan
+
+            var orders = await query
+                .OrderByDescending(o => o.Date)
+                .Select(o => new OrderHistoryDto
+                {
+                    Id = o.Id,
+                    Date = o.Date,
+                    TotalAmount = o.TotalAmount ?? 0,
+                    Status = o.Status != null ? o.Status.Name : "N/A",
+                    StatusId = o.StatusId,
+                    Games = o.OrderGames.Select(og => new BoughtGameDto
+                    {
+                        GameId = og.GameId,
+                        Title = og.Game.Title,
+                        ImageUrl = og.Game.ImageUrl,
+                        ReleaseDate = og.Game.ReleaseDate,
+                        PriceAtPurchase = og.PriceAtPurchase ?? 0,
+                    }).ToList()
+                })
+                .ToListAsync();
+
+            var counted = orders.Where(o => o.StatusId != 5).ToList(); // 5 = otkazano -> ne ulazi u potrošnju
+
+            return new UserPurchaseHistoryDto
+            {
+                UserId = user.Id,
+                Username = user.Username,
+                Email = user.Email,
+                RoleName = user.Role != null ? user.Role.Name : "N/A",
+                RegisteredAt = user.CreatedAt,
+                From = from,
+                To = to,
+                OrdersCount = orders.Count,
+                GamesCount = counted.Sum(o => o.Games.Count),
+                TotalSpent = counted.Sum(o => o.TotalAmount),
+                Orders = orders
+            };
+        }
+
         public async Task<List<OrderHistoryDto>> GetUserPurchaseHistoryAsync(int userId)
         {
             return await _context.Orders

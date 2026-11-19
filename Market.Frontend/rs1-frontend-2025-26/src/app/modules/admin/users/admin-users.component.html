@@ -87,6 +87,8 @@
             <td class="muted">{{ u.createdAt | date: 'dd.MM.yyyy' }}</td>
             <td class="muted">{{ u.lastLogin ? (u.lastLogin | date: 'dd.MM.yyyy HH:mm') : '—' }}</td>
             <td class="actions-col">
+              <a class="icon-btn" [routerLink]="['/admin/users', u.id, 'history']" [title]="'GAMES.USER_HISTORY.TITLE' | translate">
+                <mat-icon>receipt_long</mat-icon></a>
               <button type="button" class="icon-btn" (click)="openEdit(u)" [title]="'GAMES.USERS.EDIT' | translate">
                 <mat-icon>edit</mat-icon></button>
               <button type="button" class="icon-btn danger" (click)="remove(u)" [title]="'GAMES.USERS.DELETE' | translate">

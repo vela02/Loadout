@@ -82,6 +82,18 @@ namespace Market.API.Controllers
         }
 
         // 5. Pregled historije po korisniku
+        // GET api/admin/users/5/purchases?from=2026-01-01&to=2026-12-31
+        // Historija kupovina korisnika + statistika (za admin ekran i PDF izvještaj)
+        [HttpGet("{id}/purchases")]
+        public async Task<IActionResult> GetUserPurchases(int id, [FromQuery] DateTime? from, [FromQuery] DateTime? to)
+        {
+            if (from.HasValue && to.HasValue && from.Value.Date > to.Value.Date)
+                return BadRequest(new { message = "Datum 'od' ne može biti poslije datuma 'do'." });
+
+            var result = await _userService.GetUserPurchasesAsync(id, from, to);
+            return result == null ? NotFound(new { message = "Korisnik nije pronađen." }) : Ok(result);
+        }
+
         [HttpGet("{id}/history")]
         public async Task<IActionResult> GetUserHistory(int id)
         {
