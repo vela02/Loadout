@@ -22,6 +22,7 @@ import { AdminUsersComponent } from './users/admin-users.component';
 import { AdminUserHistoryComponent } from './users/user-history/admin-user-history.component';
 import { AdminNewsComponent } from './news/admin-news.component';
 import { AdminJobsComponent } from './jobs/admin-jobs.component';
+import { AdminReviewsComponent } from './reviews/admin-reviews.component';
 import { PromotionCreateDialogComponent } from './catalogs/promotions/promotion-create-dialog/promotion-create-dialog.component';
 
 
@@ -45,6 +46,7 @@ import { PromotionCreateDialogComponent } from './catalogs/promotions/promotion-
     AdminUserHistoryComponent,
     AdminNewsComponent,
     AdminJobsComponent,
+    AdminReviewsComponent,
   ],
   imports: [
     AdminRoutingModule,

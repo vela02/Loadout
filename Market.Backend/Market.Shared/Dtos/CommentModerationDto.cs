@@ -13,5 +13,11 @@ namespace Market.Shared.Dtos
         public string GameTitle { get; set; } = null!;
         public string Content { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
+
+        // Dodatno za moderaciju
+        public int? GameId { get; set; }
+        public int? UserId { get; set; }
+        public int? Rating { get; set; }       // ocjena koju je autor dao igri (1–5), ako postoji
+        public bool IsReported { get; set; }   // korisnik je prijavio komentar kao neprikladan
     }
 }
