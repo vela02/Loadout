@@ -15,6 +15,7 @@ import { AdminUsersComponent } from './users/admin-users.component';
 import { AdminUserHistoryComponent } from './users/user-history/admin-user-history.component';
 import { AdminNewsComponent } from './news/admin-news.component';
 import { AdminJobsComponent } from './jobs/admin-jobs.component';
+import { AdminReviewsComponent } from './reviews/admin-reviews.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,12 @@ const routes: Routes = [
       {
         path: 'jobs',
         component: AdminJobsComponent,
+      },
+
+      // MODERACIJA RECENZIJA -> /admin/reviews
+      {
+        path: 'reviews',
+        component: AdminReviewsComponent,
       },
 
       // VIJESTI -> /admin/news

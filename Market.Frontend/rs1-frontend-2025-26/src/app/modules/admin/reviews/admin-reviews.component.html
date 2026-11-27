@@ -1,0 +1,129 @@
+<div class="users-page" data-bs-theme="dark">
+  <div class="page-head">
+    <div>
+      <h1>{{ 'GAMES.REVIEWS_ADMIN.TITLE' | translate }}</h1>
+      <p class="muted">{{ 'GAMES.REVIEWS_ADMIN.SUBTITLE' | translate: { count: result?.totalItems ?? 0 } }}</p>
+    </div>
+  </div>
+
+  <!-- ===== FILTERI ===== -->
+  <form class="panel filters" [formGroup]="filterForm">
+    <div class="field grow">
+      <label>{{ 'GAMES.REVIEWS_ADMIN.F_GAME' | translate }}</label>
+      <div class="input-icon">
+        <mat-icon>sports_esports</mat-icon>
+        <input type="search" formControlName="game" [placeholder]="'GAMES.REVIEWS_ADMIN.F_GAME_PH' | translate" />
+      </div>
+    </div>
+    <div class="field grow">
+      <label>{{ 'GAMES.REVIEWS_ADMIN.F_USER' | translate }}</label>
+      <div class="input-icon">
+        <mat-icon>person_search</mat-icon>
+        <input type="search" formControlName="user" [placeholder]="'GAMES.REVIEWS_ADMIN.F_USER_PH' | translate" />
+      </div>
+    </div>
+    <div class="field">
+      <label>{{ 'GAMES.REVIEWS_ADMIN.F_MIN_RATING' | translate }}</label>
+      <select formControlName="minRating">
+        <option [ngValue]="null">{{ 'GAMES.USERS.ALL' | translate }}</option>
+        @for (r of ratings; track r) { <option [ngValue]="r">{{ r }}★ +</option> }
+      </select>
+    </div>
+    <div class="field">
+      <label>{{ 'GAMES.NEWS_ADMIN.F_FROM' | translate }}</label>
+      <input type="date" formControlName="createdFrom" [class.invalid]="dateRangeInvalid" />
+    </div>
+    <div class="field">
+      <label>{{ 'GAMES.NEWS_ADMIN.F_TO' | translate }}</label>
+      <input type="date" formControlName="createdTo" [class.invalid]="dateRangeInvalid" />
+    </div>
+    <label class="switch reported-switch">
+      <input type="checkbox" formControlName="reportedOnly" />
+      <span><mat-icon>flag</mat-icon> {{ 'GAMES.REVIEWS_ADMIN.F_REPORTED' | translate }}</span>
+    </label>
+    <button type="button" class="btn-ghost" [disabled]="!activeFilterCount" (click)="resetFilters()">
+      <mat-icon>filter_alt_off</mat-icon> {{ 'GAMES.USERS.RESET' | translate }}
+      @if (activeFilterCount) { <span class="count">{{ activeFilterCount }}</span> }
+    </button>
+  </form>
+  @if (dateRangeInvalid) {
+    <small class="error range-error">{{ 'GAMES.REVIEWS_ADMIN.ERR_RANGE' | translate }}</small>
+  }
+
+  <!-- ===== TABELA ===== -->
+  <div class="panel table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>{{ 'GAMES.REVIEWS_ADMIN.GAME' | translate }}</th>
+          <th>{{ 'GAMES.REVIEWS_ADMIN.USER' | translate }}</th>
+          <th>{{ 'GAMES.REVIEWS_ADMIN.RATING' | translate }}</th>
+          <th>{{ 'GAMES.REVIEWS_ADMIN.TEXT' | translate }}</th>
+          <th>{{ 'GAMES.REVIEWS_ADMIN.DATE' | translate }}</th>
+          <th class="actions-col"></th>
+        </tr>
+      </thead>
+      <tbody [class.loading]="loading">
+        @for (r of result?.items ?? []; track r.id) {
+          <tr [class.reported]="r.isReported">
+            <td>
+              @if (r.gameId) {
+                <a class="game-link" [routerLink]="['/games', r.gameId]" target="_blank">{{ r.gameTitle }}
+                  <mat-icon>open_in_new</mat-icon></a>
+              } @else { {{ r.gameTitle }} }
+            </td>
+            <td><strong>{{ r.username }}</strong></td>
+            <td>
+              @if (r.rating) {
+                <span class="stars" [title]="r.rating + '/5'">
+                  @for (s of stars; track s) { <mat-icon [class.filled]="s <= r.rating">star</mat-icon> }
+                </span>
+              } @else { <span class="muted">—</span> }
+            </td>
+            <td class="text-col">
+              @if (r.isReported) {
+                <span class="report-badge"><mat-icon>flag</mat-icon> {{ 'GAMES.REVIEWS_ADMIN.REPORTED' | translate }}</span>
+              }
+              <div class="review-text" [class.clamped]="expandedId !== r.id">{{ r.content }}</div>
+              @if (isLong(r.content)) {
+                <button type="button" class="link-btn" (click)="toggleExpand(r)">
+                  {{ (expandedId === r.id ? 'GAMES.REVIEWS_ADMIN.LESS' : 'GAMES.REVIEWS_ADMIN.MORE') | translate }}
+                </button>
+              }
+            </td>
+            <td class="muted nowrap">{{ r.createdAt | date: 'dd.MM.yyyy HH:mm' }}</td>
+            <td class="actions-col">
+              @if (r.isReported) {
+                <button type="button" class="icon-btn" (click)="dismiss(r)" [title]="'GAMES.REVIEWS_ADMIN.DISMISS' | translate">
+                  <mat-icon>verified</mat-icon></button>
+              }
+              <button type="button" class="icon-btn danger" (click)="remove(r)" [title]="'GAMES.USERS.DELETE' | translate">
+                <mat-icon>delete_outline</mat-icon></button>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="6" class="empty">{{ 'GAMES.REVIEWS_ADMIN.EMPTY' | translate }}</td></tr>
+        }
+      </tbody>
+    </table>
+
+    @if (result && result.totalItems > 0) {
+      <div class="pager">
+        <span class="muted">
+          {{ (result.currentPage - 1) * result.pageSize + 1 }}–{{ (result.currentPage - 1) * result.pageSize + result.items.length }}
+          / {{ result.totalItems }}
+        </span>
+        <div class="pages">
+          <button type="button" (click)="goToPage(page - 1)" [disabled]="page <= 1"><mat-icon>chevron_left</mat-icon></button>
+          @for (p of pages; track p) {
+            <button type="button" [class.active]="p === page" (click)="goToPage(p)">{{ p }}</button>
+          }
+          <button type="button" (click)="goToPage(page + 1)" [disabled]="page >= result.totalPages"><mat-icon>chevron_right</mat-icon></button>
+        </div>
+        <select [ngModel]="pageSize" (ngModelChange)="changePageSize($event)" [ngModelOptions]="{ standalone: true }">
+          @for (s of pageSizes; track s) { <option [ngValue]="s">{{ s }} / {{ 'GAMES.USERS.PAGE' | translate }}</option> }
+        </select>
+      </div>
+    }
+  </div>
+</div>

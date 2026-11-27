@@ -40,6 +40,65 @@ namespace Market.Infrastructure.Services
                 })
                 .ToListAsync();
         }
+        /// <summary>
+        /// Moderacija recenzija: filteri (igra, korisnik, min. ocjena, period, samo prijavljene)
+        /// + backend paging. Prijavljene recenzije su uvijek na vrhu.
+        /// </summary>
+        public async Task<PageResult<CommentModerationDto>> GetCommentsPagedAsync(ReviewFilterDto f)
+        {
+            var query = _context.Comments.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(f.Game))
+                query = query.Where(c => c.Game != null && c.Game.Title.Contains(f.Game.Trim()));
+            if (!string.IsNullOrWhiteSpace(f.User))
+                query = query.Where(c => c.User != null && c.User.Username.Contains(f.User.Trim()));
+            if (f.MinRating.HasValue)
+                // ocjena se čuva u tabeli Rating (isti korisnik + ista igra)
+                query = query.Where(c => _context.Ratings.Any(r =>
+                    r.UserId == c.UserId && r.GameId == c.GameId && r.Stars >= f.MinRating.Value));
+            if (f.CreatedFrom.HasValue)
+                query = query.Where(c => c.CreatedAt >= f.CreatedFrom.Value.Date);
+            if (f.CreatedTo.HasValue)
+                query = query.Where(c => c.CreatedAt < f.CreatedTo.Value.Date.AddDays(1));
+            if (f.ReportedOnly == true)
+                query = query.Where(c => c.IsReported);
+
+            var projected = query
+                .OrderByDescending(c => c.IsReported)      // prijavljene prve -> admin ih odmah vidi
+                .ThenByDescending(c => c.CreatedAt)
+                .Select(c => new CommentModerationDto
+                {
+                    Id = c.Id,
+                    Username = c.User != null ? c.User.Username : "Nepoznat korisnik",
+                    GameTitle = c.Game != null ? c.Game.Title : "Nepoznata igra",
+                    Content = c.Content,
+                    CreatedAt = c.CreatedAt,
+                    GameId = c.GameId,
+                    UserId = c.UserId,
+                    IsReported = c.IsReported,
+                    Rating = _context.Ratings
+                        .Where(r => r.UserId == c.UserId && r.GameId == c.GameId)
+                        .OrderByDescending(r => r.CreatedAt)
+                        .Select(r => (int?)r.Stars)
+                        .FirstOrDefault()
+                });
+
+            var paging = new PageRequest { Page = f.Page < 1 ? 1 : f.Page, PageSize = f.PageSize };
+            return await PageResult<CommentModerationDto>.FromQueryableAsync(projected, paging);
+        }
+
+        /// <summary>Admin je pregledao prijavljenu recenziju i ocijenio da je u redu -> ukloni oznaku prijave.</summary>
+        public async Task<bool> DismissCommentReportAsync(int commentId)
+        {
+            var comment = await _context.Comments.FindAsync(commentId);
+            if (comment == null) return false;
+
+            comment.IsReported = false;
+            await LogAdminAction("UPDATE", "Comments", commentId, "Administrator dismissed the report for a comment.");
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<bool> DeleteCommentAsync(int commentId)
         {
             var comment = await _context.Comments.FindAsync(commentId);

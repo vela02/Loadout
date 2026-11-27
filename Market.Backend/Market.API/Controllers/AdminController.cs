@@ -54,6 +54,26 @@ public class AdminController : ControllerBase
     }
 
     
+    // GET api/Admin/comments/paged?game=&user=&minRating=&createdFrom=&createdTo=&reportedOnly=&page=&pageSize=
+    [HttpGet("comments/paged")]
+    public async Task<IActionResult> GetCommentsPaged([FromQuery] ReviewFilterDto filter)
+    {
+        if (filter.MinRating is < 1 or > 5)
+            return BadRequest(new { message = "Minimalna ocjena mora biti između 1 i 5." });
+        if (filter.CreatedFrom.HasValue && filter.CreatedTo.HasValue && filter.CreatedFrom > filter.CreatedTo)
+            return BadRequest(new { message = "Datum 'od' ne može biti poslije datuma 'do'." });
+
+        return Ok(await _adminService.GetCommentsPagedAsync(filter));
+    }
+
+    // PUT api/Admin/comments/5/dismiss-report -> recenzija je u redu, ukloni prijavu
+    [HttpPut("comments/{id}/dismiss-report")]
+    public async Task<IActionResult> DismissReport(int id)
+    {
+        var ok = await _adminService.DismissCommentReportAsync(id);
+        return ok ? NoContent() : NotFound(new { message = "Komentar nije pronađen." });
+    }
+
     [HttpDelete("comments/{id}")]
     public async Task<IActionResult> DeleteComment(int id)
     {

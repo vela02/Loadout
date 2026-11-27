@@ -917,6 +917,32 @@
       "GAMES": "Games purchased",
       "TOTAL": "Total spent",
       "EMPTY": "No orders in the selected period."
+    },
+    "REVIEWS_ADMIN": {
+      "TITLE": "Reviews",
+      "SUBTITLE": "Review and comment moderation · {{count}} total",
+      "F_GAME": "Game",
+      "F_GAME_PH": "Game title…",
+      "F_USER": "User",
+      "F_USER_PH": "Username…",
+      "F_MIN_RATING": "Min. rating",
+      "F_REPORTED": "Reported only",
+      "GAME": "Game",
+      "USER": "User",
+      "RATING": "Rating",
+      "TEXT": "Review",
+      "DATE": "Date",
+      "REPORTED": "Reported",
+      "MORE": "Show more",
+      "LESS": "Show less",
+      "DISMISS": "Review is fine – dismiss report",
+      "DISMISSED": "Report dismissed.",
+      "DELETE_TITLE": "Delete review",
+      "DELETE_MESSAGE": "Delete the review by {{user}} for {{game}}? It will also disappear from the game page.",
+      "DELETED": "Review deleted.",
+      "DELETE_FAILED": "Delete failed.",
+      "EMPTY": "No reviews match the filters.",
+      "ERR_RANGE": "'From' date cannot be after 'To' date."
     }
   }
 }

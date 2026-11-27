@@ -917,6 +917,32 @@
       "GAMES": "Kupljene igre",
       "TOTAL": "Ukupno potrošeno",
       "EMPTY": "Nema narudžbi u odabranom periodu."
+    },
+    "REVIEWS_ADMIN": {
+      "TITLE": "Recenzije",
+      "SUBTITLE": "Moderacija recenzija i komentara · ukupno {{count}}",
+      "F_GAME": "Igra",
+      "F_GAME_PH": "Naziv igre…",
+      "F_USER": "Korisnik",
+      "F_USER_PH": "Korisničko ime…",
+      "F_MIN_RATING": "Min. ocjena",
+      "F_REPORTED": "Samo prijavljene",
+      "GAME": "Igra",
+      "USER": "Korisnik",
+      "RATING": "Ocjena",
+      "TEXT": "Recenzija",
+      "DATE": "Datum",
+      "REPORTED": "Prijavljeno",
+      "MORE": "Prikaži više",
+      "LESS": "Prikaži manje",
+      "DISMISS": "Recenzija je u redu – ukloni prijavu",
+      "DISMISSED": "Prijava je uklonjena.",
+      "DELETE_TITLE": "Brisanje recenzije",
+      "DELETE_MESSAGE": "Obrisati recenziju korisnika {{user}} za igru {{game}}? Nestat će i sa stranice igre.",
+      "DELETED": "Recenzija je obrisana.",
+      "DELETE_FAILED": "Brisanje nije uspjelo.",
+      "EMPTY": "Nema recenzija za zadane filtere.",
+      "ERR_RANGE": "Datum 'od' ne može biti poslije datuma 'do'."
     }
   }
 }

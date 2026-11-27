@@ -1,0 +1,79 @@
+// Isti izgled kao admin "Korisnici" (tabela, filteri, paging)
+@use '../users/admin-users.component';
+
+$cyan: #22d3ee;
+$magenta: #e040fb;
+$text-muted: #8d90b8;
+$warn: #fbbf24;
+$danger: #f87171;
+
+.reported-switch {
+  align-self: flex-end;
+  padding-bottom: 8px;
+  white-space: nowrap;
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; vertical-align: -4px; color: $danger; }
+}
+
+.range-error { display: block; margin: -8px 0 12px 4px; }
+
+.game-link {
+  color: $cyan;
+  text-decoration: none;
+  font-weight: 600;
+
+  mat-icon { font-size: 14px; width: 14px; height: 14px; vertical-align: -2px; opacity: 0.6; }
+  &:hover { text-decoration: underline; }
+}
+
+.stars {
+  display: inline-flex;
+  white-space: nowrap;
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; color: rgba($text-muted, 0.35); }
+  mat-icon.filled { color: $warn; }
+}
+
+.text-col { max-width: 420px; }
+
+.review-text {
+  white-space: pre-line;
+  word-break: break-word;
+
+  &.clamped {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-top: 2px;
+  color: $magenta;
+  font-size: 0.8rem;
+  cursor: pointer;
+  &:hover { text-decoration: underline; }
+}
+
+.report-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-bottom: 4px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: $danger;
+  border: 1px solid rgba($danger, 0.5);
+
+  mat-icon { font-size: 14px; width: 14px; height: 14px; }
+}
+
+tr.reported td { background: rgba($danger, 0.06); }
+
+.nowrap { white-space: nowrap; }

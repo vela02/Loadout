@@ -12,6 +12,8 @@ namespace Market.Application.Abstractions
     {
         Task<List<CommentModerationDto>> GetAllCommentsAsync();
         Task<bool> DeleteCommentAsync(int commentId);
+        Task<Market.Application.Common.PageResult<CommentModerationDto>> GetCommentsPagedAsync(ReviewFilterDto filter);
+        Task<bool> DismissCommentReportAsync(int commentId);
         Task<bool> CreateAnnouncementAsync(CreateNotificationDto dto);
         Task<List<NotificationDto>> GetLatestNotificationsAsync();
         Task<bool> ToggleNotificationStatusAsync(int id);
